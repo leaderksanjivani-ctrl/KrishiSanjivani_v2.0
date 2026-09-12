@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Gateway — KrishiSanjivani</title>
+  <meta name="description" content="Razorpay secure payment checkout simulation. Instant confirmation for farmers and buyers.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <style>
+    .payment-container {
+      max-width: 520px;
+      margin: 40px auto var(--sp-3xl);
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-2xl);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+    .payment-header {
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      color: #fff;
+      padding: var(--sp-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .payment-tabs {
+      display: flex;
+      background: var(--c-bg);
+      border-bottom: 1px solid var(--c-border);
+    }
+    .pay-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      color: var(--c-text-muted);
+    }
+    .pay-tab.active {
+      border-bottom-color: var(--c-green);
+      color: var(--c-green-dark);
+      background: #fff;
+    }
+    .payment-body { padding: var(--sp-xl); }
+
+    .qr-box {
+      background: var(--c-bg);
+      border: 2px dashed var(--c-border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-lg);
+      text-align: center;
+      margin-bottom: var(--sp-md);
+    }
+    .qr-code-img {
+      width: 160px; height: 160px; background: #fff; padding: 8px; border-radius: var(--r-md); margin: 0 auto 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 4rem;
+    }
+
+    .success-overlay {
+      text-align: center;
+      padding: var(--sp-xl) 0;
+    }
+    .checkmark-circle {
+      width: 80px; height: 80px; background: var(--c-green-light); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 16px;
+      animation: pop 0.4s ease-out;
+    }
+    @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <div class="payment-container" id="payment-box">
+      <!-- HEADER -->
+      <div class="payment-header">
+        <div>
+          <div style="font-size:11px;opacity:0.7">KrishiSanjivani Secure Payment</div>
+          <strong style="font-size:var(--fs-lg)" id="pay-amount-header">Pay ₹0</strong>
+        </div>
+        <div style="font-size:11px;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:var(--r-full)">
+          🛡️ Razorpay Test Gateway
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="payment-tabs" id="pay-tabs">
+        <div class="pay-tab active" onclick="switchPayTab('upi')">📱 UPI / QR</div>
+        <div class="pay-tab" onclick="switchPayTab('card')">💳 Card</div>
+        <div class="pay-tab" onclick="switchPayTab('net')">🏛️ NetBanking</div>
+      </div>
+
+      <!-- BODY -->
+      <div class="payment-body" id="payment-content">
+        
+        <!-- UPI PANEL -->
+        <div id="panel-upi">
+          <div class="qr-box">
+            <div class="qr-code-img">📱</div>
+            <strong style="font-size:14px;display:block">Scan &amp; Pay using any UPI App</strong>
+            <p style="font-size:11px;color:var(--c-text-muted)">GPay · PhonePe · Paytm · BHIM</p>
+          </div>
+
+          <div style="text-align:center;margin-bottom:16px">
+            <span style="font-size:12px;color:var(--c-text-muted)">OR enter UPI ID:</span>
+            <input type="text" class="input mt-xs" placeholder="e.g. mobile@upi" value="user@okhdfcbank" style="text-align:center">
+          </div>
+
+          <button class="btn btn-primary btn-lg w-100" id="simulate-pay-btn">
+            ✅ Simulate Successful Payment
+          </button>
+        </div>
+
+        <!-- CARD PANEL -->
+        <div id="panel-card" style="display:none">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <label style="font-size:12px;font-weight:700">Card Number</label>
+              <input type="text" class="input" placeholder="4111 2222 3333 4444" value="4111 2222 3333 4444">
+            </div>
+            <div class="flex gap-md">
+              <div style="flex:1">
+                <label style="font-size:12px;font-weight:700">Expiry (MM/YY)</label>
+                <input type="text" class="input" placeholder="12/28" value="12/28">
+              </div>
+              <div style="flex:1">
+                <label style="font-size:12px;font-weight:700">CVV</label>
+                <input type="password" class="input" placeholder="123" value="123">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-lg w-100 mt-md" onclick="processPayment()">
+              Pay Now
+            </button>
+          </div>
+        </div>
+
+        <!-- NETBANKING PANEL -->
+        <div id="panel-net" style="display:none">
+          <label style="font-size:12px;font-weight:700;display:block;margin-bottom:8px">Select Your Bank</label>
+          <select class="input mb-md">
+            <option>State Bank of India (SBI)</option>
+            <option>HDFC Bank</option>
+            <option>ICICI Bank</option>
+            <option>Axis Bank</option>
+            <option>Bank of Maharashtra</option>
+          </select>
+          <button class="btn btn-primary btn-lg w-100" onclick="processPayment()">
+            Proceed to NetBanking
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+
+<script>
+  initFirebase();
+
+  let currentOrder = null;
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+
+    const orderJson = localStorage.getItem('ks_current_order');
+    if (orderJson) currentOrder = JSON.parse(orderJson);
+
+    const amount = currentOrder ? currentOrder.amount : 180;
+    document.getElementById('pay-amount-header').textContent = `Pay ₹${amount}`;
+
+    document.getElementById('simulate-pay-btn').addEventListener('click', processPayment);
+  });
+
+  function switchPayTab(tab) {
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-upi').style.display = 'none';
+    document.getElementById('panel-card').style.display = 'none';
+    document.getElementById('panel-net').style.display = 'none';
+
+    if (tab === 'upi') {
+      document.querySelectorAll('.pay-tab')[0].classList.add('active');
+      document.getElementById('panel-upi').style.display = 'block';
+    } else if (tab === 'card') {
+      document.querySelectorAll('.pay-tab')[1].classList.add('active');
+      document.getElementById('panel-card').style.display = 'block';
+    } else {
+      document.querySelectorAll('.pay-tab')[2].classList.add('active');
+      document.getElementById('panel-net').style.display = 'block';
+    }
+  }
+
+  function processPayment() {
+    const box = document.getElementById('payment-content');
+    box.innerHTML = `
+      <div style="text-align:center;padding:40px 0">
+        <div class="spinner" style="margin:0 auto 16px"></div>
+        <strong>Processing Payment...</strong>
+        <p style="font-size:12px;color:var(--c-text-muted);margin-top:4px">Connecting to bank &amp; verifying transaction</p>
+      </div>
+    `;
+
+    setTimeout(() => {
+      // Clear Cart
+      localStorage.removeItem('ks_cart');
+
+      const orderId = currentOrder ? currentOrder.id : 'ORD-882910';
+
+      box.innerHTML = `
+        <div class="success-overlay">
+          <div class="checkmark-circle">✅</div>
+          <h2 style="color:var(--c-green-dark);font-size:var(--fs-2xl)">Payment Successful!</h2>
+          <p style="font-size:13px;color:var(--c-text-muted);margin-top:4px">Order ID: <strong>#${orderId}</strong></p>
+          
+          <div style="margin:20px 0;padding:12px;background:var(--c-green-light);border-radius:var(--r-lg);font-size:12px;color:var(--c-green-dark)">
+            🌾 Farmer notification sent! Pickup dispatched.
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <a href="invoice.html?orderId=${orderId}" class="btn btn-primary btn-lg">🧾 View &amp; Print Invoice</a>
+            <a href="order-tracking.html?id=${orderId}" class="btn btn-outline btn-lg">🚚 Track Order Live</a>
+          </div>
+        </div>
+      `;
+    }, 1500);
+  }
+</script>
+</body>
+</html>

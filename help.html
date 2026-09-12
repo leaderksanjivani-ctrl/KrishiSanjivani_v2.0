@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help &amp; Support — KrishiSanjivani</title>
+  <meta name="description" content="KrishiSanjivani Help Center — FAQs, user guides, toll-free helpline, and complaint ticketing.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <style>
+    .help-search-hero {
+      background: linear-gradient(135deg, #064E3B, #047857);
+      color: #fff; padding: var(--sp-2xl) 0; border-radius: var(--r-2xl); text-align: center; margin-bottom: var(--sp-2xl);
+    }
+    .faq-accordion { display: flex; flex-direction: column; gap: 12px; margin-bottom: var(--sp-3xl); }
+    .faq-item {
+      background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-xl); overflow: hidden;
+    }
+    .faq-header {
+      padding: var(--sp-md) var(--sp-lg); font-weight: 700; font-size: var(--fs-base); cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; background: #fff;
+    }
+    .faq-body {
+      padding: 0 var(--sp-lg) var(--sp-md); font-size: var(--fs-sm); color: var(--c-text-secondary); display: none; line-height: 1.6;
+    }
+    .faq-item.active .faq-body { display: block; }
+    .faq-item.active .faq-header { color: var(--c-green-dark); background: var(--c-green-light); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <!-- SEARCH HERO -->
+    <div class="help-search-hero">
+      <h1 style="font-size:var(--fs-3xl);font-weight:800;margin-bottom:8px">How can we help you?</h1>
+      <p style="opacity:0.85;font-size:var(--fs-sm);margin-bottom:var(--sp-lg)">Search help topics or browse FAQs below</p>
+      
+      <div style="max-width:520px;margin:0 auto;position:relative">
+        <input type="text" id="faq-search" class="input" placeholder="Type a question (e.g., how to sell, track order)..." style="padding:14px 20px;border-radius:var(--r-full);color:#000">
+      </div>
+    </div>
+
+    <!-- HELPLINE CARD -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-md);margin-bottom:var(--sp-2xl)">
+      <div class="card card-body text-center">
+        <div style="font-size:2.5rem;margin-bottom:8px">📞</div>
+        <strong>Toll-Free Helpline</strong>
+        <p style="font-size:12px;color:var(--c-text-muted)">1800-123-4567 (Mon-Sat 9am-6pm)</p>
+      </div>
+      <div class="card card-body text-center">
+        <div style="font-size:2.5rem;margin-bottom:8px">📧</div>
+        <strong>Email Support</strong>
+        <p style="font-size:12px;color:var(--c-text-muted)">support@krishisanjivani.gov.in</p>
+      </div>
+      <div class="card card-body text-center">
+        <div style="font-size:2.5rem;margin-bottom:8px">🔊</div>
+        <strong>Voice Guidance</strong>
+        <button class="btn btn-outline btn-sm mt-xs" id="read-help-btn">🔊 Listen to Overview</button>
+      </div>
+    </div>
+
+    <!-- FAQ SECTION -->
+    <h2 style="font-size:var(--fs-2xl);font-weight:800;margin-bottom:var(--sp-md)">Frequently Asked Questions</h2>
+    
+    <div class="faq-accordion" id="faq-accordion">
+      <div class="faq-item">
+        <div class="faq-header">
+          <span>🌾 How do I list my farm produce for sale?</span>
+          <span>+</span>
+        </div>
+        <div class="faq-body">
+          Go to your Dashboard and tap <strong>Sell (List Produce)</strong>. Select your crop from the icon list, enter quantity &amp; your expected price per kg, upload photos of your harvest, pin your farm location, and tap <strong>Publish</strong>.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-header">
+          <span>💰 How do payments work on KrishiSanjivani?</span>
+          <span>+</span>
+        </div>
+        <div class="faq-body">
+          Buyers pay securely via Razorpay (UPI, Credit/Debit Card, NetBanking). Funds are held in escrow and released directly to the farmer's linked bank account immediately upon delivery verification.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-header">
+          <span>🚚 How is delivery handled?</span>
+          <span>+</span>
+        </div>
+        <div class="faq-body">
+          We use AI route optimization to group nearby farm pickups. Buyers can select <strong>Express Delivery Now</strong> (same day) or <strong>Scheduled Delivery</strong> for a specific date and time slot.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-header">
+          <span>🏛️ What is MahaDBT and how do I apply for subsidies?</span>
+          <span>+</span>
+        </div>
+        <div class="faq-body">
+          MahaDBT is Maharashtra's official Direct Benefit Transfer portal. Visit our <strong>Schemes &amp; MahaDBT</strong> page to track subsidy applications, link your Aadhaar card, or apply for farm equipment subsidies.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-header">
+          <span>🚜 Can I rent farm machinery instead of buying?</span>
+          <span>+</span>
+        </div>
+        <div class="faq-body">
+          Yes! Our <strong>Equipment Rental</strong> portal lets you rent tractors, rotavators, water pumps, and spraying drones by the day from verified local owners.
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLAINT / GRIEVANCE FORM -->
+    <div style="background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r-2xl);padding:var(--sp-xl);margin-bottom:var(--sp-3xl)">
+      <h3 style="font-size:var(--fs-xl);font-weight:800;margin-bottom:8px">📝 File a Support Ticket / Grievance</h3>
+      <p style="font-size:var(--fs-xs);color:var(--c-text-muted);margin-bottom:var(--sp-md)">Our dedicated support team resolves all tickets within 24 hours.</p>
+
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:600px">
+        <div>
+          <label style="font-size:12px;font-weight:700">Issue Category</label>
+          <select id="ticket-cat" class="input">
+            <option>Order &amp; Delivery Issue</option>
+            <option>Payment &amp; Refund Query</option>
+            <option>Listing or Price Dispute</option>
+            <option>MahaDBT / Subsidy Guidance</option>
+            <option>Other / General Feedback</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-size:12px;font-weight:700">Describe Your Problem</label>
+          <textarea id="ticket-desc" class="input" rows="3" placeholder="Provide details about your issue..."></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-lg" id="submit-ticket-btn">
+          📩 Submit Ticket
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- AI CHATBOT -->
+<button id="chatbot-btn" title="Chat with KrishiBot">
+  🤖<div class="chatbot-badge" style="display:none">1</div>
+</button>
+<div id="chatbot-panel" class="hidden">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">🌾</div>
+    <div class="chatbot-info">
+      <strong data-i18n="chatbot_title">KrishiBot</strong>
+      <span>AI Assistant • Always Online</span>
+    </div>
+    <button class="chatbot-close" id="chatbot-close">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbot-messages"></div>
+  <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+  <div class="chatbot-input-row">
+    <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything...">
+    <button class="chatbot-send" id="chatbot-send">➤</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/chatbot.js"></script>
+
+<script>
+  initFirebase();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initNav();
+    initChatbot();
+
+    // Accordion toggle
+    document.querySelectorAll('.faq-header').forEach(hdr => {
+      hdr.addEventListener('click', () => {
+        const item = hdr.parentElement;
+        item.classList.toggle('active');
+      });
+    });
+
+    // FAQ Filter search
+    document.getElementById('faq-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    });
+
+    // Ticket submit
+    document.getElementById('submit-ticket-btn').addEventListener('click', async () => {
+      const cat = document.getElementById('ticket-cat').value;
+      const desc = document.getElementById('ticket-desc').value.trim();
+      if (!desc) {
+        showToast('Please describe your issue', 'warning');
+        return;
+      }
+
+      const uid = auth.currentUser?.uid || 'guest';
+      try {
+        await db.collection(COLLECTIONS.complaints).add({
+          userId: uid, category: cat, description: desc, status: 'open', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch (e) { console.warn(e); }
+
+      document.getElementById('ticket-desc').value = '';
+      showToast('✅ Grievance ticket submitted! Ticket #TK-' + Math.floor(1000 + Math.random()*9000), 'success');
+    });
+
+    document.getElementById('read-help-btn').addEventListener('click', () => {
+      readAloud('KrishiSanjivani Help Center. You can browse FAQs or submit a support ticket.');
+    });
+  });
+</script>
+</body>
+</html>

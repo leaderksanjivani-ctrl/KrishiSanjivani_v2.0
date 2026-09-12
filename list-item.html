@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List Your Produce — KrishiSanjivani</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <select id="lang-select"><option value="en">🌐 EN</option><option value="hi">हिं</option><option value="mr">मरा</option></select>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="container-md" style="padding-top:var(--sp-xl);padding-bottom:var(--sp-3xl)">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="dashboard.html">🏠 Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <span data-i18n="listing_title">List Your Produce</span>
+  </div>
+
+  <div class="section-header">
+    <div>
+      <div class="section-title" data-i18n="listing_title">List Your Produce</div>
+      <div class="section-subtitle">Share your farm fresh produce directly with buyers</div>
+    </div>
+    <button class="voice-btn" onclick="readAloud('List your produce. Fill in the crop details, set your price, upload a photo and publish.')">🔊</button>
+  </div>
+
+  <!-- AI PRICE HINT BANNER -->
+  <div class="ai-hint-banner" id="ai-hint-banner" style="display:none">
+    <div class="ai-hint-icon">🤖</div>
+    <div class="ai-hint-content">
+      <strong data-i18n="listing_ai_hint">AI Price Hint</strong>
+      <span id="ai-hint-text">Select a crop to see price suggestion</span>
+    </div>
+    <button class="btn btn-sm btn-outline" id="use-ai-price">Use This Price</button>
+  </div>
+
+  <div class="list-form card">
+    <div class="card-header">
+      <span>📋 Listing Details</span>
+      <span class="badge badge-green">Step 1 of 1</span>
+    </div>
+    <div class="card-body">
+
+      <!-- CROP SELECTION — Icon Grid -->
+      <div class="form-group">
+        <label class="form-label" data-i18n="listing_crop">Select Crop *</label>
+        <div class="crop-grid" id="crop-grid">
+          <button type="button" class="crop-btn" data-crop="tomato" onclick="selectCrop('tomato')">🍅<span>Tomato</span></button>
+          <button type="button" class="crop-btn" data-crop="onion" onclick="selectCrop('onion')">🧅<span>Onion</span></button>
+          <button type="button" class="crop-btn" data-crop="potato" onclick="selectCrop('potato')">🥔<span>Potato</span></button>
+          <button type="button" class="crop-btn" data-crop="wheat" onclick="selectCrop('wheat')">🌾<span>Wheat</span></button>
+          <button type="button" class="crop-btn" data-crop="rice" onclick="selectCrop('rice')">🍚<span>Rice</span></button>
+          <button type="button" class="crop-btn" data-crop="sugarcane" onclick="selectCrop('sugarcane')">🌿<span>Sugarcane</span></button>
+          <button type="button" class="crop-btn" data-crop="cotton" onclick="selectCrop('cotton')">🌸<span>Cotton</span></button>
+          <button type="button" class="crop-btn" data-crop="soybean" onclick="selectCrop('soybean')">🫘<span>Soybean</span></button>
+          <button type="button" class="crop-btn" data-crop="maize" onclick="selectCrop('maize')">🌽<span>Maize</span></button>
+          <button type="button" class="crop-btn" data-crop="groundnut" onclick="selectCrop('groundnut')">🥜<span>Groundnut</span></button>
+          <button type="button" class="crop-btn" data-crop="banana" onclick="selectCrop('banana')">🍌<span>Banana</span></button>
+          <button type="button" class="crop-btn" data-crop="mango" onclick="selectCrop('mango')">🥭<span>Mango</span></button>
+          <button type="button" class="crop-btn" data-crop="other" onclick="selectCrop('other')">➕<span>Other</span></button>
+        </div>
+        <input type="text" class="form-input mt-sm" id="crop-other-input" placeholder="Enter crop name" style="display:none">
+        <input type="hidden" id="selected-crop" required>
+        <div class="form-error" id="crop-error" style="display:none">Please select a crop</div>
+      </div>
+
+      <!-- FPO TOGGLE -->
+      <div class="form-group">
+        <label class="flex gap-sm" style="align-items:center;cursor:pointer">
+          <input type="checkbox" id="is-fpo-listing" onchange="toggleFPO(this.checked)">
+          <span class="form-label" style="margin-bottom:0">🏢 This is an FPO / Cooperative group listing</span>
+        </label>
+        <div id="fpo-section" style="display:none" class="mt-sm">
+          <div class="form-group">
+            <label class="form-label">FPO Name</label>
+            <input type="text" class="form-input" id="fpo-name" placeholder="e.g., Sahyadri Farmers Cooperative">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Farmers in Pool</label>
+            <input type="number" class="form-input" id="fpo-farmer-count" placeholder="e.g., 25" min="2">
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID: QTY + PRICE + DATE -->
+      <div class="grid-3 mb-md" id="listing-details-grid">
+        <div class="form-group">
+          <label class="form-label" data-i18n="listing_qty">Quantity (kg) *</label>
+          <div class="input-wrapper">
+            <span class="input-icon">⚖️</span>
+            <input type="number" class="form-input" id="listing-qty" placeholder="e.g., 500" min="1" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="listing_price">Your Price (₹/kg) *</label>
+          <div class="input-wrapper">
+            <span class="input-icon">💰</span>
+            <input type="number" class="form-input" id="listing-price" placeholder="e.g., 32" min="1" step="0.5" required
+                   oninput="updatePriceComparison()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="listing_harvest">Harvest Date *</label>
+          <input type="date" class="form-input" id="harvest-date" required>
+        </div>
+      </div>
+
+      <!-- PRICE COMPARISON -->
+      <div id="price-comparison" class="price-meter mb-md" style="display:none">
+        <div class="price-meter-title">📊 Price Transparency</div>
+        <div class="price-meter-bar">
+          <div class="price-meter-farmer" id="pm-farmer-bar" style="width:65%"></div>
+          <div class="price-meter-platform" style="width:5%"></div>
+          <div class="price-meter-delivery" style="width:10%"></div>
+          <div class="price-meter-mandi-ghost" id="pm-mandi-ghost" style="width:20%"></div>
+        </div>
+        <div class="price-meter-labels">
+          <div class="price-meter-label"><span class="price-meter-dot" style="background:var(--c-green)"></span> You earn: ₹<span id="pm-farmer">0</span></div>
+          <div class="price-meter-label"><span class="price-meter-dot" style="background:#e0e0e0"></span> Mandi: ₹<span id="pm-mandi">0</span></div>
+          <div class="price-meter-label text-green font-bold">↑ <span id="pm-extra">0</span>% more!</div>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="form-group">
+        <label class="form-label">Description (Optional)</label>
+        <textarea class="form-textarea" id="listing-desc" placeholder="e.g., Organic, pesticide-free, Grade A quality. Freshly harvested yesterday." rows="3"></textarea>
+      </div>
+
+      <!-- PHOTO UPLOAD -->
+      <div class="form-group">
+        <label class="form-label" data-i18n="listing_photos">Photos *</label>
+        <div class="photo-upload-area" id="photo-upload-area" onclick="document.getElementById('photo-input').click()">
+          <div class="photo-upload-icon">📸</div>
+          <div class="photo-upload-text">Tap to add photos (max 4)</div>
+          <div class="photo-upload-hint">PNG, JPG up to 5MB each</div>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="handlePhotos(this.files)">
+        <div class="photo-previews" id="photo-previews"></div>
+        <div class="form-error" id="photo-error" style="display:none">Please add at least 1 photo</div>
+      </div>
+
+      <!-- LOCATION -->
+      <div class="form-group">
+        <label class="form-label" data-i18n="listing_location">Farm Location *</label>
+        <div class="flex gap-sm mb-sm">
+          <button class="btn btn-outline btn-sm" onclick="detectLocation()" id="detect-loc-btn">
+            📍 <span data-i18n="detect_location">Detect My Location</span>
+          </button>
+          <input type="text" class="form-input" id="location-text" placeholder="Or type your village/town" style="flex:1">
+        </div>
+        <div class="map-container map-container-sm" id="listing-map"></div>
+        <input type="hidden" id="listing-lat">
+        <input type="hidden" id="listing-lng">
+        <div class="form-error" id="location-error" style="display:none">Please set farm location</div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="flex gap-md mt-lg">
+        <button class="btn btn-primary btn-full" id="btn-publish" onclick="publishListing()">
+          🌾 Publish Listing
+        </button>
+        <button class="btn btn-ghost" onclick="location.href='dashboard.html'">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay hidden" id="success-modal">
+  <div class="modal text-center">
+    <div style="font-size:4rem;margin-bottom:var(--sp-md)">🎉</div>
+    <h2 class="modal-title" style="justify-content:center;margin-bottom:8px" data-i18n="listing_success">Listing Published!</h2>
+    <p class="text-muted mb-lg">Your produce is now visible to buyers. You'll be notified when someone orders!</p>
+    <div class="flex gap-md" style="justify-content:center">
+      <a href="marketplace.html" class="btn btn-primary">View in Marketplace</a>
+      <a href="list-item.html" class="btn btn-ghost">List Another</a>
+    </div>
+  </div>
+</div>
+
+<!-- CHATBOT -->
+<button id="chatbot-btn">🤖<div class="chatbot-badge" style="display:none">1</div></button>
+<div id="chatbot-panel" class="hidden">
+  <div class="chatbot-header"><div class="chatbot-avatar">🌾</div><div class="chatbot-info"><strong>KrishiBot</strong><span>Always Online</span></div><button class="chatbot-close" id="chatbot-close">✕</button></div>
+  <div class="chatbot-messages" id="chatbot-messages"></div>
+  <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+  <div class="chatbot-input-row"><input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything..."><button class="chatbot-send" id="chatbot-send">➤</button></div>
+</div>
+<div id="toast-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/voice.js"></script>
+<script>
+  initFirebase();
+  
+  let map, marker, selectedPhotos = [], selectedCropName = '';
+  const defaultLat = 19.0760, defaultLng = 72.8777;
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    requireAuth(user => {
+      initMap();
+      initChatbot();
+      document.getElementById('harvest-date').min = new Date().toISOString().split('T')[0];
+    });
+  });
+
+  function initMap() {
+    map = L.map('listing-map').setView([defaultLat, defaultLng], 12);
+    L.tileLayer(APP_CONFIG.mapTileUrl, { attribution: APP_CONFIG.mapAttribution, maxZoom: 19 }).addTo(map);
+    
+    marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
+    marker.bindPopup('📍 Your Farm Location').openPopup();
+    
+    document.getElementById('listing-lat').value = defaultLat;
+    document.getElementById('listing-lng').value = defaultLng;
+
+    marker.on('dragend', e => {
+      const { lat, lng } = e.target.getLatLng();
+      document.getElementById('listing-lat').value = lat;
+      document.getElementById('listing-lng').value = lng;
+    });
+
+    map.on('click', e => {
+      marker.setLatLng(e.latlng);
+      document.getElementById('listing-lat').value = e.latlng.lat;
+      document.getElementById('listing-lng').value = e.latlng.lng;
+    });
+  }
+
+  function selectCrop(crop) {
+    selectedCropName = crop;
+    document.querySelectorAll('.crop-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelector(`[data-crop="${crop}"]`)?.classList.add('selected');
+    document.getElementById('selected-crop').value = crop;
+    document.getElementById('crop-other-input').style.display = crop === 'other' ? 'block' : 'none';
+    document.getElementById('crop-error').style.display = 'none';
+
+    // Show AI hint
+    const prices = MOCK_PRICES[crop];
+    if (prices) {
+      document.getElementById('ai-hint-banner').style.display = 'flex';
+      document.getElementById('ai-hint-text').textContent = 
+        `Recent avg price for ${crop.charAt(0).toUpperCase()+crop.slice(1)} near you: ₹${prices.avg}/kg (Mandi: ₹${prices.mandi}/kg). You can earn more by listing here!`;
+      document.getElementById('use-ai-price').onclick = () => {
+        document.getElementById('listing-price').value = prices.avg;
+        updatePriceComparison();
+      };
+      updatePriceComparison();
+    }
+  }
+
+  function updatePriceComparison() {
+    const price = parseFloat(document.getElementById('listing-price').value);
+    const crop = document.getElementById('selected-crop').value;
+    if (!price || !crop) return;
+
+    const mandiData = MOCK_PRICES[crop];
+    const mandiPrice = mandiData?.mandi || price * 0.8;
+    const extraPct = Math.max(0, ((price - mandiPrice) / mandiPrice * 100)).toFixed(0);
+
+    document.getElementById('price-comparison').style.display = 'block';
+    document.getElementById('pm-farmer').textContent = price.toFixed(0);
+    document.getElementById('pm-mandi').textContent = mandiPrice.toFixed(0);
+    document.getElementById('pm-extra').textContent = extraPct;
+
+    // Update bars
+    const total = price + mandiPrice;
+    const farmerPct = Math.min(80, (price / (price * 1.4)) * 100);
+    document.getElementById('pm-farmer-bar').style.width = farmerPct + '%';
+    const mandiGhostPct = Math.max(0, 100 - farmerPct - 15);
+    document.getElementById('pm-mandi-ghost').style.width = mandiGhostPct + '%';
+  }
+
+  function toggleFPO(checked) {
+    document.getElementById('fpo-section').style.display = checked ? 'block' : 'none';
+  }
+
+  function detectLocation() {
+    const btn = document.getElementById('detect-loc-btn');
+    btn.textContent = '⏳ Detecting...';
+    if (!navigator.geolocation) { showToast('Geolocation not supported', 'error'); return; }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const { latitude, longitude } = pos.coords;
+        map.setView([latitude, longitude], 15);
+        marker.setLatLng([latitude, longitude]);
+        document.getElementById('listing-lat').value = latitude;
+        document.getElementById('listing-lng').value = longitude;
+        btn.textContent = '✅ Location Set';
+        showToast('📍 Location detected!', 'success');
+      },
+      err => {
+        btn.textContent = '📍 Detect Location';
+        showToast('Could not detect location', 'error');
+      }
+    );
+  }
+
+  function handlePhotos(files) {
+    const maxPhotos = 4;
+    const previews = document.getElementById('photo-previews');
+    
+    Array.from(files).slice(0, maxPhotos).forEach(file => {
+      if (selectedPhotos.length >= maxPhotos) return;
+      selectedPhotos.push(file);
+      const reader = new FileReader();
+      reader.onload = e => {
+        const div = document.createElement('div');
+        div.className = 'photo-preview-item';
+        div.innerHTML = `
+          <img src="${e.target.result}" alt="Preview">
+          <button class="photo-remove" onclick="removePhoto(${selectedPhotos.length - 1})">✕</button>
+        `;
+        previews.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function removePhoto(idx) {
+    selectedPhotos.splice(idx, 1);
+    const previews = document.getElementById('photo-previews');
+    previews.innerHTML = '';
+    selectedPhotos.forEach((file, i) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const div = document.createElement('div');
+        div.className = 'photo-preview-item';
+        div.innerHTML = `<img src="${e.target.result}" alt="Preview"><button class="photo-remove" onclick="removePhoto(${i})">✕</button>`;
+        previews.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function publishListing() {
+    // Validation
+    const crop = document.getElementById('selected-crop').value || (document.getElementById('crop-other-input').value.trim());
+    const qty = document.getElementById('listing-qty').value;
+    const price = document.getElementById('listing-price').value;
+    const harvestDate = document.getElementById('harvest-date').value;
+    const lat = document.getElementById('listing-lat').value;
+    const lng = document.getElementById('listing-lng').value;
+
+    if (!crop) { document.getElementById('crop-error').style.display = 'block'; return; }
+    if (!qty || !price) { showToast('Please fill quantity and price', 'error'); return; }
+    if (!harvestDate) { showToast('Please select harvest date', 'error'); return; }
+    if (selectedPhotos.length === 0) { document.getElementById('photo-error').style.display = 'block'; return; }
+
+    const btn = document.getElementById('btn-publish');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading-spinner" style="width:18px;height:18px;border-width:2px"></div> Publishing...';
+
+    try {
+      const user = auth.currentUser;
+      const profileDoc = await db.collection(COLLECTIONS.users).doc(user.uid).get();
+      const profile = profileDoc.data();
+
+      // Upload photos to Firebase Storage
+      const photoURLs = [];
+      for (const photo of selectedPhotos) {
+        const ref = storage.ref(`listings/${user.uid}/${Date.now()}_${photo.name}`);
+        await ref.put(photo);
+        const url = await ref.getDownloadURL();
+        photoURLs.push(url);
+      }
+
+      // Create listing document
+      const isFPO = document.getElementById('is-fpo-listing').checked;
+      const listingData = {
+        farmerId: user.uid,
+        farmerName: profile.name || 'Farmer',
+        farmerPhone: profile.phone || '',
+        farmerRating: profile.rating || 0,
+        crop: crop.charAt(0).toUpperCase() + crop.slice(1),
+        qty: parseFloat(qty),
+        price: parseFloat(price),
+        harvestDate: firebase.firestore.Timestamp.fromDate(new Date(harvestDate)),
+        description: document.getElementById('listing-desc').value.trim(),
+        photos: photoURLs,
+        location: new firebase.firestore.GeoPoint(parseFloat(lat), parseFloat(lng)),
+        locationText: document.getElementById('location-text').value || '',
+        status: 'active',
+        views: 0,
+        orders: 0,
+        isFPO,
+        fpoName: isFPO ? document.getElementById('fpo-name').value : '',
+        fpoFarmerCount: isFPO ? parseInt(document.getElementById('fpo-farmer-count').value || 1) : 1,
+        mandiRate: MOCK_PRICES[crop.toLowerCase()]?.mandi || parseFloat(price) * 0.85,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      await db.collection(COLLECTIONS.listings).add(listingData);
+
+      // Add to price history
+      const today = new Date().toISOString().split('T')[0];
+      await db.collection(COLLECTIONS.priceHistory).doc(crop.toLowerCase())
+        .collection('daily').doc(today).set({
+          date: today,
+          avgPrice: parseFloat(price),
+          quantity: parseFloat(qty),
+          region: document.getElementById('location-text').value || 'unknown'
+        }, { merge: true });
+
+      // Notification
+      await db.collection(COLLECTIONS.notifications).add({
+        userId: user.uid,
+        title: `🌾 Listing Published!`,
+        body: `Your ${crop} listing is now live. Buyers can see it!`,
+        icon: '✅',
+        read: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      document.getElementById('success-modal').classList.remove('hidden');
+    } catch (e) {
+      showToast('Error publishing: ' + e.message, 'error');
+      btn.disabled = false;
+      btn.innerHTML = '🌾 Publish Listing';
+    }
+  }
+</script>
+</body>
+</html>

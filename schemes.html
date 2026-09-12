@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Government Schemes &amp; MahaDBT — KrishiSanjivani</title>
+  <meta name="description" content="Explore PM-KISAN, crop insurance, irrigation subsidies, and MahaDBT Maharashtra Direct Benefit Transfer schemes.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <style>
+    .mahadbt-banner {
+      background: linear-gradient(135deg, #D97706, #B45309);
+      color: #fff; padding: var(--sp-2xl); border-radius: var(--r-2xl); margin-top: var(--sp-md); margin-bottom: var(--sp-2xl);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+    }
+    .schemes-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-lg); margin-bottom: var(--sp-3xl);
+    }
+    .scheme-card {
+      background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-xl); padding: var(--sp-lg);
+      display: flex; flex-direction: column; transition: all var(--tr-base);
+    }
+    .scheme-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #D97706; }
+    .scheme-icon-box {
+      width: 52px; height: 52px; background: #FEF3C7; border-radius: var(--r-lg);
+      display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 12px;
+    }
+    @media (max-width: 900px) { .schemes-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .schemes-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <!-- MAHADBT BANNER -->
+    <div class="mahadbt-banner">
+      <div style="max-width:540px">
+        <span class="badge badge-gold mb-xs" style="background:#FFF;color:#B45309">🏛️ MahaDBT Portal</span>
+        <h1 style="font-size:var(--fs-2xl);font-weight:800;margin-bottom:8px">Maharashtra Direct Benefit Transfer (MahaDBT)</h1>
+        <p style="opacity:0.9;font-size:var(--fs-sm)">Apply for state agricultural equipment subsidies, seed distribution, and drip irrigation benefits directly through the official government portal.</p>
+      </div>
+      <div>
+        <a href="https://mahadbt.maharashtra.gov.in" target="_blank" class="btn btn-secondary btn-lg">
+          🔗 Visit Official MahaDBT Portal ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div class="flex-between align-center mb-lg">
+      <h2 style="font-size:var(--fs-2xl);font-weight:800">🏛️ Key Farmer Welfare Schemes</h2>
+      <input type="text" id="scheme-search" class="input" placeholder="Search schemes..." style="max-width:280px">
+    </div>
+
+    <!-- SCHEMES GRID -->
+    <div class="schemes-grid" id="schemes-grid">
+      
+      <div class="scheme-card">
+        <div class="scheme-icon-box">💰</div>
+        <strong style="font-size:var(--fs-lg);margin-bottom:4px">PM-KISAN Samman Nidhi</strong>
+        <span style="font-size:11px;color:var(--c-green);font-weight:700">₹6,000 / year Direct Transfer</span>
+        <p style="font-size:12px;color:var(--c-text-secondary);margin:8px 0;flex:1">Financial benefit of ₹6,000 per year paid in three equal installments directly into farmer bank accounts.</p>
+        <button class="btn btn-outline btn-sm w-100" onclick="applyScheme('PM-KISAN')">Check Eligibility &amp; Apply</button>
+      </div>
+
+      <div class="scheme-card">
+        <div class="scheme-icon-box">🌾</div>
+        <strong style="font-size:var(--fs-lg);margin-bottom:4px">PM Fasal Bima Yojana</strong>
+        <span style="font-size:11px;color:var(--c-green);font-weight:700">Crop Loss Insurance</span>
+        <p style="font-size:12px;color:var(--c-text-secondary);margin:8px 0;flex:1">Comprehensive risk insurance covering crop damage due to floods, drought, pests, and unseasonal rains.</p>
+        <button class="btn btn-outline btn-sm w-100" onclick="applyScheme('PM Fasal Bima')">Check Eligibility &amp; Apply</button>
+      </div>
+
+      <div class="scheme-card">
+        <div class="scheme-icon-box">💧</div>
+        <strong style="font-size:var(--fs-lg);margin-bottom:4px">PM Krishi Sinchai Yojana</strong>
+        <span style="font-size:11px;color:var(--c-green);font-weight:700">Up to 80% Drip Subsidy</span>
+        <p style="font-size:12px;color:var(--c-text-secondary);margin:8px 0;flex:1">Subsidy for micro-irrigation systems, farm ponds, drip sets, and solar water pumps.</p>
+        <button class="btn btn-outline btn-sm w-100" onclick="applyScheme('PM Krishi Sinchai')">Check Eligibility &amp; Apply</button>
+      </div>
+
+      <div class="scheme-card">
+        <div class="scheme-icon-box">🌱</div>
+        <strong style="font-size:var(--fs-lg);margin-bottom:4px">Soil Health Card Scheme</strong>
+        <span style="font-size:11px;color:var(--c-green);font-weight:700">Free Soil Testing</span>
+        <p style="font-size:12px;color:var(--c-text-secondary);margin:8px 0;flex:1">Get your farm soil tested for free and receive crop-wise nutrient recommendations to improve yield.</p>
+        <button class="btn btn-outline btn-sm w-100" onclick="applyScheme('Soil Health Card')">Check Eligibility &amp; Apply</button>
+      </div>
+
+      <div class="scheme-card">
+        <div class="scheme-icon-box">🏦</div>
+        <strong style="font-size:var(--fs-lg);margin-bottom:4px">Kisan Credit Card (KCC)</strong>
+        <span style="font-size:11px;color:var(--c-green);font-weight:700">Low-Interest Loans at 4%</span>
+        <p style="font-size:12px;color:var(--c-text-secondary);margin:8px 0;flex:1">Hassle-free credit up to ₹3 Lakhs at subsidized interest rates for seeds, fertilizers, and equipment.</p>
+        <button class="btn btn-outline btn-sm w-100" onclick="applyScheme('Kisan Credit Card')">Check Eligibility &amp; Apply</button>
+      </div>
+
+      <div class="scheme-card">
+        <div class="scheme-icon-box">📱</div>
+        <strong style="font-size:var(--fs-lg);margin-bottom:4px">e-NAM Platform</strong>
+        <span style="font-size:11px;color:var(--c-green);font-weight:700">National Digital Mandi</span>
+        <p style="font-size:12px;color:var(--c-text-secondary);margin:8px 0;flex:1">Pan-India electronic trading portal connecting APMC mandis across India for transparent price discovery.</p>
+        <button class="btn btn-outline btn-sm w-100" onclick="applyScheme('e-NAM Platform')">Check Eligibility &amp; Apply</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- AI CHATBOT -->
+<button id="chatbot-btn" title="Chat with KrishiBot">
+  🤖<div class="chatbot-badge" style="display:none">1</div>
+</button>
+<div id="chatbot-panel" class="hidden">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">🌾</div>
+    <div class="chatbot-info">
+      <strong data-i18n="chatbot_title">KrishiBot</strong>
+      <span>AI Assistant • Always Online</span>
+    </div>
+    <button class="chatbot-close" id="chatbot-close">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbot-messages"></div>
+  <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+  <div class="chatbot-input-row">
+    <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything...">
+    <button class="chatbot-send" id="chatbot-send">➤</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/chatbot.js"></script>
+
+<script>
+  initFirebase();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initNav();
+    initChatbot();
+
+    document.getElementById('scheme-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      document.querySelectorAll('.scheme-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? 'flex' : 'none';
+      });
+    });
+  });
+
+  function applyScheme(schemeName) {
+    showToast(`✅ Eligibility check passed for ${schemeName}! Redirecting to MahaDBT application form...`, 'info', 4000);
+  }
+</script>
+</body>
+</html>

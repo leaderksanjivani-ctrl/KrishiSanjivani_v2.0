@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tax Invoice — KrishiSanjivani</title>
+  <meta name="description" content="Official tax invoice and payment receipt for KrishiSanjivani produce orders.">
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    .invoice-card {
+      max-width: 720px;
+      margin: 40px auto var(--sp-3xl);
+      background: #fff;
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-2xl);
+      padding: var(--sp-2xl);
+      box-shadow: var(--shadow-xl);
+      color: #000;
+    }
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--c-green);
+      padding-bottom: var(--sp-lg);
+      margin-bottom: var(--sp-lg);
+    }
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--sp-lg) 0;
+    }
+    .invoice-table th, .invoice-table td {
+      padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 13px;
+    }
+    .invoice-table th { background: #f8fafc; font-weight: 700; }
+    .inv-total-row { font-weight: 800; font-size: 16px; background: #f0fdf4; }
+
+    @media print {
+      body { background: #fff; }
+      #main-nav, .no-print { display: none !important; }
+      .invoice-card { border: none; box-shadow: none; margin: 0; width: 100%; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav" class="no-print">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+    <a href="order-tracking.html" class="btn btn-primary btn-sm" id="inv-track-link">🚚 Track Order</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <div class="invoice-card">
+      <!-- HEADER -->
+      <div class="invoice-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:1.5rem;font-weight:800;color:var(--c-green-dark)">
+            🌾 KrishiSanjivani
+          </div>
+          <p style="font-size:11px;color:#64748b;margin-top:2px">Direct Farm-to-Fork Digital Platform · Govt of India Initiative</p>
+        </div>
+        <div style="text-align:right">
+          <h2 style="font-size:18px;color:#0f172a;margin-bottom:2px">TAX INVOICE</h2>
+          <div style="font-size:12px;color:#64748b">Invoice #: <strong id="inv-id">INV-882910</strong></div>
+          <div style="font-size:12px;color:#64748b">Date: <span id="inv-date">12 Sep 2026</span></div>
+          <div style="margin-top:4px"><span class="badge badge-green">✓ PAID</span></div>
+        </div>
+      </div>
+
+      <!-- BUYER & SELLER ADDRESS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px;font-size:13px">
+        <div style="background:#f8fafc;padding:12px;border-radius:8px">
+          <strong style="color:#0f172a;display:block;margin-bottom:4px">🧑 Buyer Details:</strong>
+          <div id="inv-buyer-name">Anand Shinde</div>
+          <div id="inv-buyer-phone">📞 +91 9876543210</div>
+          <div id="inv-buyer-addr">Flat 302, Kothrud, Pune, Maharashtra</div>
+        </div>
+        <div style="background:#f8fafc;padding:12px;border-radius:8px">
+          <strong style="color:#0f172a;display:block;margin-bottom:4px">👨‍🌾 Farmer / Producer:</strong>
+          <div id="inv-farmer-name">Raju Patil (Nashik)</div>
+          <div>Verified KrishiSanjivani Farmer</div>
+          <div>Mandi Hub: Nashik Central</div>
+        </div>
+      </div>
+
+      <!-- ITEMS TABLE -->
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>Item / Crop</th>
+            <th>Qty</th>
+            <th>Farmer Rate</th>
+            <th style="text-align:right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody id="inv-items-body">
+          <!-- Populated by JS -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align:right">Produce Subtotal:</td>
+            <td style="text-align:right" id="inv-subtotal">₹150.00</td>
+          </tr>
+          <tr>
+            <td colspan="3" style="text-align:right">Platform Service Fee (2%):</td>
+            <td style="text-align:right" id="inv-fee">₹3.00</td>
+          </tr>
+          <tr>
+            <td colspan="3" style="text-align:right">Direct Delivery Charge:</td>
+            <td style="text-align:right" id="inv-delivery">₹30.00</td>
+          </tr>
+          <tr class="inv-total-row">
+            <td colspan="3" style="text-align:right">Grand Total Paid:</td>
+            <td style="text-align:right;color:var(--c-green-dark)" id="inv-total">₹183.00</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <!-- IMPACT HIGHLIGHT -->
+      <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid var(--c-green);padding:16px;border-radius:12px;margin-top:20px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <strong style="color:var(--c-green-dark);font-size:13px;display:block">💚 Direct Trade Impact Summary:</strong>
+          <span style="font-size:12px;color:#166534">You saved <strong id="inv-saved">₹45</strong> compared to traditional Mandi retail stores!</span>
+        </div>
+        <div style="font-size:1.8rem">🌱</div>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="border-top:1px solid #e2e8f0;margin-top:24px;padding-top:16px;font-size:11px;color:#94a3b8;text-align:center">
+        Thank you for supporting Indian farmers directly! · KrishiSanjivani SIH 2026
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('orderId') || 'ORD-882910';
+    document.getElementById('inv-id').textContent = orderId;
+    document.getElementById('inv-date').textContent = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+    document.getElementById('inv-track-link').href = `order-tracking.html?id=${orderId}`;
+
+    const storedOrder = localStorage.getItem('ks_current_order');
+    if (storedOrder) {
+      const order = JSON.parse(storedOrder);
+      renderInvoiceData(order);
+    } else {
+      renderInvoiceData({
+        id: orderId,
+        buyerName: 'Anand Shinde',
+        buyerPhone: '+91 9876543210',
+        buyerAddress: 'Flat 302, Kothrud, Pune, Maharashtra',
+        items: [{ crop: 'Tomato', qty: 5, price: 30 }],
+        subtotal: 150,
+        fee: 3,
+        delivery: 30,
+        amount: 183
+      });
+    }
+  });
+
+  function renderInvoiceData(order) {
+    document.getElementById('inv-buyer-name').textContent = order.buyerName || 'Anand Shinde';
+    document.getElementById('inv-buyer-phone').textContent = `📞 ${order.buyerPhone || '+91 9876543210'}`;
+    document.getElementById('inv-buyer-addr').textContent = order.buyerAddress || 'Pune, Maharashtra';
+
+    const items = order.items || [{ crop: 'Produce Item', qty: 5, price: 30 }];
+    document.getElementById('inv-items-body').innerHTML = items.map(i => `
+      <tr>
+        <td><strong>${i.crop}</strong></td>
+        <td>${i.qty} kg</td>
+        <td>₹${i.price}/kg</td>
+        <td style="text-align:right">₹${i.price * i.qty}.00</td>
+      </tr>
+    `).join('');
+
+    const subtotal = order.subtotal || 150;
+    const fee = order.fee || Math.round(subtotal * 0.02);
+    const delivery = order.delivery !== undefined ? order.delivery : 30;
+    const total = order.amount || (subtotal + fee + delivery);
+    const saved = Math.round(subtotal * 0.25);
+
+    document.getElementById('inv-subtotal').textContent = `₹${subtotal}.00`;
+    document.getElementById('inv-fee').textContent = `₹${fee}.00`;
+    document.getElementById('inv-delivery').textContent = delivery === 0 ? 'FREE' : `₹${delivery}.00`;
+    document.getElementById('inv-total').textContent = `₹${total}.00`;
+    document.getElementById('inv-saved').textContent = `₹${saved}`;
+  }
+</script>
+</body>
+</html>

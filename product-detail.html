@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details — KrishiSanjivani</title>
+  <meta name="description" content="View fresh produce details, farmer information, price breakdown vs traditional mandi, and buy direct.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    .product-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-2xl);
+      margin-top: var(--sp-lg);
+      margin-bottom: var(--sp-3xl);
+    }
+    .product-gallery {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-2xl);
+      padding: var(--sp-xl);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 360px;
+      position: relative;
+    }
+    .product-hero-emoji { font-size: 8rem; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1)); }
+    .product-hero-img { width: 100%; max-height: 320px; object-fit: cover; border-radius: var(--r-xl); }
+    
+    .price-breakdown-box {
+      background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+      border: 1.5px solid var(--c-green);
+      border-radius: var(--r-xl);
+      padding: var(--sp-lg);
+      margin: var(--sp-md) 0;
+    }
+    .price-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 0; border-bottom: 1px dashed rgba(19,136,8,0.2); font-size: var(--fs-sm);
+    }
+    .price-row:last-child { border-bottom: none; }
+    
+    .farmer-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-md);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      margin-bottom: var(--sp-lg);
+    }
+    .farmer-avatar {
+      width: 54px; height: 54px; background: var(--c-green-light); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+    }
+
+    #farm-map { height: 180px; border-radius: var(--r-lg); border: 1px solid var(--c-border); margin-top: 8px; }
+
+    @media (max-width: 768px) {
+      .product-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="marketplace.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="cart.html" class="nav-btn" title="Cart">
+      🛒 <span class="nav-badge cart-badge" id="cart-badge" style="display:none">0</span>
+    </a>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+
+    <!-- BREADCRUMB -->
+    <div style="padding:16px 0;font-size:13px;color:var(--c-text-muted)">
+      <a href="marketplace.html" style="color:var(--c-green);font-weight:600">← Back to Marketplace</a>
+      <span> / </span>
+      <span id="breadcrumb-crop">Produce Details</span>
+    </div>
+
+    <!-- PRODUCT DETAIL GRID -->
+    <div class="product-layout">
+
+      <!-- LEFT COLUMN: IMAGE & MAP -->
+      <div>
+        <div class="product-gallery" id="product-gallery">
+          <span class="product-hero-emoji" id="p-emoji">🍅</span>
+          <span class="badge badge-green" style="position:absolute;top:16px;left:16px">Direct Farm Fresh</span>
+          <span class="badge badge-gold" id="p-fpo-badge" style="position:absolute;top:16px;right:16px;display:none">✓ Verified FPO</span>
+        </div>
+
+        <!-- FARM LOCATION MAP -->
+        <div style="margin-top:var(--sp-lg)">
+          <h3 style="font-size:var(--fs-base);font-weight:700">📍 Farm Origin &amp; Location</h3>
+          <p style="font-size:var(--fs-xs);color:var(--c-text-muted)" id="p-location-text">Nashik District, Maharashtra (12 km away)</p>
+          <div id="farm-map"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: DETAILS & BUY ACTIONS -->
+      <div>
+        <div class="flex-between align-center">
+          <span class="badge badge-blue" id="p-delivery-type">⚡ Delivery Now Available</span>
+          <button class="btn btn-ghost btn-sm" id="voice-read-btn">🔊 Read Aloud</button>
+        </div>
+
+        <h1 id="p-crop" style="font-size:var(--fs-3xl);font-weight:800;margin-top:8px">Fresh Farm Tomato</h1>
+        <p style="font-size:var(--fs-sm);color:var(--c-text-secondary);margin-bottom:var(--sp-md)">
+          Harvested 6 hours ago. Grown with natural organic practices. Guaranteed high quality.
+        </p>
+
+        <!-- FARMER INFO -->
+        <div class="farmer-card">
+          <div class="farmer-avatar" id="f-avatar">👨‍🌾</div>
+          <div style="flex:1">
+            <strong id="f-name">Raju Patil</strong>
+            <div style="font-size:12px;color:var(--c-text-muted)">
+              <span>⭐ 4.8 (42 reviews)</span> · <span id="f-village">Nashik, Maharashtra</span>
+            </div>
+            <div style="font-size:11px;color:var(--c-green);margin-top:2px">✓ Verified KrishiSanjivani Farmer</div>
+          </div>
+          <a href="tel:18001234567" class="btn btn-outline btn-sm">📞 Call</a>
+        </div>
+
+        <!-- PRICE & TRANSPARENCY BOX -->
+        <div class="price-breakdown-box">
+          <div class="flex-between align-center">
+            <div>
+              <span style="font-size:var(--fs-xs);color:var(--c-text-muted);display:block">Direct Price</span>
+              <strong style="font-size:var(--fs-2xl);color:var(--c-green)" id="p-price">₹30</strong>
+              <span style="font-size:var(--fs-xs);color:var(--c-text-muted)">/ kg</span>
+            </div>
+            <div style="text-align:right">
+              <span class="savings-chip" id="p-saving-chip">↓ 21% cheaper vs Mandi</span>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;padding-top:8px;border-top:1px solid rgba(19,136,8,0.2)">
+            <div class="price-row">
+              <span>🌾 Direct Farmer Price:</span>
+              <strong id="price-direct-val">₹30.00/kg</strong>
+            </div>
+            <div class="price-row">
+              <span>🏬 Old Mandi Retail Rate:</span>
+              <span style="text-decoration:line-through;color:var(--c-text-muted)" id="price-mandi-val">₹38.00/kg</span>
+            </div>
+            <div class="price-row">
+              <span>💚 Farmer Earns:</span>
+              <strong style="color:var(--c-green)">₹27.00 (+62% vs Mandi ₹18)</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUANTITY SELECTOR -->
+        <div style="margin:var(--sp-lg) 0">
+          <label style="font-weight:700;font-size:var(--fs-sm);display:block;margin-bottom:8px">
+            Select Quantity (Available: <span id="p-stock">250</span> kg)
+          </label>
+          <div class="flex align-center gap-md">
+            <div style="display:flex;align-items:center;border:1.5px solid var(--c-border);border-radius:var(--r-lg);overflow:hidden;background:#fff">
+              <button onclick="adjustQty(-1)" style="padding:10px 16px;border:none;background:none;font-weight:bold;cursor:pointer">-</button>
+              <input type="number" id="qty-input" value="5" min="1" max="250" style="width:60px;text-align:center;border:none;font-weight:bold;font-size:16px;outline:none">
+              <button onclick="adjustQty(1)" style="padding:10px 16px;border:none;background:none;font-weight:bold;cursor:pointer">+</button>
+            </div>
+            <div style="font-size:var(--fs-lg);font-weight:800;color:var(--c-text-primary)">
+              Total: <span id="subtotal-val" style="color:var(--c-green)">₹150</span>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--c-blue);margin-top:6px" id="bulk-hint">
+            💡 Bulk order of 50kg+ gets 5% additional discount!
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="flex gap-md mt-xl">
+          <button class="btn btn-primary btn-lg" style="flex:1" id="add-to-cart-btn">
+            🛒 Add to Cart
+          </button>
+          <button class="btn btn-secondary btn-lg" style="flex:1" id="buy-now-btn">
+            ⚡ Buy Now
+          </button>
+        </div>
+
+        <!-- QUALITY GUARANTEE -->
+        <div style="margin-top:var(--sp-xl);padding:var(--sp-md);background:var(--c-surface);border-radius:var(--r-lg);border:1px solid var(--c-border);display:flex;gap:12px;align-items:center">
+          <span style="font-size:2rem">🛡️</span>
+          <div style="font-size:12px;color:var(--c-text-secondary)">
+            <strong>KrishiSanjivani Quality Guarantee</strong><br>
+            Direct farm inspection. 100% fresh or full refund within 24 hours of delivery.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/voice.js"></script>
+
+<script>
+  initFirebase();
+
+  let itemData = null;
+  let map = null;
+
+  const MOCK_ITEM = {
+    id: 'm1', crop: 'Tomato', farmerName: 'Raju Patil', location: 'Nashik, Maharashtra', price: 30, mandiPrice: 38, qty: 250, unit: 'kg', isFPO: false, deliveryNow: true, rating: 4.8, lat: 20.0000, lng: 73.7800
+  };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initNav();
+    updateCartBadge();
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id') || 'm1';
+
+    await loadItemDetails(id);
+
+    // Quantity change event
+    document.getElementById('qty-input').addEventListener('input', updateSubtotal);
+
+    // Actions
+    document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+      addToCartAndNotify(false);
+    });
+    document.getElementById('buy-now-btn').addEventListener('click', () => {
+      addToCartAndNotify(true);
+    });
+
+    document.getElementById('voice-read-btn').addEventListener('click', () => {
+      readAloud(`${itemData.crop} listed by ${itemData.farmerName} at ₹${itemData.price} per kg.`);
+    });
+  });
+
+  async function loadItemDetails(id) {
+    try {
+      const doc = await db.collection(COLLECTIONS.listings).doc(id).get();
+      if (doc.exists) {
+        itemData = { id: doc.id, ...doc.data() };
+      } else {
+        itemData = MOCK_ITEM;
+      }
+    } catch (e) {
+      console.warn('Doc fetch error, using mock:', e);
+      itemData = MOCK_ITEM;
+    }
+
+    renderItemDetails();
+  }
+
+  function renderItemDetails() {
+    const d = itemData;
+    document.title = `${d.crop} — KrishiSanjivani`;
+    document.getElementById('breadcrumb-crop').textContent = d.crop;
+    document.getElementById('p-crop').textContent = `Fresh Farm ${d.crop}`;
+    document.getElementById('p-price').textContent = `₹${d.price}`;
+    document.getElementById('p-stock').textContent = d.qty;
+    document.getElementById('f-name').textContent = d.farmerName || 'Farmer';
+    document.getElementById('f-village').textContent = d.location || 'Local Farm';
+    document.getElementById('p-location-text').textContent = `${d.location || 'Nashik District, Maharashtra'} (Direct Farm)`;
+
+    const mandi = d.mandiPrice || Math.round(d.price * 1.25);
+    const saving = Math.round(((mandi - d.price) / mandi) * 100);
+    document.getElementById('p-saving-chip').textContent = `↓ ${saving}% cheaper vs Mandi`;
+    document.getElementById('price-direct-val').textContent = `₹${d.price}.00/kg`;
+    document.getElementById('price-mandi-val').textContent = `₹${mandi}.00/kg`;
+
+    if (d.photos?.[0]) {
+      document.getElementById('product-gallery').innerHTML = `<img src="${d.photos[0]}" class="product-hero-img" alt="${d.crop}">`;
+    } else {
+      document.getElementById('p-emoji').textContent = getCropEmoji(d.crop);
+    }
+
+    if (d.isFPO) document.getElementById('p-fpo-badge').style.display = 'inline-block';
+    if (!d.deliveryNow) document.getElementById('p-delivery-type').textContent = '📅 Scheduled Delivery';
+
+    updateSubtotal();
+    initFarmMap(d.lat || 20.0000, d.lng || 73.7800);
+  }
+
+  function adjustQty(delta) {
+    const input = document.getElementById('qty-input');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    if (val > itemData.qty) val = itemData.qty;
+    input.value = val;
+    updateSubtotal();
+  }
+
+  function updateSubtotal() {
+    const qty = parseInt(document.getElementById('qty-input').value) || 1;
+    let price = itemData ? itemData.price : 30;
+    if (qty >= 50) price = Math.round(price * 0.95); // 5% bulk discount
+    const total = qty * price;
+    document.getElementById('subtotal-val').textContent = `₹${total}`;
+  }
+
+  function addToCartAndNotify(redirect) {
+    const qty = parseInt(document.getElementById('qty-input').value) || 1;
+    const cart = JSON.parse(localStorage.getItem('ks_cart') || '[]');
+    const existing = cart.find(i => i.listingId === itemData.id);
+    if (existing) existing.qty += qty;
+    else cart.push({ listingId: itemData.id, crop: itemData.crop, price: itemData.price, qty: qty });
+    localStorage.setItem('ks_cart', JSON.stringify(cart));
+    updateCartBadge();
+    showToast(`✅ ${qty}kg ${itemData.crop} added!`, 'success');
+    if (redirect) location.href = 'cart.html';
+  }
+
+  function updateCartBadge() {
+    const cart = JSON.parse(localStorage.getItem('ks_cart') || '[]');
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    const badge = document.getElementById('cart-badge');
+    if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+  }
+
+  function initFarmMap(lat, lng) {
+    if (map) return;
+    map = L.map('farm-map').setView([lat, lng], 11);
+    L.tileLayer(APP_CONFIG.mapTileUrl, { attribution: APP_CONFIG.mapAttribution }).addTo(map);
+    L.marker([lat, lng]).addTo(map).bindPopup(`<strong>🌾 Farm Location</strong><br>${itemData.location}`).openPopup();
+  }
+
+  function getCropEmoji(crop) {
+    const map = { tomato:'🍅', onion:'🧅', potato:'🥔', wheat:'🌾', rice:'🍚', sugarcane:'🌿', cotton:'🌸', soybean:'🫘', maize:'🌽', groundnut:'🥜', banana:'🍌', mango:'🥭' };
+    return map[crop?.toLowerCase()] || '🌿';
+  }
+</script>
+</body>
+</html>

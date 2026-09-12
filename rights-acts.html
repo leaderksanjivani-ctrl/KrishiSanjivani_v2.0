@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Rights &amp; Acts — KrishiSanjivani</title>
+  <meta name="description" content="Understand your legal rights as a farmer in plain language — MSP guarantee, APMC laws, contract farming, and land rights.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <style>
+    .rights-hero {
+      background: linear-gradient(135deg, #831843, #BE185D);
+      color: #fff; padding: var(--sp-2xl); border-radius: var(--r-2xl); margin-top: var(--sp-md); margin-bottom: var(--sp-2xl);
+    }
+    .acts-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-lg); margin-bottom: var(--sp-3xl);
+    }
+    .act-card {
+      background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-xl); padding: var(--sp-xl);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .act-header { display: flex; align-items: center; gap: 12px; }
+    .act-icon {
+      width: 52px; height: 52px; background: #FCE7F3; color: #9D174D; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0;
+    }
+    @media (max-width: 800px) { .acts-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <!-- HERO -->
+    <div class="rights-hero">
+      <div style="max-width:620px">
+        <span class="badge badge-gold mb-xs" style="background:#FFF;color:#9D174D">📜 Know Your Rights</span>
+        <h1 style="font-size:var(--fs-3xl);font-weight:800;margin-bottom:8px">Farmer Rights &amp; Legal Protections</h1>
+        <p style="opacity:0.9;font-size:var(--fs-sm)">Simplified legal guidance in plain language — understand your MSP rights, direct sale freedoms, and land protections without complex jargon.</p>
+      </div>
+    </div>
+
+    <!-- ACTS GRID -->
+    <div class="acts-grid">
+      
+      <div class="act-card">
+        <div class="act-header">
+          <div class="act-icon">⚖️</div>
+          <div>
+            <h3 style="font-size:var(--fs-lg);font-weight:800">MSP Guarantee Rights</h3>
+            <span style="font-size:11px;color:#9D174D;font-weight:700">Minimum Support Price Protections</span>
+          </div>
+        </div>
+        <p style="font-size:var(--fs-sm);color:var(--c-text-secondary);line-height:1.6">
+          The government sets MSP for 22 mandated crops. If market rates drop below MSP during harvest season, government agencies are obligated to purchase at MSP rates.
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="readAloud('MSP Guarantee Rights protect farmers against price drops below government floor prices.')">
+          🔊 Listen Explanation
+        </button>
+      </div>
+
+      <div class="act-card">
+        <div class="act-header">
+          <div class="act-icon">🤝</div>
+          <div>
+            <h3 style="font-size:var(--fs-lg);font-weight:800">Direct Sale Freedom (APMC Reform)</h3>
+            <span style="font-size:11px;color:#9D174D;font-weight:700">Right to Sell Anywhere</span>
+          </div>
+        </div>
+        <p style="font-size:var(--fs-sm);color:var(--c-text-secondary);line-height:1.6">
+          Farmers are legally free to sell their produce directly to consumers, bulk buyers, or via digital platforms like KrishiSanjivani without paying mandatory middleman commissions at local APMC mandis.
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="readAloud('Direct Sale Freedom gives you the right to sell produce directly to buyers without middleman fees.')">
+          🔊 Listen Explanation
+        </button>
+      </div>
+
+      <div class="act-card">
+        <div class="act-header">
+          <div class="act-icon">📋</div>
+          <div>
+            <h3 style="font-size:var(--fs-lg);font-weight:800">Contract Farming Act</h3>
+            <span style="font-size:11px;color:#9D174D;font-weight:700">Written Price Agreement Protections</span>
+          </div>
+        </div>
+        <p style="font-size:var(--fs-sm);color:var(--c-text-secondary);line-height:1.6">
+          Under contract farming regulations, written contracts must specify pre-agreed purchase prices. Buyers cannot refuse produce or reduce prices after harvest if quality standards are met.
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="readAloud('Contract Farming Act protects farmers with written price agreements prior to sowing.')">
+          🔊 Listen Explanation
+        </button>
+      </div>
+
+      <div class="act-card">
+        <div class="act-header">
+          <div class="act-icon">🏦</div>
+          <div>
+            <h3 style="font-size:var(--fs-lg);font-weight:800">Debt Relief &amp; Money Lending Act</h3>
+            <span style="font-size:11px;color:#9D174D;font-weight:700">Protection Against Illegal Lenders</span>
+          </div>
+        </div>
+        <p style="font-size:var(--fs-sm);color:var(--c-text-secondary);line-height:1.6">
+          Unlicensed money lenders charging exorbitant interest rates are illegal. Farmers have the right to restructure institutional farm loans under state debt relief schemes.
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="readAloud('Debt Relief Act protects farmers from illegal money lenders and provides loan restructuring.')">
+          🔊 Listen Explanation
+        </button>
+      </div>
+
+    </div>
+
+    <!-- LEGAL HELPLINE -->
+    <div style="background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r-2xl);padding:var(--sp-xl);margin-bottom:var(--sp-3xl);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div>
+        <h3 style="font-size:var(--fs-xl);font-weight:800">📞 Need Free Legal Advice?</h3>
+        <p style="font-size:13px;color:var(--c-text-secondary)">Contact National Legal Services Authority (NALSA) Farmer Legal Aid</p>
+      </div>
+      <a href="tel:15100" class="btn btn-primary btn-lg">📞 Dial Toll-Free 15100</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- AI CHATBOT -->
+<button id="chatbot-btn" title="Chat with KrishiBot">
+  🤖<div class="chatbot-badge" style="display:none">1</div>
+</button>
+<div id="chatbot-panel" class="hidden">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">🌾</div>
+    <div class="chatbot-info">
+      <strong data-i18n="chatbot_title">KrishiBot</strong>
+      <span>AI Assistant • Always Online</span>
+    </div>
+    <button class="chatbot-close" id="chatbot-close">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbot-messages"></div>
+  <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+  <div class="chatbot-input-row">
+    <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything...">
+    <button class="chatbot-send" id="chatbot-send">➤</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/chatbot.js"></script>
+
+<script>
+  initFirebase();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initNav();
+    initChatbot();
+  });
+</script>
+</body>
+</html>

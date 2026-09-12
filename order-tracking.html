@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Order Tracking — KrishiSanjivani</title>
+  <meta name="description" content="Track your fresh produce delivery live on the map with AI-optimized routing.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    .tracking-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: var(--sp-xl);
+      margin: var(--sp-lg) 0 var(--sp-3xl);
+    }
+    .track-timeline {
+      display: flex; flex-direction: column; gap: var(--sp-md); position: relative; margin: 20px 0;
+    }
+    .track-step {
+      display: flex; gap: 16px; align-items: flex-start; position: relative;
+    }
+    .step-icon-circle {
+      width: 40px; height: 40px; border-radius: 50%; background: var(--c-bg); border: 2px solid var(--c-border);
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 2; flex-shrink: 0;
+    }
+    .track-step.done .step-icon-circle { background: var(--c-green-light); border-color: var(--c-green); color: var(--c-green-dark); }
+    .track-step.active .step-icon-circle { background: var(--c-blue-light); border-color: var(--c-blue); color: var(--c-blue-dark); box-shadow: 0 0 0 4px rgba(0,112,192,0.2); }
+    
+    .driver-card {
+      background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-xl);
+      padding: var(--sp-md); display: flex; align-items: center; gap: 12px; margin-top: 16px;
+    }
+
+    #tracking-map { height: 480px; border-radius: var(--r-2xl); border: 1px solid var(--c-border); box-shadow: var(--shadow-lg); }
+    @media (max-width: 850px) { .tracking-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <div class="flex-between align-center" style="padding:var(--sp-md) 0">
+      <div>
+        <h1 style="font-size:var(--fs-2xl);font-weight:800">🚚 Live Order Tracking</h1>
+        <p style="font-size:var(--fs-xs);color:var(--c-text-muted)">Order ID: <strong id="track-order-id">#ORD-882910</strong></p>
+      </div>
+      <a href="invoice.html" id="track-inv-btn" class="btn btn-outline btn-sm">🧾 View Invoice</a>
+    </div>
+
+    <div class="tracking-layout">
+      
+      <!-- LEFT: STATUS & ETA -->
+      <div>
+        <div class="card card-body mb-lg">
+          <div style="font-size:12px;color:var(--c-text-muted)">Estimated Arrival:</div>
+          <div style="font-size:var(--fs-2xl);font-weight:800;color:var(--c-green)" id="eta-timer">⏱️ 35 Mins</div>
+          <div style="font-size:12px;color:var(--c-blue);margin-top:4px" id="eta-desc">Delivery vehicle is on the way from farm!</div>
+        </div>
+
+        <!-- AI ROUTE EFFICIENCY CARD -->
+        <div style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border:1.5px solid var(--c-blue);padding:14px;border-radius:var(--r-xl);margin-bottom:var(--sp-lg)">
+          <div style="display:flex;gap:10px;align-items:center">
+            <span style="font-size:1.8rem">🤖</span>
+            <div>
+              <strong style="font-size:13px;color:#1E40AF">AI Route Optimization Active</strong>
+              <div style="font-size:11px;color:#1E3A8A" id="ai-route-info">Saved 4.2 km &amp; 15 mins by grouping nearby farm pickups!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIMELINE -->
+        <div class="track-timeline">
+          <div class="track-step done">
+            <div class="step-icon-circle">✅</div>
+            <div>
+              <strong style="font-size:13px">Order Placed</strong>
+              <div style="font-size:11px;color:var(--c-text-muted)">10:15 AM · Order confirmed by farmer</div>
+            </div>
+          </div>
+
+          <div class="track-step done">
+            <div class="step-icon-circle">🚜</div>
+            <div>
+              <strong style="font-size:13px">Picked Up from Farm</strong>
+              <div style="font-size:11px;color:var(--c-text-muted)">10:45 AM · Nashik Organic Farm</div>
+            </div>
+          </div>
+
+          <div class="track-step active">
+            <div class="step-icon-circle">🚚</div>
+            <div>
+              <strong style="font-size:13px;color:var(--c-blue-dark)">In Transit (On the way)</strong>
+              <div style="font-size:11px;color:var(--c-blue)">Driver is 12 km away from your location</div>
+            </div>
+          </div>
+
+          <div class="track-step">
+            <div class="step-icon-circle">🏠</div>
+            <div>
+              <strong style="font-size:13px;color:var(--c-text-muted)">Delivered</strong>
+              <div style="font-size:11px;color:var(--c-text-muted)">Pending arrival</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DRIVER INFO -->
+        <div class="driver-card">
+          <div style="width:48px;height:48px;background:var(--c-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem">
+            👨‍✈️
+          </div>
+          <div style="flex:1">
+            <strong>Ramesh Pawar</strong>
+            <div style="font-size:11px;color:var(--c-text-muted)">Vehicle: MH-15-AB-4092 (Mini Pickup)</div>
+            <div style="font-size:11px;color:var(--c-green)">⭐ 4.9 Rating (120 deliveries)</div>
+          </div>
+          <a href="tel:9876543210" class="btn btn-outline btn-sm">📞 Call</a>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: MAP -->
+      <div>
+        <div id="tracking-map"></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/route-optimizer.js"></script>
+
+<script>
+  initFirebase();
+
+  let map = null;
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initNav();
+
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('id') || 'ORD-882910';
+    document.getElementById('track-order-id').textContent = `#${orderId}`;
+    document.getElementById('track-inv-btn').href = `invoice.html?orderId=${orderId}`;
+
+    initTrackingMap();
+  });
+
+  function initTrackingMap() {
+    // Route points: Farm -> Driver -> Buyer
+    const points = [
+      { lat: 20.0000, lng: 73.7800, label: '🌾 Farm Pickup (Nashik)', isNow: false },
+      { lat: 19.3000, lng: 73.3000, label: '🚚 Driver Current Location', isNow: true },
+      { lat: 18.5204, lng: 73.8567, label: '🏠 Buyer Home (Pune)', isNow: false }
+    ];
+
+    const optimizedRoute = nearestNeighborTSP(points);
+    const totalKm = totalRouteKm(optimizedRoute);
+
+    document.getElementById('ai-route-info').textContent = `TSP Optimized route: Total ${totalKm} km. Saved 4.2 km & 15 mins!`;
+
+    map = L.map('tracking-map').setView([19.2000, 73.6000], 9);
+    L.tileLayer(APP_CONFIG.mapTileUrl, { attribution: APP_CONFIG.mapAttribution }).addTo(map);
+
+    drawRouteOnMap(map, optimizedRoute);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Forecast — KrishiSanjivani</title>
+  <meta name="description" content="5-day agricultural weather forecast with farm-specific advice and heavy rain alerts.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <style>
+    .weather-hero {
+      background: linear-gradient(135deg, #0284C7, #0369A1);
+      color: #fff; padding: var(--sp-2xl); border-radius: var(--r-2xl); margin-top: var(--sp-md); margin-bottom: var(--sp-xl);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+    }
+    .weather-5day-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-md); margin-bottom: var(--sp-3xl);
+    }
+    .weather-day-card {
+      background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-xl); padding: var(--sp-md);
+      text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .weather-day-card.today { border-color: #0284C7; background: #F0F9FF; }
+    .alert-banner {
+      background: linear-gradient(135deg, #FEF2F2, #FEE2E2); border: 1.5px solid #EF4444; border-radius: var(--r-xl);
+      padding: var(--sp-md); display: flex; align-items: center; gap: 12px; margin-bottom: var(--sp-xl); color: #991B1B;
+    }
+    @media (max-width: 800px) { .weather-5day-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <!-- WEATHER HERO -->
+    <div class="weather-hero">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;opacity:0.85">
+          <span>📍 Farm Location:</span>
+          <strong id="w-location-name">Nashik, Maharashtra</strong>
+        </div>
+        <div style="font-size:4rem;font-weight:800;margin:8px 0;display:flex;align-items:center;gap:16px">
+          <span>☀️</span>
+          <span>28°C</span>
+        </div>
+        <div style="font-size:var(--fs-lg);font-weight:600">Clear &amp; Sunny Day</div>
+        <div style="font-size:12px;opacity:0.8;margin-top:4px">Humidity: 45% · Wind: 12 km/h · Rain: 0%</div>
+      </div>
+      <div>
+        <button class="btn btn-secondary btn-lg" id="read-weather-btn">
+          🔊 Read Weather Forecast
+        </button>
+      </div>
+    </div>
+
+    <!-- ALERT BANNER -->
+    <div class="alert-banner">
+      <span style="font-size:2rem">🌧️</span>
+      <div>
+        <strong style="font-size:14px;display:block">Rain Advisory for Thursday Afternoon</strong>
+        <span style="font-size:12px">Light to moderate showers expected in Nashik &amp; Pune districts. Avoid spraying pesticides 24 hours prior.</span>
+      </div>
+    </div>
+
+    <!-- 5-DAY FORECAST -->
+    <h2 style="font-size:var(--fs-2xl);font-weight:800;margin-bottom:var(--sp-md)">📅 5-Day Agricultural Forecast</h2>
+
+    <div class="weather-5day-grid">
+      <div class="weather-day-card today">
+        <strong style="font-size:13px;color:#0284C7">Today (Sat)</strong>
+        <div style="font-size:2.5rem">☀️</div>
+        <strong style="font-size:18px">28°C</strong>
+        <span style="font-size:11px;color:var(--c-text-muted)">Low: 18°C</span>
+        <div style="font-size:11px;background:var(--c-green-light);color:var(--c-green-dark);padding:2px 6px;border-radius:4px;margin-top:4px">
+          ✅ Harvest Day
+        </div>
+      </div>
+
+      <div class="weather-day-card">
+        <strong style="font-size:13px">Sun</strong>
+        <div style="font-size:2.5rem">⛅</div>
+        <strong style="font-size:18px">27°C</strong>
+        <span style="font-size:11px;color:var(--c-text-muted)">Low: 19°C</span>
+        <div style="font-size:11px;background:var(--c-bg);color:var(--c-text-secondary);padding:2px 6px;border-radius:4px;margin-top:4px">
+          💧 Good Irrigation
+        </div>
+      </div>
+
+      <div class="weather-day-card">
+        <strong style="font-size:13px">Mon</strong>
+        <div style="font-size:2.5rem">🌤️</div>
+        <strong style="font-size:18px">29°C</strong>
+        <span style="font-size:11px;color:var(--c-text-muted)">Low: 20°C</span>
+        <div style="font-size:11px;background:var(--c-bg);color:var(--c-text-secondary);padding:2px 6px;border-radius:4px;margin-top:4px">
+          🌾 Crop Drying
+        </div>
+      </div>
+
+      <div class="weather-day-card">
+        <strong style="font-size:13px">Tue</strong>
+        <div style="font-size:2.5rem">🌧️</div>
+        <strong style="font-size:18px">24°C</strong>
+        <span style="font-size:11px;color:var(--c-text-muted)">Low: 17°C</span>
+        <div style="font-size:11px;background:#FEE2E2;color:#991B1B;padding:2px 6px;border-radius:4px;margin-top:4px">
+          ⚠️ Rain Expected
+        </div>
+      </div>
+
+      <div class="weather-day-card">
+        <strong style="font-size:13px">Wed</strong>
+        <div style="font-size:2.5rem">🌥️</div>
+        <strong style="font-size:18px">26°C</strong>
+        <span style="font-size:11px;color:var(--c-text-muted)">Low: 18°C</span>
+        <div style="font-size:11px;background:var(--c-bg);color:var(--c-text-secondary);padding:2px 6px;border-radius:4px;margin-top:4px">
+          🌱 Field Preparation
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- AI CHATBOT -->
+<button id="chatbot-btn" title="Chat with KrishiBot">
+  🤖<div class="chatbot-badge" style="display:none">1</div>
+</button>
+<div id="chatbot-panel" class="hidden">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">🌾</div>
+    <div class="chatbot-info">
+      <strong data-i18n="chatbot_title">KrishiBot</strong>
+      <span>AI Assistant • Always Online</span>
+    </div>
+    <button class="chatbot-close" id="chatbot-close">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbot-messages"></div>
+  <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+  <div class="chatbot-input-row">
+    <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything...">
+    <button class="chatbot-send" id="chatbot-send">➤</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/chatbot.js"></script>
+
+<script>
+  initFirebase();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initNav();
+    initChatbot();
+
+    document.getElementById('read-weather-btn').addEventListener('click', () => {
+      readAloud('Today in Nashik: 28 degrees Celsius, clear and sunny. Rain advisory for Tuesday. Good conditions for harvesting today.');
+    });
+  });
+</script>
+</body>
+</html>

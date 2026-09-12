@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Cart — KrishiSanjivani</title>
+  <meta name="description" content="View items in your cart, check savings vs Mandi prices, select delivery preferences, and proceed to checkout.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <style>
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: var(--sp-xl);
+      margin: var(--sp-lg) 0 var(--sp-3xl);
+    }
+    .cart-item {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-md);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      margin-bottom: var(--sp-md);
+    }
+    .cart-item-emoji {
+      width: 60px; height: 60px; background: var(--c-green-light); border-radius: var(--r-lg);
+      display: flex; align-items: center; justify-content: center; font-size: 2rem;
+    }
+    .cart-item-info { flex: 1; }
+    .summary-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-lg);
+      position: sticky;
+      top: 90px;
+    }
+    .delivery-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-md);
+    }
+    .delivery-opt-card {
+      border: 2px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: 12px;
+      cursor: pointer;
+      background: var(--c-bg);
+      text-align: center;
+      transition: all var(--tr-fast);
+    }
+    .delivery-opt-card.active {
+      border-color: var(--c-green);
+      background: var(--c-green-light);
+    }
+    @media (max-width: 800px) {
+      .cart-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <div class="flex-between align-center" style="padding:var(--sp-md) 0">
+      <div>
+        <h1 style="font-size:var(--fs-2xl);font-weight:800">🛒 Shopping Cart</h1>
+        <p style="font-size:var(--fs-xs);color:var(--c-text-muted)">Buying direct supports local Indian farmers!</p>
+      </div>
+      <a href="marketplace.html" class="btn btn-outline btn-sm">+ Add More Crops</a>
+    </div>
+
+    <!-- CART CONTAINER -->
+    <div class="cart-layout" id="cart-layout">
+      <!-- LEFT: CART ITEMS LIST -->
+      <div>
+        <div id="cart-items-container">
+          <!-- Items inserted via JS -->
+        </div>
+
+        <!-- DELIVERY PREFERENCE -->
+        <div style="margin-top:var(--sp-xl);background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r-xl);padding:var(--sp-lg)">
+          <h3 style="font-size:var(--fs-base);font-weight:700;margin-bottom:12px">🚚 Delivery Preference</h3>
+          <div class="delivery-options-grid">
+            <div class="delivery-opt-card active" id="opt-express" onclick="selectDeliveryMode('express')">
+              <div style="font-size:1.5rem">⚡</div>
+              <strong style="font-size:13px;display:block">Delivery Now</strong>
+              <span style="font-size:11px;color:var(--c-text-muted)">Express delivery (within 3 hrs)</span>
+            </div>
+            <div class="delivery-opt-card" id="opt-scheduled" onclick="selectDeliveryMode('scheduled')">
+              <div style="font-size:1.5rem">📅</div>
+              <strong style="font-size:13px;display:block">Scheduled</strong>
+              <span style="font-size:11px;color:var(--c-text-muted)">Pick preferred date/slot</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: SUMMARY & CHECKOUT -->
+      <div>
+        <div class="summary-card">
+          <h3 style="font-size:var(--fs-lg);font-weight:800;margin-bottom:var(--sp-md)">Order Summary</h3>
+
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:var(--fs-sm)">
+            <div class="flex-between">
+              <span>Produce Subtotal:</span>
+              <strong id="sum-subtotal">₹0</strong>
+            </div>
+            <div class="flex-between">
+              <span>Platform Fee (2%):</span>
+              <span id="sum-fee">₹0</span>
+            </div>
+            <div class="flex-between">
+              <span>Delivery Charge:</span>
+              <span id="sum-delivery">₹30</span>
+            </div>
+          </div>
+
+          <!-- SAVINGS BANNER -->
+          <div style="margin:16px 0;padding:12px;background:var(--c-green-light);border-radius:var(--r-lg);border:1px solid var(--c-green);color:var(--c-green-dark);font-size:12px;text-align:center">
+            🎉 You save <strong><span id="sum-savings">₹0</span></strong> by cutting out middlemen!
+          </div>
+
+          <div style="border-top:2px solid var(--c-border);padding-top:12px;margin-top:12px">
+            <div class="flex-between align-center" style="font-size:var(--fs-xl);font-weight:800">
+              <span>Total Payable:</span>
+              <span style="color:var(--c-green)" id="sum-total">₹0</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg w-100 mt-lg" id="proceed-checkout-btn">
+            Proceed to Checkout →
+          </button>
+          
+          <button class="btn btn-ghost btn-sm w-100 mt-sm" onclick="clearCart()">
+            🗑️ Clear Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+
+<script>
+  initFirebase();
+
+  let cart = [];
+  let deliveryMode = 'express';
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initNav();
+    loadCart();
+
+    document.getElementById('proceed-checkout-btn').addEventListener('click', () => {
+      if (cart.length === 0) {
+        showToast('Your cart is empty!', 'warning');
+        return;
+      }
+      localStorage.setItem('ks_delivery_mode', deliveryMode);
+      location.href = 'checkout.html';
+    });
+  });
+
+  function loadCart() {
+    cart = JSON.parse(localStorage.getItem('ks_cart') || '[]');
+    renderCart();
+  }
+
+  function renderCart() {
+    const container = document.getElementById('cart-items-container');
+    if (cart.length === 0) {
+      container.innerHTML = `<div class="empty-state">
+        <div class="empty-state-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Explore fresh produce direct from local farmers</p>
+        <a href="marketplace.html" class="btn btn-primary mt-md">Browse Marketplace</a>
+      </div>`;
+      updateSummary(0);
+      document.getElementById('proceed-checkout-btn').disabled = true;
+      return;
+    }
+
+    document.getElementById('proceed-checkout-btn').disabled = false;
+
+    let subtotal = 0;
+    container.innerHTML = cart.map((item, idx) => {
+      const itemTotal = item.price * item.qty;
+      subtotal += itemTotal;
+      const emoji = getCropEmoji(item.crop);
+
+      return `
+        <div class="cart-item">
+          <div class="cart-item-emoji">${emoji}</div>
+          <div class="cart-item-info">
+            <strong style="font-size:var(--fs-base)">${item.crop}</strong>
+            <div style="font-size:12px;color:var(--c-text-muted)">₹${item.price} per kg</div>
+            <div style="font-size:13px;font-weight:700;color:var(--c-green);margin-top:4px">Subtotal: ₹${itemTotal}</div>
+          </div>
+          <div class="flex align-center gap-xs">
+            <button onclick="updateQty(${idx}, -1)" style="padding:6px 12px;border:1px solid var(--c-border);border-radius:var(--r-md);background:#fff;font-weight:bold;cursor:pointer">-</button>
+            <span style="font-weight:bold;width:24px;text-align:center">${item.qty}</span>
+            <button onclick="updateQty(${idx}, 1)" style="padding:6px 12px;border:1px solid var(--c-border);border-radius:var(--r-md);background:#fff;font-weight:bold;cursor:pointer">+</button>
+            <button onclick="removeItem(${idx})" style="background:none;border:none;color:var(--c-error);margin-left:12px;cursor:pointer;font-size:18px" title="Remove">🗑️</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    updateSummary(subtotal);
+  }
+
+  function updateQty(idx, delta) {
+    cart[idx].qty += delta;
+    if (cart[idx].qty <= 0) cart.splice(idx, 1);
+    saveAndRefresh();
+  }
+
+  function removeItem(idx) {
+    cart.splice(idx, 1);
+    saveAndRefresh();
+  }
+
+  function clearCart() {
+    cart = [];
+    saveAndRefresh();
+  }
+
+  function saveAndRefresh() {
+    localStorage.setItem('ks_cart', JSON.stringify(cart));
+    renderCart();
+  }
+
+  function updateSummary(subtotal) {
+    const fee = Math.round(subtotal * 0.02);
+    const delivery = subtotal > 500 || subtotal === 0 ? 0 : 30;
+    const savings = Math.round(subtotal * 0.25);
+    const total = subtotal + fee + delivery;
+
+    document.getElementById('sum-subtotal').textContent = `₹${subtotal}`;
+    document.getElementById('sum-fee').textContent = `₹${fee}`;
+    document.getElementById('sum-delivery').textContent = delivery === 0 ? 'FREE' : `₹${delivery}`;
+    document.getElementById('sum-savings').textContent = `₹${savings}`;
+    document.getElementById('sum-total').textContent = `₹${total}`;
+  }
+
+  function selectDeliveryMode(mode) {
+    deliveryMode = mode;
+    document.getElementById('opt-express').classList.toggle('active', mode === 'express');
+    document.getElementById('opt-scheduled').classList.toggle('active', mode === 'scheduled');
+  }
+
+  function getCropEmoji(crop) {
+    const map = { tomato:'🍅', onion:'🧅', potato:'🥔', wheat:'🌾', rice:'🍚', sugarcane:'🌿', cotton:'🌸', soybean:'🫘', maize:'🌽', groundnut:'🥜', banana:'🍌', mango:'🥭' };
+    return map[crop?.toLowerCase()] || '🌿';
+  }
+</script>
+</body>
+</html>

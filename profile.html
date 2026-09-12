@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — KrishiSanjivani</title>
+  <meta name="description" content="Manage your KrishiSanjivani profile, active listings, order history, earnings, and bank details.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <style>
+    .profile-hero {
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      color: #fff; padding: var(--sp-xl); border-radius: var(--r-2xl); margin-top: var(--sp-md); margin-bottom: var(--sp-xl);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+    .profile-avatar-xl {
+      width: 72px; height: 72px; background: var(--c-green); color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 800;
+    }
+
+    .profile-tabs {
+      display: flex; gap: 8px; border-bottom: 2px solid var(--c-border); margin-bottom: var(--sp-xl); overflow-x: auto;
+    }
+    .profile-tab {
+      padding: 10px 18px; font-weight: 700; font-size: var(--fs-sm); cursor: pointer; border-bottom: 3px solid transparent; color: var(--c-text-muted); white-space: nowrap;
+    }
+    .profile-tab.active { border-bottom-color: var(--c-green); color: var(--c-green-dark); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <button class="btn btn-outline btn-sm" onclick="signOut()">Sign Out</button>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    
+    <!-- PROFILE HERO BANNER -->
+    <div class="profile-hero">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="profile-avatar-xl" id="prof-avatar-box">👤</div>
+        <div>
+          <h1 style="font-size:var(--fs-2xl);font-weight:800;margin-bottom:2px" id="prof-name">User Name</h1>
+          <div style="font-size:12px;opacity:0.8" id="prof-role-badge">👨‍🌾 Verified Farmer</div>
+          <div style="font-size:11px;opacity:0.6;margin-top:2px" id="prof-email">user@example.com</div>
+        </div>
+      </div>
+      <div>
+        <a href="list-item.html" class="btn btn-primary btn-sm">+ List New Crop</a>
+      </div>
+    </div>
+
+    <!-- TAB NAVIGATION -->
+    <div class="profile-tabs" id="profile-tabs">
+      <div class="profile-tab active" data-tab="listings">🌾 My Listings</div>
+      <div class="profile-tab" data-tab="orders">📦 My Orders</div>
+      <div class="profile-tab" data-tab="earnings">💰 Earnings &amp; Savings</div>
+      <div class="profile-tab" data-tab="bank">🏛️ Bank &amp; Aadhaar</div>
+      <div class="profile-tab" data-tab="info">⚙️ Account Settings</div>
+    </div>
+
+    <!-- TAB PANELS -->
+    
+    <!-- TAB 1: LISTINGS -->
+    <div class="tab-panel active" id="panel-listings">
+      <div class="flex-between align-center mb-md">
+        <h3 style="font-size:var(--fs-xl);font-weight:800">Your Active Crop Listings</h3>
+        <a href="list-item.html" class="btn btn-outline btn-sm">+ Add Listing</a>
+      </div>
+      <div class="listings-grid" id="my-listings-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- TAB 2: ORDERS -->
+    <div class="tab-panel" id="panel-orders">
+      <h3 style="font-size:var(--fs-xl);font-weight:800;margin-bottom:var(--sp-md)">Order History</h3>
+      <div id="my-orders-list">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- TAB 3: EARNINGS -->
+    <div class="tab-panel" id="panel-earnings">
+      <h3 style="font-size:var(--fs-xl);font-weight:800;margin-bottom:var(--sp-md)">Earnings &amp; Mandi Savings</h3>
+      <div class="dash-stats-row mb-xl">
+        <div class="dash-stat-card">
+          <div class="dash-stat-icon">💰</div>
+          <div class="dash-stat-body">
+            <div class="dash-stat-value" id="prof-earnings-val">₹14,500</div>
+            <div class="dash-stat-label">Total Earnings</div>
+          </div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dash-stat-icon">💚</div>
+          <div class="dash-stat-body">
+            <div class="dash-stat-value" id="prof-savings-val">₹4,200</div>
+            <div class="dash-stat-label">Saved vs Mandi Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: BANK -->
+    <div class="tab-panel" id="panel-bank">
+      <div style="max-width:540px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r-2xl);padding:var(--sp-xl)">
+        <h3 style="font-size:var(--fs-xl);font-weight:800;margin-bottom:8px">🏛️ Bank Account &amp; Aadhaar</h3>
+        <p style="font-size:12px;color:var(--c-text-muted);margin-bottom:16px">Required for Direct Benefit Transfer (MahaDBT) and direct sales payouts.</p>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <label style="font-size:12px;font-weight:700">Bank Account Number</label>
+            <input type="text" class="input" placeholder="e.g. 501002349102" value="501002349102">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:700">IFSC Code</label>
+            <input type="text" class="input" placeholder="e.g. SBIN0001234" value="SBIN0001234">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:700">Aadhaar Number (12 Digits)</label>
+            <input type="text" class="input" placeholder="XXXX XXXX XXXX" value="8829 4012 9931">
+          </div>
+          <button class="btn btn-primary btn-lg mt-sm" onclick="showToast('✅ Bank details saved successfully!', 'success')">
+            💾 Save Bank &amp; Aadhaar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: ACCOUNT INFO -->
+    <div class="tab-panel" id="panel-info">
+      <div style="max-width:540px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r-2xl);padding:var(--sp-xl)">
+        <h3 style="font-size:var(--fs-xl);font-weight:800;margin-bottom:16px">⚙️ Account Settings</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <label style="font-size:12px;font-weight:700">Display Name</label>
+            <input type="text" id="edit-name" class="input" value="Farmer Friend">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:700">Location / City</label>
+            <input type="text" id="edit-loc" class="input" value="Nashik, Maharashtra">
+          </div>
+          <button class="btn btn-primary btn-lg mt-sm" onclick="showToast('✅ Account details updated!', 'success')">
+            Update Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+
+<script>
+  initFirebase();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+
+    requireAuth((user) => {
+      initNav();
+
+      const name = user.displayName || user.email?.split('@')[0] || 'Farmer';
+      document.getElementById('prof-name').textContent = name;
+      document.getElementById('prof-email').textContent = user.email || 'Phone user';
+      document.getElementById('prof-avatar-box').textContent = name[0].toUpperCase();
+
+      loadMyListings(user.uid);
+      loadMyOrders(user.uid);
+    });
+
+    // Tab switching
+    document.querySelectorAll('.profile-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`panel-${tab.dataset.tab}`).classList.add('active');
+      });
+    });
+
+    // Check URL tab parameter
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tab')) {
+      const tabName = params.get('tab');
+      const targetTab = document.querySelector(`.profile-tab[data-tab="${tabName}"]`);
+      if (targetTab) targetTab.click();
+    }
+  });
+
+  async function loadMyListings(uid) {
+    const container = document.getElementById('my-listings-grid');
+    try {
+      const snap = await db.collection(COLLECTIONS.listings).where('farmerId', '==', uid).get();
+      if (snap.empty) {
+        container.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-state-icon">🌾</div>
+          <h3>No active listings</h3>
+          <a href="list-item.html" class="btn btn-primary mt-md">Create Your First Listing</a>
+        </div>`;
+        return;
+      }
+      container.innerHTML = snap.docs.map(doc => {
+        const d = doc.data();
+        return `
+          <div class="listing-card">
+            <div class="listing-card-body">
+              <strong style="font-size:var(--fs-lg)">${d.crop}</strong>
+              <div style="font-size:12px;color:var(--c-text-muted)">Quantity: ${d.qty} kg</div>
+              <div style="font-size:16px;font-weight:bold;color:var(--c-green);margin-top:4px">₹${d.price}/kg</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      container.innerHTML = '<p class="text-muted">Could not load listings</p>';
+    }
+  }
+
+  async function loadMyOrders(uid) {
+    const container = document.getElementById('my-orders-list');
+    try {
+      const snap = await db.collection(COLLECTIONS.orders).where('buyerId', '==', uid).get();
+      if (snap.empty) {
+        container.innerHTML = `<div class="empty-state">
+          <div class="empty-state-icon">📦</div>
+          <h3>No orders placed yet</h3>
+          <a href="marketplace.html" class="btn btn-primary mt-md">Shop Produce</a>
+        </div>`;
+        return;
+      }
+      container.innerHTML = snap.docs.map(doc => {
+        const d = doc.data();
+        return `
+          <div class="card card-body mb-md flex-between align-center">
+            <div>
+              <strong>Order #${doc.id.substring(0,8).toUpperCase()}</strong>
+              <div style="font-size:12px;color:var(--c-text-muted)">${d.crop || 'Produce'} · ₹${d.amount}</div>
+            </div>
+            <div class="flex gap-xs">
+              <a href="order-tracking.html?id=${doc.id}" class="btn btn-outline btn-sm">🚚 Track</a>
+              <a href="invoice.html?orderId=${doc.id}" class="btn btn-ghost btn-sm">🧾 Invoice</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      container.innerHTML = '<p class="text-muted">Could not load orders</p>';
+    }
+  }
+</script>
+</body>
+</html>
