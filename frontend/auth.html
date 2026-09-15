@@ -297,55 +297,6 @@
   document.addEventListener('DOMContentLoaded', async () => {
     await initI18n();
     
-    // Check if already authenticated
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        try {
-          const isAdmin = typeof isAdminEmail === 'function' && isAdminEmail(user.email);
-          const userDocRef = db.collection(COLLECTIONS.users).doc(user.uid);
-          let doc = null;
-          try { doc = await userDocRef.get(); } catch(err) { console.warn('Firestore read error:', err); }
-
-          if (isAdmin || (doc && doc.exists && doc.data().role === 'admin')) {
-            // Ensure admin role document exists
-            try {
-              await userDocRef.set({
-                uid: user.uid,
-                name: user.displayName || 'System Admin',
-                email: user.email || 'admin@gmail.com',
-                role: 'admin',
-                isVerified: true,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-              }, { merge: true });
-            } catch(setErr) { console.warn('Admin profile set warning:', setErr); }
-
-            showToastMsg('🛡️ Welcome Admin! Redirecting...', 'success');
-            setTimeout(() => location.href = 'admin-dashboard.html', 600);
-            return;
-          }
-
-          if (doc && doc.exists && doc.data().role) {
-            const dest = redirectPage === 'admin-dashboard.html' ? 'dashboard.html' : redirectPage;
-            location.href = dest;
-          } else {
-            // User exists in Auth but not Firestore — show role selection
-            switchTab('signup');
-            document.getElementById('signup-step1').style.display = 'none';
-            document.getElementById('signup-step2').style.display = 'block';
-          }
-        } catch (e) {
-          console.warn('Profile check error:', e);
-          if (user.email && isAdminEmail(user.email)) {
-            location.href = 'admin-dashboard.html';
-          } else {
-            switchTab('signup');
-            document.getElementById('signup-step1').style.display = 'none';
-            document.getElementById('signup-step2').style.display = 'block';
-          }
-        }
-      }
-    });
-
     if (initMode === 'signup') switchTab('signup');
     if (initRole) selectRole(initRole);
     
@@ -433,7 +384,9 @@
     try {
       await auth.signInWithEmailAndPassword(email, password);
       showToastMsg('✅ Login successful!', 'success');
-      setTimeout(() => location.href = redirectPage, 800);
+      const destination = isAdminEmail(email) ? 'admin-dashboard.html' :
+        (redirectPage === 'admin-dashboard.html' ? 'dashboard.html' : redirectPage);
+      setTimeout(() => location.href = destination, 800);
     } catch (e) {
       let msg = 'Login failed. Check your credentials.';
       if (e.code === 'auth/user-not-found') msg = 'No account found. Please sign up first.';

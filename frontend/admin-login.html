@@ -174,14 +174,6 @@
   document.addEventListener('DOMContentLoaded', async () => {
     await initI18n();
 
-    // Check auth state
-    auth.onAuthStateChanged(async (user) => {
-      if (user && (isAdminEmail(user.email) || user.email === 'admin@gmail.com')) {
-        showToastMsg('🛡️ Admin session detected! Redirecting...', 'success');
-        setTimeout(() => location.href = 'admin-dashboard.html', 500);
-      }
-    });
-
     document.getElementById('btn-admin-login').addEventListener('click', handleAdminLogin);
     document.getElementById('admin-password').addEventListener('keydown', e => {
       if (e.key === 'Enter') handleAdminLogin();
@@ -211,26 +203,12 @@
     btn.innerHTML = '<div class="loading-spinner" style="width:18px;height:18px;border-width:2px"></div> Authenticating...';
 
     try {
-      let user = null;
-      try {
-        const cred = await auth.signInWithEmailAndPassword(email, password);
-        user = cred.user;
-      } catch (authErr) {
-        // If user does not exist in Firebase Auth yet, auto-create admin user for local dev testing
-        if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/wrong-password') {
-          try {
-            const cred = await auth.createUserWithEmailAndPassword(email, password);
-            user = cred.user;
-          } catch(createErr) {
-            if (createErr.code === 'auth/email-already-in-use') {
-              throw new Error('Incorrect password for admin account.');
-            }
-            throw authErr;
-          }
-        } else {
-          throw authErr;
-        }
+      if (!isAdminEmail(email)) {
+        throw new Error('This account does not have administrator access.');
       }
+
+      const cred = await auth.signInWithEmailAndPassword(email, password);
+      const user = cred.user;
 
       if (user) {
         // Ensure Admin Role in Firestore
