@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — KrishiSanjivani</title>
+  <meta name="description" content="KrishiSanjivani dashboard — sell produce, buy fresh, track orders, check weather and government schemes.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <div style="position:relative">
+      <button class="nav-btn" id="nav-notif-btn" title="Notifications">
+        🔔
+        <span class="nav-badge" id="notif-badge" style="display:none">0</span>
+      </button>
+      <div id="notif-dropdown" class="notifications-dropdown hidden">
+        <div class="notif-header">
+          🔔 Notifications
+          <button onclick="markAllRead()" style="background:none;border:none;color:var(--c-green);font-size:12px;cursor:pointer">Mark all read</button>
+        </div>
+        <div id="notif-list">
+          <div class="notif-item"><span class="notif-icon">🌾</span><div class="notif-text"><strong>Welcome to KrishiSanjivani!</strong><span>Start selling or buying produce today</span></div></div>
+        </div>
+      </div>
+    </div>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+<!-- WEATHER MINI-WIDGET -->
+<div id="weather-widget-bar" class="weather-bar">
+  <div class="container">
+    <div class="weather-bar-inner">
+      <span class="weather-bar-icon" id="wb-icon">☀️</span>
+      <span id="wb-temp">28°C</span>
+      <span id="wb-desc" style="opacity:0.7">Clear sky</span>
+      <span class="weather-bar-sep">|</span>
+      <span id="wb-tip" class="weather-bar-tip">☁️ Good day for field work</span>
+      <span class="weather-bar-sep">|</span>
+      <a href="weather.html" style="color:var(--c-green-dark);font-weight:600;font-size:12px">5-Day Forecast →</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO GREETING -->
+<div class="dash-hero">
+  <div class="container">
+    <div class="dash-hero-content">
+      <div class="dash-greeting">
+        <div class="dash-greeting-icon" id="greeting-icon">🌅</div>
+        <div>
+          <h1 class="dash-greeting-text">
+            <span data-i18n="dash_greeting">Good Morning</span>,
+            <span id="user-name">Farmer</span>! 👋
+          </h1>
+          <p data-i18n="dash_subtitle">What would you like to do today?</p>
+        </div>
+      </div>
+      <div class="dash-hero-actions">
+        <div class="dash-role-badge" id="role-badge">👨‍🌾 Farmer</div>
+        <button class="voice-btn" id="dash-voice-btn">🔊 Read Aloud</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DEMAND FORECAST BANNER (for farmers) -->
+<div class="container" id="forecast-banner" style="margin-bottom:var(--sp-lg)">
+  <div class="forecast-banner" id="farmer-forecast-strip">
+    <span class="forecast-icon">📈</span>
+    <span class="forecast-text" id="forecast-text">Demand for <strong>Tomatoes</strong> expected to rise <strong>18%</strong> next week — Consider listing more!</span>
+    <a href="list-item.html" class="btn btn-sm btn-primary">List Now</a>
+  </div>
+</div>
+
+<!-- MAIN DASHBOARD GRID -->
+<div class="container">
+  <div class="section-header">
+    <div>
+      <div class="section-title" data-i18n="dash_welcome">Welcome to KrishiSanjivani</div>
+      <div class="section-subtitle" data-i18n="dash_subtitle">Tap a tile to get started</div>
+    </div>
+  </div>
+
+  <!-- TILES GRID -->
+  <div class="dash-tiles" id="dash-tiles">
+    <!-- Farmer-first tiles (reordered by role via JS) -->
+    <a href="list-item.html" class="dash-tile" id="tile-sell" data-role-priority="farmer">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#138808,#52C41A)">🌾</div>
+      <span class="tile-label" data-i18n="tile_sell">Sell</span>
+      <span class="tile-sublabel">List Produce</span>
+    </a>
+
+    <a href="marketplace.html" class="dash-tile" id="tile-buy" data-role-priority="buyer">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#FF6B00,#FF9A3C)">🛒</div>
+      <span class="tile-label" data-i18n="tile_buy">Buy</span>
+      <span class="tile-sublabel">Browse Market</span>
+    </a>
+
+    <a href="marketplace.html?mode=search" class="dash-tile" id="tile-search">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#0070C0,#00B4D8)">🔍</div>
+      <span class="tile-label" data-i18n="tile_search">Search</span>
+      <span class="tile-sublabel">Find Crops</span>
+    </a>
+
+    <a href="equipment-rental.html" class="dash-tile" id="tile-rent">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">🚜</div>
+      <span class="tile-label" data-i18n="tile_rent">Rent</span>
+      <span class="tile-sublabel">Farm Equipment</span>
+    </a>
+
+    <a href="profile.html?tab=orders" class="dash-tile" id="tile-orders">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#059669,#34D399)">📦</div>
+      <span class="tile-label" data-i18n="tile_orders">My Orders</span>
+      <span class="tile-sublabel" id="orders-count">Loading...</span>
+    </a>
+
+    <a href="order-tracking.html" class="dash-tile" id="tile-track">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#D97706,#F59E0B)">🚚</div>
+      <span class="tile-label" data-i18n="tile_track">Track</span>
+      <span class="tile-sublabel">Live Delivery</span>
+    </a>
+
+    <a href="profile.html?tab=earnings" class="dash-tile" id="tile-earnings">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#1A237E,#3949AB)">💰</div>
+      <span class="tile-label" data-i18n="tile_earnings">Earnings</span>
+      <span class="tile-sublabel" id="earnings-amount">₹ Loading...</span>
+    </a>
+
+    <a href="weather.html" class="dash-tile" id="tile-weather">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#06B6D4,#0EA5E9)">☁️</div>
+      <span class="tile-label" data-i18n="tile_weather">Weather</span>
+      <span class="tile-sublabel" id="weather-tile-text">Today's Forecast</span>
+    </a>
+
+    <a href="schemes.html" class="dash-tile" id="tile-schemes">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#DC2626,#F87171)">🏛️</div>
+      <span class="tile-label" data-i18n="tile_schemes">Schemes</span>
+      <span class="tile-sublabel">MahaDBT &amp; More</span>
+    </a>
+
+    <a href="rights-acts.html" class="dash-tile" id="tile-rights">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#9D174D,#F472B6)">📜</div>
+      <span class="tile-label" data-i18n="tile_rights">Rights</span>
+      <span class="tile-sublabel">Farmer Acts</span>
+    </a>
+
+    <a href="help.html" class="dash-tile" id="tile-help">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#374151,#6B7280)">❓</div>
+      <span class="tile-label" data-i18n="tile_help">Help</span>
+      <span class="tile-sublabel">Support</span>
+    </a>
+
+    <a href="profile.html" class="dash-tile" id="tile-profile">
+      <div class="tile-icon-wrap" style="background:linear-gradient(135deg,#064E3B,#10B981)">👤</div>
+      <span class="tile-label" data-i18n="tile_profile">Profile</span>
+      <span class="tile-sublabel">My Account</span>
+    </a>
+  </div>
+</div>
+
+<!-- STATS OVERVIEW -->
+<div class="container mt-xl">
+  <div class="dash-stats-row">
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon">💰</div>
+      <div class="dash-stat-body">
+        <div class="dash-stat-value" id="stat-earnings">₹0</div>
+        <div class="dash-stat-label">Total Earnings</div>
+      </div>
+      <div class="dash-stat-trend positive" id="stat-earnings-trend">↑ 35% vs mandi</div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon">🌾</div>
+      <div class="dash-stat-body">
+        <div class="dash-stat-value" id="stat-listings">0</div>
+        <div class="dash-stat-label">Active Listings</div>
+      </div>
+      <a href="list-item.html" class="dash-stat-trend positive" style="text-decoration:none">+ Add New</a>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon">📦</div>
+      <div class="dash-stat-body">
+        <div class="dash-stat-value" id="stat-orders">0</div>
+        <div class="dash-stat-label">Total Orders</div>
+      </div>
+      <a href="profile.html?tab=orders" class="dash-stat-trend" style="text-decoration:none;color:var(--c-blue)">View All →</a>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon">🏷️</div>
+      <div class="dash-stat-body">
+        <div class="dash-stat-value" id="stat-saved">₹0</div>
+        <div class="dash-stat-label" id="stat-saved-label">Saved vs Mandi</div>
+      </div>
+      <div class="dash-stat-trend positive">✅ Direct Buy</div>
+    </div>
+  </div>
+</div>
+
+<!-- RECENT ACTIVITY -->
+<div class="container mt-xl mb-xl">
+  <div class="section-header">
+    <div class="section-title">Recent Activity</div>
+    <a href="profile.html" class="btn btn-ghost btn-sm">View All</a>
+  </div>
+  <div id="recent-activity" class="recent-list">
+    <div class="skeleton" style="height:64px;border-radius:12px;margin-bottom:8px"></div>
+    <div class="skeleton" style="height:64px;border-radius:12px;margin-bottom:8px"></div>
+    <div class="skeleton" style="height:64px;border-radius:12px"></div>
+  </div>
+</div>
+
+<!-- NEARBY LISTINGS PREVIEW -->
+<div class="container mt-xl mb-xl">
+  <div class="section-header">
+    <div class="section-title">Fresh Near You 🌾</div>
+    <a href="marketplace.html" class="btn btn-outline btn-sm">See All</a>
+  </div>
+  <div id="nearby-listings" class="nearby-grid">
+    <!-- Loaded dynamically -->
+  </div>
+</div>
+
+</div> <!-- end page-wrapper -->
+
+<!-- AI CHATBOT -->
+<button id="chatbot-btn" title="Chat with KrishiBot">
+  🤖<div class="chatbot-badge" style="display:none">1</div>
+</button>
+<div id="chatbot-panel" class="hidden">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">🌾</div>
+    <div class="chatbot-info">
+      <strong data-i18n="chatbot_title">KrishiBot</strong>
+      <span>AI Assistant • Always Online</span>
+    </div>
+    <button class="chatbot-close" id="chatbot-close">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbot-messages"></div>
+  <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+  <div class="chatbot-input-row">
+    <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything...">
+    <button class="chatbot-send" id="chatbot-send">➤</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/demand-forecast.js"></script>
+<script>
+  initFirebase();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+
+    // Require authentication
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) { location.href = 'auth.html'; return; }
+
+      // Check profile exists
+      const profileDoc = await db.collection(COLLECTIONS.users).doc(user.uid).get();
+      if (!profileDoc.exists || !profileDoc.data().role) {
+        location.href = 'auth.html';
+        return;
+      }
+
+      const profile = profileDoc.data();
+      currentUserProfile = profile;
+
+      // Apply language preference
+      if (profile.language) await loadLanguage(profile.language);
+
+      // Update UI
+      document.getElementById('user-name').textContent = profile.name?.split(' ')[0] || 'Friend';
+      updateGreeting();
+      updateRoleBadge(profile.role);
+      reorderTilesByRole(profile.role);
+      loadUserStats(user.uid, profile);
+      loadRecentActivity(user.uid);
+      loadNearbyListings(profile.location);
+      loadDemandForecast(profile.role);
+      loadWeatherWidget(profile.location);
+      initNav();
+      initChatbot();
+
+      // Voice read
+      document.getElementById('dash-voice-btn')?.addEventListener('click', () => {
+        const greeting = document.querySelector('.dash-greeting-text')?.textContent;
+        readAloud(greeting + '. ' + t('dash_subtitle'));
+      });
+    });
+  });
+
+  function updateGreeting() {
+    const h = new Date().getHours();
+    const greetingEl = document.querySelector('[data-i18n="dash_greeting"]');
+    const icon = document.getElementById('greeting-icon');
+    if (h < 12) { if (greetingEl) greetingEl.textContent = 'Good Morning'; if (icon) icon.textContent = '🌅'; }
+    else if (h < 17) { if (greetingEl) greetingEl.textContent = 'Good Afternoon'; if (icon) icon.textContent = '☀️'; }
+    else { if (greetingEl) greetingEl.textContent = 'Good Evening'; if (icon) icon.textContent = '🌙'; }
+  }
+
+  function updateRoleBadge(role) {
+    const badge = document.getElementById('role-badge');
+    const labels = { farmer: '👨‍🌾 Farmer', buyer: '🛒 Buyer', bulk_buyer: '🏢 Bulk Buyer', admin: '🛡️ System Admin' };
+    if (badge) badge.textContent = labels[role] || '👤 User';
+  }
+
+  function reorderTilesByRole(role) {
+    const grid = document.getElementById('dash-tiles');
+    if (!grid) return;
+    const tiles = Array.from(grid.children);
+    const sellTile = document.getElementById('tile-sell');
+    const buyTile = document.getElementById('tile-buy');
+    if (role === 'farmer' && sellTile) grid.prepend(sellTile);
+    else if ((role === 'buyer' || role === 'bulk_buyer') && buyTile) grid.prepend(buyTile);
+    else if (role === 'admin') {
+      const adminTile = document.createElement('a');
+      adminTile.href = 'admin-dashboard.html';
+      adminTile.className = 'dash-tile';
+      adminTile.innerHTML = `<div class="tile-icon-wrap" style="background:linear-gradient(135deg,#0f172a,#1e293b)">🛡️</div><span class="tile-label">Admin Panel</span><span class="tile-sublabel">Governance</span>`;
+      grid.prepend(adminTile);
+    }
+  }
+
+  async function loadUserStats(uid, profile) {
+    try {
+      // Orders count
+      const ordersSnap = await db.collection(COLLECTIONS.orders).where('buyerId', '==', uid).get();
+      document.getElementById('stat-orders').textContent = ordersSnap.size;
+      document.getElementById('orders-count').textContent = `${ordersSnap.size} orders`;
+
+      // Listings count (for farmers)
+      if (profile.role === 'farmer') {
+        const listingsSnap = await db.collection(COLLECTIONS.listings)
+          .where('farmerId', '==', uid)
+          .where('status', '==', 'active')
+          .get();
+        document.getElementById('stat-listings').textContent = listingsSnap.size;
+      }
+
+      // Earnings
+      const earnings = profile.totalEarnings || 0;
+      const saved = profile.mandiSavings || 0;
+      document.getElementById('stat-earnings').textContent = `₹${earnings.toLocaleString('en-IN')}`;
+      document.getElementById('earnings-amount').textContent = `₹${earnings.toLocaleString('en-IN')}`;
+      document.getElementById('stat-saved').textContent = `₹${saved.toLocaleString('en-IN')}`;
+      
+      if (profile.role !== 'farmer') {
+        document.getElementById('stat-saved-label').textContent = 'Saved vs Mandi Price';
+        document.getElementById('stat-earnings-trend').textContent = `↓ ${((saved / Math.max(earnings + saved, 1)) * 100).toFixed(0)}% cheaper`;
+      }
+    } catch (e) {
+      console.warn('Stats error:', e);
+    }
+  }
+
+  async function loadRecentActivity(uid) {
+    const container = document.getElementById('recent-activity');
+    try {
+      const ordersSnap = await db.collection(COLLECTIONS.orders)
+        .where('buyerId', '==', uid)
+        .orderBy('createdAt', 'desc')
+        .limit(5)
+        .get();
+
+      const listingsSnap = await db.collection(COLLECTIONS.listings)
+        .where('farmerId', '==', uid)
+        .orderBy('createdAt', 'desc')
+        .limit(3)
+        .get();
+
+      const items = [];
+      ordersSnap.docs.forEach(d => items.push({ ...d.data(), _type: 'order', _id: d.id }));
+      listingsSnap.docs.forEach(d => items.push({ ...d.data(), _type: 'listing', _id: d.id }));
+      items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+      if (items.length === 0) {
+        container.innerHTML = `<div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <h3>No activity yet</h3>
+          <p>Start selling or buying to see activity here</p>
+          <a href="marketplace.html" class="btn btn-primary mt-md">Browse Marketplace</a>
+        </div>`;
+        return;
+      }
+
+      container.innerHTML = items.slice(0, 5).map(item => {
+        if (item._type === 'order') {
+          const statusColors = { placed: 'badge-blue', confirmed: 'badge-green', delivered: 'badge-gold', transit: 'badge-orange' };
+          return `<div class="activity-item" onclick="location.href='order-tracking.html?id=${item._id}'">
+            <div class="activity-icon">📦</div>
+            <div class="activity-body">
+              <strong>Order #${item._id.substring(0,8).toUpperCase()}</strong>
+              <span>${item.crop || 'Produce'} · ₹${item.amount || 0}</span>
+            </div>
+            <div>
+              <span class="badge ${statusColors[item.deliveryStatus] || 'badge-blue'}">${item.deliveryStatus || 'placed'}</span>
+              <div style="font-size:11px;color:var(--c-text-muted);margin-top:4px;text-align:right">
+                ${item.createdAt ? new Date(item.createdAt.seconds*1000).toLocaleDateString('en-IN') : ''}
+              </div>
+            </div>
+          </div>`;
+        } else {
+          return `<div class="activity-item" onclick="location.href='product-detail.html?id=${item._id}'">
+            <div class="activity-icon">🌾</div>
+            <div class="activity-body">
+              <strong>Listed: ${item.crop || 'Produce'}</strong>
+              <span>${item.qty || 0}kg · ₹${item.price || 0}/kg</span>
+            </div>
+            <div>
+              <span class="badge ${item.status === 'active' ? 'badge-green' : 'badge-orange'}">${item.status || 'active'}</span>
+            </div>
+          </div>`;
+        }
+      }).join('');
+    } catch (e) {
+      container.innerHTML = '<p class="text-muted text-center p-md">Could not load activity</p>';
+    }
+  }
+
+  async function loadNearbyListings(userLocation) {
+    const container = document.getElementById('nearby-listings');
+    try {
+      const snap = await db.collection(COLLECTIONS.listings)
+        .where('status', '==', 'active')
+        .orderBy('createdAt', 'desc')
+        .limit(6)
+        .get();
+
+      if (snap.empty) {
+        container.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-state-icon">🛒</div>
+          <h3>No listings yet</h3>
+          <a href="list-item.html" class="btn btn-primary mt-md">Be the first to list!</a>
+        </div>`;
+        return;
+      }
+
+      container.innerHTML = snap.docs.map(doc => {
+        const d = doc.data();
+        const mandiPrice = MOCK_PRICES[d.crop?.toLowerCase()]?.mandi || d.price * 0.85;
+        const saving = Math.round(((mandiPrice * 1.4) - d.price) / (mandiPrice * 1.4) * 100);
+        return `<div class="listing-mini-card card card-interactive" onclick="location.href='product-detail.html?id=${doc.id}'">
+          <div class="listing-mini-img" style="background:linear-gradient(135deg,#E6F4E6,#D1FAE5)">
+            ${d.photos?.[0] ? `<img src="${d.photos[0]}" alt="${d.crop}" loading="lazy">` : `<div style="font-size:3rem">${getCropEmoji(d.crop)}</div>`}
+            ${d.isFPO ? '<span class="badge-fpo listing-fpo-badge">✓ FPO</span>' : ''}
+          </div>
+          <div class="listing-mini-body card-body" style="padding:12px">
+            <div class="flex-between mb-xs">
+              <span class="listing-mini-crop">${d.crop || 'Produce'}</span>
+              ${saving > 0 ? `<span class="badge badge-green">↓${saving}% saved</span>` : ''}
+            </div>
+            <div class="listing-mini-price">₹${d.price}<span>/kg</span></div>
+            <div class="listing-mini-meta">
+              <span>🌾 ${d.farmerName || 'Farmer'}</span>
+              <span>📦 ${d.qty}kg</span>
+            </div>
+            <div class="listing-mini-action flex gap-xs mt-sm">
+              <button class="btn btn-primary btn-sm" style="flex:1" onclick="event.stopPropagation();addToCart('${doc.id}', '${d.crop}', ${d.price})">🛒 Add</button>
+              <a href="product-detail.html?id=${doc.id}" class="btn btn-ghost btn-sm">View</a>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      container.innerHTML = '<p class="text-muted">Could not load listings</p>';
+    }
+  }
+
+  async function loadDemandForecast(role) {
+    if (role !== 'farmer') {
+      document.getElementById('forecast-banner').style.display = 'none';
+      return;
+    }
+    const crops = ['tomato', 'onion', 'potato', 'wheat'];
+    const crop = crops[Math.floor(Math.random() * crops.length)];
+    const data = await generateMockForecast(crop);
+    const change = parseFloat(data.change);
+    if (change > 0) {
+      document.getElementById('forecast-text').innerHTML = `Demand for <strong>${crop.charAt(0).toUpperCase()+crop.slice(1)}</strong> expected to rise <strong>${change}%</strong> next week — Consider listing more!`;
+    } else {
+      document.getElementById('farmer-forecast-strip').style.background = 'linear-gradient(135deg,#FFF0E0,#FFEDD5)';
+      document.getElementById('forecast-text').innerHTML = `Demand for <strong>${crop.charAt(0).toUpperCase()+crop.slice(1)}</strong> may dip ${Math.abs(change)}% next week — Consider selling now.`;
+    }
+  }
+
+  function loadWeatherWidget(location) {
+    // Mock weather for now
+    const weathers = [
+      { icon: '☀️', temp: '28°C', desc: 'Clear sky', tip: '✅ Good day for harvesting' },
+      { icon: '⛅', temp: '25°C', desc: 'Partly cloudy', tip: '💧 Ideal for irrigation' },
+      { icon: '🌧️', temp: '22°C', desc: 'Light rain', tip: '⚠️ Delay pesticide spraying' },
+      { icon: '🌤️', temp: '30°C', desc: 'Sunny', tip: '☀️ Dry crops if needed' }
+    ];
+    const w = weathers[Math.floor(Math.random() * weathers.length)];
+    document.getElementById('wb-icon').textContent = w.icon;
+    document.getElementById('wb-temp').textContent = w.temp;
+    document.getElementById('wb-desc').textContent = w.desc;
+    document.getElementById('wb-tip').textContent = w.tip;
+    document.getElementById('weather-tile-text').textContent = `${w.icon} ${w.temp}`;
+  }
+
+  function getCropEmoji(crop) {
+    const map = { tomato:'🍅', onion:'🧅', potato:'🥔', wheat:'🌾', rice:'🍚', sugarcane:'🌿', cotton:'🌸', soybean:'🫘', maize:'🌽', groundnut:'🥜', banana:'🍌', mango:'🥭' };
+    return map[crop?.toLowerCase()] || '🌿';
+  }
+
+  function addToCart(listingId, crop, price) {
+    const cart = JSON.parse(localStorage.getItem('ks_cart') || '[]');
+    const existing = cart.find(i => i.listingId === listingId);
+    if (existing) { existing.qty++; }
+    else { cart.push({ listingId, crop, price, qty: 1 }); }
+    localStorage.setItem('ks_cart', JSON.stringify(cart));
+    showToast(`✅ ${crop} added to cart!`, 'success');
+    
+    // Update notification badge
+    const cartBadge = document.querySelector('.cart-badge');
+    if (cartBadge) cartBadge.textContent = cart.reduce((s, i) => s + i.qty, 0);
+  }
+
+  function markAllRead() {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+    db.collection(COLLECTIONS.notifications).where('userId', '==', uid).get().then(snap => {
+      const batch = db.batch();
+      snap.docs.forEach(d => batch.update(d.ref, { read: true }));
+      batch.commit();
+    });
+    document.getElementById('notif-badge').style.display = 'none';
+  }
+</script>
+</body>
+</html>

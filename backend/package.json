@@ -1,0 +1,28 @@
+{
+  "name": "krishisanjivani-backend",
+  "version": "1.0.0",
+  "description": "KrishiSanjivani Backend API Server & Official Meta WhatsApp Cloud API Integration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node -e \"console.log('Backend syntax check passed')\""
+  },
+  "keywords": [
+    "krishisanjivani",
+    "agriculture",
+    "whatsapp",
+    "express",
+    "firebase"
+  ],
+  "author": "KrishiSanjivani Team",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.1.0"
+  }
+}

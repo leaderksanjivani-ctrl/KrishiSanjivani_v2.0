@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login / Sign Up — KrishiSanjivani</title>
+  <meta name="description" content="Sign in or create a new KrishiSanjivani account as a farmer, buyer, or bulk buyer.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="auth-page">
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div class="auth-brand">
+        <div class="auth-brand-icon">🌾</div>
+        <h1 class="auth-brand-name" data-i18n="app_name">KrishiSanjivani</h1>
+        <p data-i18n="tagline">From Farm to Fork — No Middlemen</p>
+      </div>
+      <div class="auth-benefits">
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">💰</span>
+          <div>
+            <strong>Better Prices for Farmers</strong>
+            <span>Earn 35% more than mandi rates</span>
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">🛒</span>
+          <div>
+            <strong>Lower Prices for Buyers</strong>
+            <span>Save 18% on fresh produce</span>
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">🤖</span>
+          <div>
+            <strong>AI-Powered Assistance</strong>
+            <span>Smart pricing, chatbot, demand forecast</span>
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">🚚</span>
+          <div>
+            <strong>Optimized Delivery</strong>
+            <span>AI route planning, real-time tracking</span>
+          </div>
+        </div>
+      </div>
+      <div class="auth-left-footer">
+        <span class="badge badge-green">🔒 Secure</span>
+        <span class="badge badge-blue">🇮🇳 Made in India</span>
+        <span class="badge badge-gold">🏆 SIH 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL — AUTH FORMS -->
+  <div class="auth-right">
+    <div class="auth-card">
+      <!-- TABS -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')" data-i18n="btn_login">Login</button>
+        <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')" data-i18n="btn_signup">Sign Up</button>
+      </div>
+
+      <!-- ========== LOGIN FORM ========== -->
+      <div id="form-login" class="auth-form-section">
+        <h2 class="auth-form-title" data-i18n="login_title">Welcome Back</h2>
+        <p class="auth-form-subtitle">Sign in to your KrishiSanjivani account</p>
+
+        <!-- Google Sign In -->
+        <button class="btn-google-sso" id="btn-google-login">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <span data-i18n="btn_google">Continue with Google</span>
+        </button>
+
+        <div class="auth-divider">
+          <span data-i18n="or">OR</span>
+        </div>
+
+        <!-- Login Tabs: Email / Phone -->
+        <div class="method-tabs">
+          <button class="method-tab active" id="method-email" onclick="switchLoginMethod('email')">📧 Email</button>
+          <button class="method-tab" id="method-phone" onclick="switchLoginMethod('phone')">📱 Phone OTP</button>
+        </div>
+
+        <!-- Email Login -->
+        <div id="login-email-form">
+          <div class="form-group">
+            <label class="form-label" data-i18n="email">Email</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📧</span>
+              <input type="email" class="form-input" id="login-email" placeholder="your@email.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="password">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" class="form-input" id="login-password" placeholder="Enter password">
+              <button class="input-btn" onclick="togglePasswordVisibility('login-password')">👁️</button>
+            </div>
+          </div>
+          <div class="flex-between mb-md">
+            <label class="flex gap-xs" style="align-items:center;cursor:pointer">
+              <input type="checkbox" id="remember-me"> <span style="font-size:13px">Remember me</span>
+            </label>
+            <a href="#" class="text-green" style="font-size:13px" onclick="forgotPassword()" data-i18n="forgot_password">Forgot Password?</a>
+          </div>
+          <button class="btn btn-primary btn-full" id="btn-email-login">
+            <span data-i18n="btn_login">Login</span>
+          </button>
+          <div id="login-error" class="form-error mt-sm" style="display:none"></div>
+        </div>
+
+        <!-- Phone Login -->
+        <div id="login-phone-form" style="display:none">
+          <div class="form-group">
+            <label class="form-label" data-i18n="phone">Phone Number</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📱</span>
+              <input type="tel" class="form-input" id="login-phone" placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+          <div id="phone-otp-section" style="display:none">
+            <div class="form-group">
+              <label class="form-label">OTP</label>
+              <div class="otp-inputs" id="otp-inputs">
+                <input type="text" class="otp-box" maxlength="1" id="otp0">
+                <input type="text" class="otp-box" maxlength="1" id="otp1">
+                <input type="text" class="otp-box" maxlength="1" id="otp2">
+                <input type="text" class="otp-box" maxlength="1" id="otp3">
+                <input type="text" class="otp-box" maxlength="1" id="otp4">
+                <input type="text" class="otp-box" maxlength="1" id="otp5">
+              </div>
+              <div class="flex-between mt-sm">
+                <span style="font-size:13px;color:var(--c-text-muted)" id="otp-sent-text" data-i18n="otp_sent"></span>
+                <button onclick="resendOTP()" style="font-size:13px;background:none;border:none;color:var(--c-green);cursor:pointer" data-i18n="otp_resend">Resend OTP</button>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-full" id="btn-verify-otp">
+              <span data-i18n="otp_verify">Verify OTP</span>
+            </button>
+          </div>
+          <button class="btn btn-outline btn-full" id="btn-send-otp" style="display:block">
+            Send OTP
+          </button>
+          <div id="recaptcha-container"></div>
+          <div id="phone-error" class="form-error mt-sm" style="display:none"></div>
+        </div>
+
+        <p class="auth-switch-text">
+          <span data-i18n="no_account">Don't have an account?</span>
+          <a href="#" onclick="switchTab('signup')" class="text-green" data-i18n="btn_signup">Sign Up</a>
+        </p>
+      </div>
+
+      <!-- ========== SIGNUP FORM ========== -->
+      <div id="form-signup" class="auth-form-section" style="display:none">
+        <h2 class="auth-form-title" data-i18n="signup_title">Create Account</h2>
+        <p class="auth-form-subtitle">Join 50,000+ farmers and buyers on KrishiSanjivani</p>
+
+        <!-- Google Sign Up -->
+        <button class="btn-google-sso" id="btn-google-signup">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <span data-i18n="btn_google">Continue with Google</span>
+        </button>
+        <div class="auth-divider"><span data-i18n="or">OR</span></div>
+
+        <!-- Step 1: Basic Info -->
+        <div id="signup-step1">
+          <div class="form-group">
+            <label class="form-label" data-i18n="name">Full Name</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input type="text" class="form-input" id="signup-name" placeholder="Ramesh Patil">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="email">Email</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📧</span>
+              <input type="email" class="form-input" id="signup-email" placeholder="your@email.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="phone">Phone (for OTP)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📱</span>
+              <input type="tel" class="form-input" id="signup-phone" placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="password">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" class="form-input" id="signup-password" placeholder="Min 6 characters">
+              <button class="input-btn" onclick="togglePasswordVisibility('signup-password')">👁️</button>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="proceedToRoleSelect()">
+            Next → Choose Role
+          </button>
+          <div id="signup-error" class="form-error mt-sm" style="display:none"></div>
+        </div>
+
+        <!-- Step 2: Role Selection -->
+        <div id="signup-step2" style="display:none">
+          <div class="role-back">
+            <button onclick="document.getElementById('signup-step2').style.display='none';document.getElementById('signup-step1').style.display='block'" class="btn btn-ghost btn-sm">← Back</button>
+          </div>
+          <h3 class="role-title" data-i18n="i_am">I am a</h3>
+          <div class="role-grid">
+            <button class="role-card" id="role-farmer" onclick="selectRole('farmer')">
+              <div class="role-icon">👨‍🌾</div>
+              <strong data-i18n="role_farmer">Farmer</strong>
+              <span>Sell produce, rent equipment</span>
+            </button>
+            <button class="role-card" id="role-buyer" onclick="selectRole('buyer')">
+              <div class="role-icon">🛒</div>
+              <strong data-i18n="role_buyer">Buyer</strong>
+              <span>Buy fresh produce directly</span>
+            </button>
+            <button class="role-card" id="role-bulk" onclick="selectRole('bulk_buyer')">
+              <div class="role-icon">🏢</div>
+              <strong data-i18n="role_bulk_buyer">Bulk Buyer</strong>
+              <span>FPO, restaurant, wholesaler</span>
+            </button>
+          </div>
+          <button class="btn btn-primary btn-full mt-md" id="btn-complete-signup" disabled>
+            🎉 Create My Account
+          </button>
+          <div id="signup-step2-error" class="form-error mt-sm" style="display:none"></div>
+        </div>
+
+        <p class="auth-switch-text">
+          <span data-i18n="have_account">Already have an account?</span>
+          <a href="#" onclick="switchTab('login')" class="text-green" data-i18n="btn_login">Login</a>
+        </p>
+      </div>
+
+    </div>
+    <!-- Trust badges -->
+    <div class="auth-trust">
+      <span>🔒 256-bit SSL Encrypted</span>
+      <span>•</span>
+      <span>🇮🇳 Aadhaar-Ready</span>
+      <span>•</span>
+      <span>✅ CERT-In Compliant</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  initFirebase();
+  
+  let selectedRole = null;
+  let confirmationResult = null;
+  let recaptchaVerifier = null;
+  
+  const urlParams = new URLSearchParams(location.search);
+  const redirectPage = urlParams.get('redirect') || 'dashboard.html';
+  const initMode = urlParams.get('mode') || 'login';
+  const initRole = urlParams.get('role');
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    
+    // Check if already authenticated
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const isAdmin = typeof isAdminEmail === 'function' && isAdminEmail(user.email);
+          const userDocRef = db.collection(COLLECTIONS.users).doc(user.uid);
+          let doc = null;
+          try { doc = await userDocRef.get(); } catch(err) { console.warn('Firestore read error:', err); }
+
+          if (isAdmin || (doc && doc.exists && doc.data().role === 'admin')) {
+            // Ensure admin role document exists
+            try {
+              await userDocRef.set({
+                uid: user.uid,
+                name: user.displayName || 'System Admin',
+                email: user.email || 'admin@gmail.com',
+                role: 'admin',
+                isVerified: true,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              }, { merge: true });
+            } catch(setErr) { console.warn('Admin profile set warning:', setErr); }
+
+            showToastMsg('🛡️ Welcome Admin! Redirecting...', 'success');
+            setTimeout(() => location.href = 'admin-dashboard.html', 600);
+            return;
+          }
+
+          if (doc && doc.exists && doc.data().role) {
+            const dest = redirectPage === 'admin-dashboard.html' ? 'dashboard.html' : redirectPage;
+            location.href = dest;
+          } else {
+            // User exists in Auth but not Firestore — show role selection
+            switchTab('signup');
+            document.getElementById('signup-step1').style.display = 'none';
+            document.getElementById('signup-step2').style.display = 'block';
+          }
+        } catch (e) {
+          console.warn('Profile check error:', e);
+          if (user.email && isAdminEmail(user.email)) {
+            location.href = 'admin-dashboard.html';
+          } else {
+            switchTab('signup');
+            document.getElementById('signup-step1').style.display = 'none';
+            document.getElementById('signup-step2').style.display = 'block';
+          }
+        }
+      }
+    });
+
+    if (initMode === 'signup') switchTab('signup');
+    if (initRole) selectRole(initRole);
+    
+    // OTP box auto-advance
+    document.querySelectorAll('.otp-box').forEach((box, i, arr) => {
+      box.addEventListener('input', e => {
+        if (e.target.value && i < arr.length - 1) arr[i+1].focus();
+      });
+      box.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !e.target.value && i > 0) arr[i-1].focus();
+      });
+    });
+
+    // Email Login
+    document.getElementById('btn-email-login').addEventListener('click', handleEmailLogin);
+    document.getElementById('login-password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleEmailLogin();
+    });
+
+    // Google buttons
+    document.getElementById('btn-google-login').addEventListener('click', handleGoogleAuth);
+    document.getElementById('btn-google-signup').addEventListener('click', handleGoogleAuth);
+
+    // Send OTP
+    document.getElementById('btn-send-otp').addEventListener('click', handleSendOTP);
+    document.getElementById('btn-verify-otp').addEventListener('click', handleVerifyOTP);
+
+    // Complete signup
+    document.getElementById('btn-complete-signup').addEventListener('click', handleCompleteSignup);
+  });
+
+  function switchTab(tab) {
+    document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('form-signup').style.display = tab === 'signup' ? 'block' : 'none';
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+  }
+
+  function switchLoginMethod(method) {
+    document.getElementById('login-email-form').style.display = method === 'email' ? 'block' : 'none';
+    document.getElementById('login-phone-form').style.display = method === 'phone' ? 'block' : 'none';
+    document.getElementById('method-email').classList.toggle('active', method === 'email');
+    document.getElementById('method-phone').classList.toggle('active', method === 'phone');
+  }
+
+  function selectRole(role) {
+    selectedRole = role;
+    document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('role-' + (role === 'bulk_buyer' ? 'bulk' : role)).classList.add('selected');
+    document.getElementById('btn-complete-signup').disabled = false;
+  }
+
+  function togglePasswordVisibility(id) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  function proceedToRoleSelect() {
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const pw = document.getElementById('signup-password').value;
+
+    if (!name) { showError('signup-error', 'Please enter your name'); return; }
+    if (!email && !document.getElementById('signup-phone').value.trim()) {
+      showError('signup-error', 'Please enter email or phone'); return;
+    }
+    if (pw.length < 6) { showError('signup-error', 'Password must be at least 6 characters'); return; }
+
+    document.getElementById('signup-error').style.display = 'none';
+    document.getElementById('signup-step1').style.display = 'none';
+    document.getElementById('signup-step2').style.display = 'block';
+    if (initRole) selectRole(initRole);
+  }
+
+  async function handleEmailLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const btn = document.getElementById('btn-email-login');
+
+    if (!email || !password) { showError('login-error', 'Please fill all fields'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading-spinner" style="width:18px;height:18px;border-width:2px"></div>';
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      showToastMsg('✅ Login successful!', 'success');
+      setTimeout(() => location.href = redirectPage, 800);
+    } catch (e) {
+      let msg = 'Login failed. Check your credentials.';
+      if (e.code === 'auth/user-not-found') msg = 'No account found. Please sign up first.';
+      if (e.code === 'auth/wrong-password') msg = 'Incorrect password.';
+      if (e.code === 'auth/invalid-email') msg = 'Invalid email address.';
+      showError('login-error', msg);
+      btn.disabled = false;
+      btn.innerHTML = '<span data-i18n="btn_login">Login</span>';
+    }
+  }
+
+  async function handleGoogleAuth() {
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const result = await auth.signInWithPopup(provider);
+      const user = result.user;
+
+      // Check if user profile exists in Firestore
+      let docExists = false;
+      let hasRole = false;
+      try {
+        const doc = await db.collection(COLLECTIONS.users).doc(user.uid).get();
+        docExists = doc.exists;
+        hasRole = docExists && !!doc.data().role;
+      } catch (err) {
+        console.warn('Firestore read permission warning during Google Auth:', err);
+      }
+
+      if (!hasRole) {
+        // New user — show role selection
+        switchTab('signup');
+        document.getElementById('signup-step1').style.display = 'none';
+        document.getElementById('signup-step2').style.display = 'block';
+        showToastMsg('👋 Welcome! Please select your role.', 'info');
+      } else {
+        showToastMsg('✅ Logged in with Google!', 'success');
+        setTimeout(() => location.href = redirectPage, 800);
+      }
+    } catch (e) {
+      console.error('Google Auth error:', e);
+      let msg = e.message;
+      if (e.code === 'auth/operation-not-allowed') {
+        msg = 'Google Sign-in is not enabled in Firebase Console. Go to Authentication > Sign-in method > Google.';
+      } else if (e.code === 'permission-denied' || (e.message && e.message.includes('insufficient permissions'))) {
+        msg = 'Missing Firestore permissions. Check Firestore Security Rules in Firebase Console.';
+      }
+      showToastMsg('Google sign-in error: ' + msg, 'error');
+    }
+  }
+
+  function formatPhoneNumber(phone) {
+    phone = (phone || '').trim().replace(/[\s\-\(\)]/g, '');
+    if (!phone) return '';
+    if (!phone.startsWith('+')) {
+      if (phone.length === 10 && /^\d+$/.test(phone)) {
+        phone = '+91' + phone;
+      } else if (phone.length === 12 && phone.startsWith('91')) {
+        phone = '+' + phone;
+      } else {
+        phone = '+' + phone;
+      }
+    }
+    return phone;
+  }
+
+  async function handleSendOTP() {
+    const rawPhone = document.getElementById('login-phone').value;
+    const phone = formatPhoneNumber(rawPhone);
+    if (!phone) { showError('phone-error', 'Enter a valid phone number (e.g. +91 9876543210)'); return; }
+
+    try {
+      // Initialize reCAPTCHA
+      if (!recaptchaVerifier) {
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          size: 'invisible',
+          callback: () => {}
+        });
+        await recaptchaVerifier.render();
+      }
+
+      document.getElementById('btn-send-otp').disabled = true;
+      document.getElementById('btn-send-otp').textContent = 'Sending...';
+
+      confirmationResult = await auth.signInWithPhoneNumber(phone, recaptchaVerifier);
+      document.getElementById('btn-send-otp').style.display = 'none';
+      document.getElementById('phone-otp-section').style.display = 'block';
+      document.getElementById('otp-sent-text').textContent = `OTP sent to ${phone}`;
+      document.getElementById('otp0').focus();
+      showToastMsg('📱 OTP sent!', 'success');
+    } catch (e) {
+      console.error('Send OTP Error:', e);
+      let msg = e.message;
+      if (e.code === 'auth/operation-not-allowed' || (e.message && e.message.includes('region enabled'))) {
+        msg = 'SMS unable to be sent until SMS region policy (+91 India) is enabled in Firebase Console (Authentication > Settings > SMS region policy) & Phone auth is enabled under Sign-in method.';
+      } else if (e.code === 'auth/invalid-phone-number') {
+        msg = 'Invalid phone number format. Please enter in full international format like +91 9876543210.';
+      }
+      showError('phone-error', 'Failed to send OTP: ' + msg);
+      document.getElementById('btn-send-otp').disabled = false;
+      document.getElementById('btn-send-otp').textContent = 'Send OTP';
+      if (recaptchaVerifier) {
+        try { recaptchaVerifier.clear(); } catch(err) {}
+        recaptchaVerifier = null;
+      }
+    }
+  }
+
+  async function handleVerifyOTP() {
+    const otp = Array.from(document.querySelectorAll('.otp-box')).map(b => b.value).join('');
+    if (otp.length !== 6) { showError('phone-error', 'Enter 6-digit OTP'); return; }
+
+    try {
+      document.getElementById('btn-verify-otp').disabled = true;
+      const result = await confirmationResult.confirm(otp);
+      const user = result.user;
+
+      // Check profile
+      let docExists = false;
+      let hasRole = false;
+      try {
+        const doc = await db.collection(COLLECTIONS.users).doc(user.uid).get();
+        docExists = doc.exists;
+        hasRole = docExists && !!doc.data().role;
+      } catch (err) {
+        console.warn('Firestore read error after OTP verify:', err);
+      }
+
+      if (!hasRole) {
+        switchTab('signup');
+        document.getElementById('signup-step1').style.display = 'none';
+        document.getElementById('signup-step2').style.display = 'block';
+      } else {
+        showToastMsg('✅ Phone verified! Logging in...', 'success');
+        setTimeout(() => location.href = redirectPage, 800);
+      }
+    } catch (e) {
+      showError('phone-error', 'Invalid OTP. Try again.');
+      document.getElementById('btn-verify-otp').disabled = false;
+    }
+  }
+
+  async function handleCompleteSignup() {
+    let user = auth.currentUser;
+    if (!selectedRole) {
+      showError('signup-step2-error', 'Please select your role');
+      return;
+    }
+
+    const btn = document.getElementById('btn-complete-signup');
+    btn.disabled = true;
+    btn.textContent = 'Creating account...';
+
+    try {
+      // If email/password signup (no current user signed in yet)
+      if (!user) {
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value;
+        if (!email || !password) {
+          showError('signup-step2-error', 'Please fill in email and password in Step 1');
+          btn.disabled = false;
+          btn.textContent = '🎉 Create My Account';
+          return;
+        }
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        user = cred.user;
+        await user.updateProfile({ displayName: document.getElementById('signup-name').value.trim() });
+      }
+
+      // Save profile to Firestore
+      await db.collection(COLLECTIONS.users).doc(user.uid).set({
+        uid: user.uid,
+        name: user.displayName || document.getElementById('signup-name').value.trim() || 'User',
+        email: user.email || document.getElementById('signup-email').value.trim() || '',
+        phone: user.phoneNumber || document.getElementById('signup-phone').value.trim() || '',
+        role: selectedRole,
+        language: localStorage.getItem('ks_lang') || 'en',
+        photoURL: user.photoURL || null,
+        rating: 0,
+        totalRatings: 0,
+        location: null,
+        walletBalance: 0,
+        totalEarnings: 0,
+        mandiSavings: 0,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        isVerified: false,
+        isFPO: false
+      }, { merge: true });
+
+      // Send welcome notification
+      try {
+        await db.collection(COLLECTIONS.notifications).add({
+          userId: user.uid,
+          title: '🎉 Welcome to KrishiSanjivani!',
+          body: selectedRole === 'farmer' ? 'Start listing your produce and earn more!' : 'Discover fresh produce directly from farmers!',
+          icon: '🌾',
+          read: false,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch(nErr) {
+        console.warn('Notification write warning:', nErr);
+      }
+
+      showToastMsg('🎉 Account created! Welcome!', 'success');
+      setTimeout(() => location.href = redirectPage, 1000);
+    } catch (e) {
+      console.error('Signup complete error:', e);
+      let msg = 'Sign up failed: ' + e.message;
+      if (e.code === 'auth/email-already-in-use') msg = 'Email already registered. Please login.';
+      if (e.code === 'permission-denied' || (e.message && e.message.includes('insufficient permissions'))) {
+        msg = 'Firestore permission denied. Please update Firestore security rules in Firebase console.';
+      }
+      showError('signup-step2-error', msg);
+      btn.disabled = false;
+      btn.textContent = '🎉 Create My Account';
+    }
+  }
+
+  async function forgotPassword() {
+    const email = document.getElementById('login-email').value.trim();
+    if (!email) { showError('login-error', 'Enter your email first'); return; }
+    try {
+      await auth.sendPasswordResetEmail(email);
+      showToastMsg('📧 Password reset email sent!', 'success');
+    } catch (e) {
+      showError('login-error', 'Could not send reset email: ' + e.message);
+    }
+  }
+
+  async function resendOTP() {
+    recaptchaVerifier = null;
+    await handleSendOTP();
+  }
+
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.style.display = 'block'; }
+  }
+
+  function showToastMsg(msg, type) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.add('exit'); setTimeout(() => toast.remove(), 300); }, 3000);
+  }
+</script>
+</body>
+</html>

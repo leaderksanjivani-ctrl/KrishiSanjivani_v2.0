@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — KrishiSanjivani Governance</title>
+  <meta name="description" content="KrishiSanjivani System Governance & Admin Control Center.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --admin-navy: #0f172a;
+      --admin-navy-light: #1e293b;
+      --admin-accent: #10b981;
+      --admin-gold: #f59e0b;
+      --admin-danger: #ef4444;
+    }
+    body {
+      background-color: #f1f5f9;
+    }
+    .admin-header {
+      background: linear-gradient(135deg, var(--admin-navy) 0%, var(--admin-navy-light) 100%);
+      color: white;
+      padding: 24px 0;
+      border-bottom: 4px solid var(--c-green);
+    }
+    .admin-nav-tabs {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 12px 0;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 24px;
+    }
+    .admin-tab-btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: white;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .admin-tab-btn:hover {
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    .admin-tab-btn.active {
+      background: var(--c-green-dark, #064e3b);
+      color: white;
+      border-color: var(--c-green);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+    .stat-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+    }
+    .kpi-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .kpi-label {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+    }
+    .kpi-trend {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 6px;
+      color: #10b981;
+    }
+    .chart-box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      margin-bottom: 24px;
+    }
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+    .admin-table-container {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+    .admin-table th {
+      background: #f8fafc;
+      padding: 14px 16px;
+      color: #475569;
+      font-weight: 700;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .admin-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+    .admin-table tr:hover {
+      background: #f8fafc;
+    }
+    .badge-verify {
+      background: #dcfce7;
+      color: #15803d;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .badge-unverify {
+      background: #fef3c7;
+      color: #b45309;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .table-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-action {
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-action-green { background: #10b981; color: white; }
+    .btn-action-amber { background: #f59e0b; color: white; }
+    .btn-action-red { background: #ef4444; color: white; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="admin-dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🛡️</div>
+    <span class="nav-logo-text">KrishiSanjivani Admin</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <span class="badge badge-green" id="admin-user-tag">🛡️ Logged in as Admin</span>
+    <button onclick="logoutAdmin()" class="btn btn-outline btn-sm">Logout</button>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="admin-header">
+  <div class="container flex-between" style="flex-wrap:wrap;gap:16px">
+    <div>
+      <h1 style="font-size:24px;margin-bottom:4px">🌾 System Governance & Analytics</h1>
+      <p style="opacity:0.8;font-size:14px">Real-time marketplace monitoring, sales breakdown & user handling</p>
+    </div>
+    <div class="flex gap-sm">
+      <button class="btn btn-primary btn-sm" onclick="exportSalesReport()">📥 Download Sales Report</button>
+      <button class="btn btn-ghost btn-sm" style="color:white" onclick="refreshAdminData()">🔄 Refresh Data</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrapper container mt-md">
+
+  <!-- NAVIGATION TABS -->
+  <div class="admin-nav-tabs">
+    <button class="admin-tab-btn active" id="tab-analytics" onclick="switchAdminTab('analytics')">📊 Sales & Financials</button>
+    <button class="admin-tab-btn" id="tab-users" onclick="switchAdminTab('users')">👥 User Handling</button>
+    <button class="admin-tab-btn" id="tab-listings" onclick="switchAdminTab('listings')">🌾 Marketplace Listings</button>
+    <button class="admin-tab-btn" id="tab-orders" onclick="switchAdminTab('orders')">📦 Orders & Delivery</button>
+    <button class="admin-tab-btn" id="tab-complaints" onclick="switchAdminTab('complaints')">⚖️ Grievance Resolution</button>
+  </div>
+
+  <!-- KPI OVERVIEW CARDS -->
+  <div class="stat-kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-val" id="kpi-gmv">₹4,85,200</div>
+      <div class="kpi-label">Gross Merchandise Value (GMV)</div>
+      <div class="kpi-trend">↑ 24.5% this month</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📈</div>
+      <div class="kpi-val" id="kpi-savings">₹1,42,800</div>
+      <div class="kpi-label">Direct Farmer Mandi Savings</div>
+      <div class="kpi-trend">↑ 35% earned vs Mandi</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">👨‍🌾</div>
+      <div class="kpi-val" id="kpi-users">1,248</div>
+      <div class="kpi-label">Registered Farmers & Buyers</div>
+      <div class="kpi-trend">↑ 85 new this week</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-val" id="kpi-orders">342</div>
+      <div class="kpi-label">Completed Direct Orders</div>
+      <div class="kpi-trend">98.2% fulfillment rate</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: SALES & FINANCIAL ANALYTICS (GRAPHS) -->
+  <div id="section-analytics" class="admin-section">
+    <div class="chart-grid">
+      <!-- Chart 1: Revenue & Mandi Savings -->
+      <div class="chart-box">
+        <h3 class="mb-sm">📈 Sales Revenue & Mandi Price Savings (₹)</h3>
+        <canvas id="salesChart" height="220"></canvas>
+      </div>
+
+      <!-- Chart 2: Category Breakdown -->
+      <div class="chart-box">
+        <h3 class="mb-sm">🥦 Sales Breakdown by Crop Category</h3>
+        <canvas id="categoryChart" height="220"></canvas>
+      </div>
+    </div>
+
+    <!-- Financial Breakdown Table -->
+    <div class="admin-table-container mt-md">
+      <div class="p-md flex-between" style="border-bottom:1px solid #e2e8f0">
+        <h3>📋 Detailed Sales & Financial Breakdown</h3>
+        <div class="flex gap-xs">
+          <input type="text" id="sales-search" class="form-input" placeholder="Search crop or buyer..." style="padding:6px 12px;font-size:13px" onkeyup="filterSalesTable()">
+        </div>
+      </div>
+      <table class="admin-table" id="sales-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Order ID</th>
+            <th>Crop Name</th>
+            <th>Qty</th>
+            <th>Direct Price</th>
+            <th>Mandi Rate</th>
+            <th>Farmer Extra Gain</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="sales-table-body">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 2: USER HANDLING -->
+  <div id="section-users" class="admin-section" style="display:none">
+    <div class="admin-table-container">
+      <div class="p-md flex-between" style="border-bottom:1px solid #e2e8f0;flex-wrap:wrap;gap:12px">
+        <h3>👥 Registered Users & Verification Control</h3>
+        <div class="flex gap-xs">
+          <select id="user-role-filter" class="form-input" style="padding:6px 12px;font-size:13px" onchange="filterUsersTable()">
+            <option value="all">All Roles</option>
+            <option value="farmer">Farmers</option>
+            <option value="buyer">Buyers</option>
+            <option value="bulk_buyer">Bulk Buyers</option>
+            <option value="admin">Admins</option>
+          </select>
+        </div>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Email / Contact</th>
+            <th>Verification</th>
+            <th>Wallet / Earnings</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-table-body">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 3: MARKETPLACE LISTINGS -->
+  <div id="section-listings" class="admin-section" style="display:none">
+    <div class="admin-table-container">
+      <div class="p-md flex-between" style="border-bottom:1px solid #e2e8f0">
+        <h3>🌾 Marketplace Produce & Equipment Listings</h3>
+        <span class="badge badge-green" id="active-listings-count">12 Active Listings</span>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Produce / Equipment</th>
+            <th>Farmer / Owner</th>
+            <th>Location</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Moderation Action</th>
+          </tr>
+        </thead>
+        <tbody id="listings-table-body">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 4: ORDERS & LOGISTICS -->
+  <div id="section-orders" class="admin-section" style="display:none">
+    <div class="admin-table-container">
+      <div class="p-md flex-between" style="border-bottom:1px solid #e2e8f0">
+        <h3>📦 Platform Logistics & Order Management</h3>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Buyer</th>
+            <th>Crop</th>
+            <th>Amount</th>
+            <th>Logistics Status</th>
+            <th>Update Status</th>
+          </tr>
+        </thead>
+        <tbody id="orders-table-body">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 5: COMPLAINTS & GRIEVANCES -->
+  <div id="section-complaints" class="admin-section" style="display:none">
+    <div class="admin-table-container">
+      <div class="p-md flex-between" style="border-bottom:1px solid #e2e8f0">
+        <h3>⚖️ Farmer & Buyer Grievance Resolution</h3>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Ticket ID</th>
+            <th>Complainant</th>
+            <th>Subject</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Resolution Action</th>
+          </tr>
+        </thead>
+        <tbody id="complaints-table-body">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script>
+  initFirebase();
+
+  let salesChartObj = null;
+  let categoryChartObj = null;
+
+  // Mock sales data for reporting
+  const mockSalesData = [
+    { id: 'ORD-9821', date: '2026-09-14', crop: 'Organic Tomatoes', qty: '500 kg', price: '₹14,000', mandiRate: '₹10,500', extraGain: '+₹3,500', status: 'Delivered' },
+    { id: 'ORD-9822', date: '2026-09-14', crop: 'Sharbati Wheat', qty: '2000 kg', price: '₹44,000', mandiRate: '₹38,000', extraGain: '+₹6,000', status: 'Delivered' },
+    { id: 'ORD-9823', date: '2026-09-15', crop: 'Nashik Red Onions', qty: '1200 kg', price: '₹28,800', mandiRate: '₹21,600', extraGain: '+₹7,200', status: 'In Transit' },
+    { id: 'ORD-9824', date: '2026-09-15', crop: 'Alphonso Mangoes', qty: '300 kg', price: '₹24,000', mandiRate: '₹19,500', extraGain: '+₹4,500', status: 'Confirmed' },
+    { id: 'ORD-9825', date: '2026-09-15', crop: 'Sugarcane Batch', qty: '50 Quintal', price: '₹16,000', mandiRate: '₹14,000', extraGain: '+₹2,000', status: 'Placed' }
+  ];
+
+  // Mock users
+  const mockUsers = [
+    { uid: 'u-101', name: 'Ramesh Patil', role: 'farmer', contact: 'ramesh@farm.in', verified: true, balance: '₹48,200' },
+    { uid: 'u-102', name: 'Suresh Deshmukh', role: 'farmer', contact: '+91 98765 43210', verified: true, balance: '₹32,500' },
+    { uid: 'u-103', name: 'Metro Fresh Mart', role: 'bulk_buyer', contact: 'procurement@metrofresh.com', verified: true, balance: '₹1,20,000' },
+    { uid: 'u-104', name: 'Anjali Sharma', role: 'buyer', contact: 'anjali@gmail.com', verified: false, balance: '₹4,500' },
+    { uid: 'u-105', name: 'Sahyadri Farmers Producer Co.', role: 'farmer', contact: 'fpo@sahyadri.org', verified: true, balance: '₹3,40,000' },
+    { uid: 'u-106', name: 'System Administrator', role: 'admin', contact: 'admin@gmail.com', verified: true, balance: 'N/A' }
+  ];
+
+  // Mock listings
+  const mockListings = [
+    { id: 'list-001', crop: 'Organic Tomatoes', farmer: 'Ramesh Patil', location: 'Nashik, MH', price: '₹28/kg', status: 'Active' },
+    { id: 'list-002', crop: 'Sharbati Wheat', farmer: 'Suresh Deshmukh', location: 'Indore, MP', price: '₹22/kg', status: 'Active' },
+    { id: 'eq-001', crop: 'Mahindra 575 Tractor', farmer: 'Sahyadri FPO', location: 'Pune, MH', price: '₹1,200/day', status: 'Rented' }
+  ];
+
+  // Mock complaints
+  const mockComplaints = [
+    { id: 'TKT-101', name: 'Anjali Sharma', subject: 'Delay in tomato delivery', category: 'Logistics', status: 'Pending' },
+    { id: 'TKT-102', name: 'Ramesh Patil', subject: 'Razorpay payout clearance', category: 'Payment', status: 'Resolved' }
+  ];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Auth Check
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        // Allow demo view or redirect to admin-login
+        console.log('Demo mode or unauthenticated admin view');
+      } else {
+        document.getElementById('admin-user-tag').textContent = `🛡️ Admin: ${user.email}`;
+      }
+    });
+
+    renderCharts();
+    loadSalesTable();
+    loadUsersTable();
+    loadListingsTable();
+    loadOrdersTable();
+    loadComplaintsTable();
+  });
+
+  function switchAdminTab(tabName) {
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.admin-section').forEach(sec => sec.style.display = 'none');
+
+    document.getElementById('tab-' + tabName).classList.add('active');
+    document.getElementById('section-' + tabName).style.display = 'block';
+  }
+
+  function renderCharts() {
+    // Chart 1: Sales & Savings Trend
+    const ctx1 = document.getElementById('salesChart').getContext('2d');
+    if (salesChartObj) salesChartObj.destroy();
+    salesChartObj = new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+        datasets: [
+          {
+            label: 'Total Platform GMV (₹)',
+            data: [120000, 185000, 240000, 310000, 420000, 485200],
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Farmer Mandi Gain (₹)',
+            data: [35000, 52000, 71000, 92000, 125000, 142800],
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            fill: true,
+            tension: 0.3
+          }
+        ]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // Chart 2: Category Breakdown
+    const ctx2 = document.getElementById('categoryChart').getContext('2d');
+    if (categoryChartObj) categoryChartObj.destroy();
+    categoryChartObj = new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: ['Vegetables', 'Grains & Pulses', 'Fruits', 'Equipment Rental'],
+        datasets: [{
+          data: [40, 32, 18, 10],
+          backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6']
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+  }
+
+  function loadSalesTable() {
+    const tbody = document.getElementById('sales-table-body');
+    tbody.innerHTML = mockSalesData.map(item => `
+      <tr>
+        <td>${item.date}</td>
+        <td><strong>${item.id}</strong></td>
+        <td>${item.crop}</td>
+        <td>${item.qty}</td>
+        <td><strong>${item.price}</strong></td>
+        <td><s style="color:#94a3b8">${item.mandiRate}</s></td>
+        <td style="color:#10b981;font-weight:700">${item.extraGain}</td>
+        <td><span class="badge ${item.status === 'Delivered' ? 'badge-green' : 'badge-blue'}">${item.status}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  function filterSalesTable() {
+    const query = document.getElementById('sales-search').value.toLowerCase();
+    const rows = document.querySelectorAll('#sales-table-body tr');
+    rows.forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+    });
+  }
+
+  function loadUsersTable() {
+    const tbody = document.getElementById('users-table-body');
+    tbody.innerHTML = mockUsers.map(u => `
+      <tr>
+        <td><strong>${u.name}</strong></td>
+        <td><span class="badge badge-blue">${u.role.toUpperCase()}</span></td>
+        <td>${u.contact}</td>
+        <td>
+          ${u.verified 
+            ? `<span class="badge-verify">✓ Verified</span>` 
+            : `<span class="badge-unverify">⏳ Pending</span>`}
+        </td>
+        <td>${u.balance}</td>
+        <td class="table-actions">
+          <button class="btn-action btn-action-green" onclick="toggleVerify('${u.uid}')">${u.verified ? 'Unverify' : 'Approve'}</button>
+          <button class="btn-action btn-action-red" onclick="suspendUser('${u.uid}')">Suspend</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function filterUsersTable() {
+    const role = document.getElementById('user-role-filter').value;
+    const rows = document.querySelectorAll('#users-table-body tr');
+    rows.forEach((row, idx) => {
+      const user = mockUsers[idx];
+      if (role === 'all' || user?.role === role) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+
+  function toggleVerify(uid) {
+    const u = mockUsers.find(x => x.uid === uid);
+    if (u) {
+      u.verified = !u.verified;
+      loadUsersTable();
+      showToastMsg(`User verification status updated!`, 'success');
+    }
+  }
+
+  function suspendUser(uid) {
+    showToastMsg(`User ${uid} status updated`, 'info');
+  }
+
+  function loadListingsTable() {
+    const tbody = document.getElementById('listings-table-body');
+    tbody.innerHTML = mockListings.map(l => `
+      <tr>
+        <td>${l.id}</td>
+        <td><strong>${l.crop}</strong></td>
+        <td>${l.farmer}</td>
+        <td>${l.location}</td>
+        <td><strong>${l.price}</strong></td>
+        <td><span class="badge badge-green">${l.status}</span></td>
+        <td class="table-actions">
+          <button class="btn-action btn-action-amber" onclick="showToastMsg('Listing flagged', 'warning')">Flag</button>
+          <button class="btn-action btn-action-red" onclick="showToastMsg('Listing removed', 'error')">Remove</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function loadOrdersTable() {
+    const tbody = document.getElementById('orders-table-body');
+    tbody.innerHTML = mockSalesData.map(o => `
+      <tr>
+        <td><strong>${o.id}</strong></td>
+        <td>Metro Fresh Mart</td>
+        <td>${o.crop}</td>
+        <td>${o.price}</td>
+        <td><span class="badge badge-gold">${o.status}</span></td>
+        <td class="table-actions">
+          <button class="btn-action btn-action-green" onclick="showToastMsg('Order status updated', 'success')">Advance Status</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function loadComplaintsTable() {
+    const tbody = document.getElementById('complaints-table-body');
+    tbody.innerHTML = mockComplaints.map(c => `
+      <tr>
+        <td><strong>${c.id}</strong></td>
+        <td>${c.name}</td>
+        <td>${c.subject}</td>
+        <td><span class="badge badge-blue">${c.category}</span></td>
+        <td><span class="badge ${c.status === 'Resolved' ? 'badge-green' : 'badge-orange'}">${c.status}</span></td>
+        <td class="table-actions">
+          <button class="btn-action btn-action-green" onclick="resolveTicket('${c.id}')">Resolve Ticket</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function resolveTicket(id) {
+    const ticket = mockComplaints.find(t => t.id === id);
+    if (ticket) {
+      ticket.status = 'Resolved';
+      loadComplaintsTable();
+      showToastMsg(`Ticket ${id} marked as resolved!`, 'success');
+    }
+  }
+
+  function exportSalesReport() {
+    showToastMsg('📥 Generating & downloading Sales Breakdown CSV...', 'success');
+  }
+
+  function refreshAdminData() {
+    showToastMsg('🔄 Admin data refreshed!', 'info');
+  }
+
+  function logoutAdmin() {
+    auth.signOut().then(() => {
+      location.href = 'admin-login.html';
+    });
+  }
+
+  function showToastMsg(msg, type) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.add('exit'); setTimeout(() => toast.remove(), 300); }, 3000);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "listings": [
+    {
+      "id": "list-001",
+      "cropName": "Organic Tomatoes",
+      "category": "Vegetables",
+      "price": 28,
+      "unit": "kg",
+      "quantity": 500,
+      "location": "Nashik, Maharashtra",
+      "organicCertified": true,
+      "status": "active"
+    },
+    {
+      "id": "list-002",
+      "cropName": "Sharbati Wheat",
+      "category": "Grains",
+      "price": 22,
+      "unit": "kg",
+      "quantity": 2000,
+      "location": "Indore, Madhya Pradesh",
+      "organicCertified": false,
+      "status": "active"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "eq-001",
+      "title": "Mahindra 575 DI Tractor (45 HP)",
+      "ratePerDay": 1200,
+      "location": "Pune, Maharashtra",
+      "available": true
+    },
+    {
+      "id": "eq-002",
+      "title": "Solar Powered Crop Dryer",
+      "ratePerDay": 400,
+      "location": "Kolhapur, Maharashtra",
+      "available": true
+    }
+  ]
+}

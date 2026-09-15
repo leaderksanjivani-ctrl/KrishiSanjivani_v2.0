@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal Login — KrishiSanjivani</title>
+  <meta name="description" content="Administrator authentication portal for KrishiSanjivani.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <style>
+    .admin-badge-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .demo-creds-box {
+      background: var(--c-surface-soft, #f8fafc);
+      border: 1px dashed var(--c-border, #cbd5e1);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .quick-fill-btn {
+      background: white;
+      border: 1px solid var(--c-border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--c-green-dark);
+      margin-top: 6px;
+      font-weight: 600;
+    }
+    .quick-fill-btn:hover {
+      background: var(--c-green-light);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <a href="auth.html" class="btn btn-ghost btn-sm">User Login</a>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="auth-page">
+  <!-- LEFT PANEL -->
+  <div class="auth-left" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+    <div class="auth-left-content">
+      <div class="auth-brand">
+        <div class="auth-brand-icon">🛡️</div>
+        <h1 class="auth-brand-name" style="color:#fff">KrishiSanjivani Admin</h1>
+        <p style="color:#94a3b8">Control Center & System Governance</p>
+      </div>
+      <div class="auth-benefits">
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">📊</span>
+          <div>
+            <strong style="color:#f8fafc">Sales & Financial Reports</strong>
+            <span style="color:#cbd5e1">Track GMV, mandi savings, platform revenue</span>
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">👥</span>
+          <div>
+            <strong style="color:#f8fafc">User & FPO Management</strong>
+            <span style="color:#cbd5e1">Verify farmers, buyers & FPO cooperatives</span>
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">🌾</span>
+          <div>
+            <strong style="color:#f8fafc">Marketplace Governance</strong>
+            <span style="color:#cbd5e1">Audit active listings & equipment rentals</span>
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">⚖️</span>
+          <div>
+            <strong style="color:#f8fafc">Grievance & Resolution</strong>
+            <span style="color:#cbd5e1">Resolve buyer/farmer complaints & price disputes</span>
+          </div>
+        </div>
+      </div>
+      <div class="auth-left-footer">
+        <span class="badge badge-red">🔒 Administrator Access</span>
+        <span class="badge badge-gold">🏆 SIH 2026 Admin Portal</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="admin-badge-header">
+        🛡️ System Administration
+      </div>
+      <h2 class="auth-form-title">Admin Sign In</h2>
+      <p class="auth-form-subtitle">Enter your administrator credentials to access the panel</p>
+
+      <div class="demo-creds-box">
+        <strong>💡 Quick Admin Login Shortcut:</strong>
+        <div style="margin-top:4px">Email: <code>admin@gmail.com</code> or <code>admin@krishisanjivani.gov.in</code></div>
+        <div class="flex gap-xs mt-xs">
+          <button class="quick-fill-btn" onclick="quickFill('admin@gmail.com')">Fill admin@gmail.com</button>
+          <button class="quick-fill-btn" onclick="quickFill('admin@krishisanjivani.gov.in')">Fill admin@krishisanjivani.gov.in</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Admin Email</label>
+        <div class="input-wrapper">
+          <span class="input-icon">📧</span>
+          <input type="email" class="form-input" id="admin-email" placeholder="admin@gmail.com" value="admin@gmail.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="form-input" id="admin-password" placeholder="Enter admin password" value="admin123">
+          <button class="input-btn" onclick="togglePasswordVisibility('admin-password')">👁️</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-full" id="btn-admin-login">
+        🛡️ Access Admin Dashboard
+      </button>
+
+      <div id="admin-error" class="form-error mt-sm" style="display:none"></div>
+
+      <p class="auth-switch-text mt-md">
+        <span>Not an admin?</span>
+        <a href="auth.html" class="text-green">Go to Standard User Login</a>
+      </p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+  initFirebase();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+
+    // Check auth state
+    auth.onAuthStateChanged(async (user) => {
+      if (user && (isAdminEmail(user.email) || user.email === 'admin@gmail.com')) {
+        showToastMsg('🛡️ Admin session detected! Redirecting...', 'success');
+        setTimeout(() => location.href = 'admin-dashboard.html', 500);
+      }
+    });
+
+    document.getElementById('btn-admin-login').addEventListener('click', handleAdminLogin);
+    document.getElementById('admin-password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleAdminLogin();
+    });
+  });
+
+  function quickFill(email) {
+    document.getElementById('admin-email').value = email;
+  }
+
+  function togglePasswordVisibility(id) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  async function handleAdminLogin() {
+    const email = document.getElementById('admin-email').value.trim();
+    const password = document.getElementById('admin-password').value;
+    const btn = document.getElementById('btn-admin-login');
+
+    if (!email || !password) {
+      showError('admin-error', 'Please enter both admin email and password');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading-spinner" style="width:18px;height:18px;border-width:2px"></div> Authenticating...';
+
+    try {
+      let user = null;
+      try {
+        const cred = await auth.signInWithEmailAndPassword(email, password);
+        user = cred.user;
+      } catch (authErr) {
+        // If user does not exist in Firebase Auth yet, auto-create admin user for local dev testing
+        if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/wrong-password') {
+          try {
+            const cred = await auth.createUserWithEmailAndPassword(email, password);
+            user = cred.user;
+          } catch(createErr) {
+            if (createErr.code === 'auth/email-already-in-use') {
+              throw new Error('Incorrect password for admin account.');
+            }
+            throw authErr;
+          }
+        } else {
+          throw authErr;
+        }
+      }
+
+      if (user) {
+        // Ensure Admin Role in Firestore
+        await db.collection(COLLECTIONS.users).doc(user.uid).set({
+          uid: user.uid,
+          name: 'System Administrator',
+          email: user.email,
+          role: 'admin',
+          isVerified: true,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+        showToastMsg('✅ Admin authentication successful!', 'success');
+        setTimeout(() => location.href = 'admin-dashboard.html', 700);
+      }
+    } catch (e) {
+      console.error('Admin login error:', e);
+      showError('admin-error', e.message || 'Login failed.');
+      btn.disabled = false;
+      btn.innerHTML = '🛡️ Access Admin Dashboard';
+    }
+  }
+
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.style.display = 'block'; }
+  }
+
+  function showToastMsg(msg, type) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.add('exit'); setTimeout(() => toast.remove(), 300); }, 3000);
+  }
+</script>
+</body>
+</html>

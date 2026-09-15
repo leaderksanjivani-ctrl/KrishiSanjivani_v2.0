@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiSanjivani — From Farm to Fork, No Middlemen</title>
+  <meta name="description" content="KrishiSanjivani connects farmers directly with consumers and bulk buyers, eliminating middlemen for better prices for all.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/index.css">
+  <style>
+    /* Page-specific overrides */
+    body { background: #0A1628; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR (Public version) -->
+<nav id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Select Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="auth.html" class="btn btn-outline btn-sm" data-i18n="btn_login">Login</a>
+    <a href="auth.html?mode=signup" class="btn btn-primary btn-sm" data-i18n="btn_signup">Sign Up</a>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grain"></div>
+    <div class="hero-particles" id="hero-particles"></div>
+  </div>
+  <div class="hero-content container">
+    <div class="hero-badge">
+      <span>🏆</span>
+      <span>Smart India Hackathon 2026</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="hero-title-line1" data-i18n="app_name">KrishiSanjivani</span>
+      <span class="hero-title-line2">No Middlemen. Better Prices. Always.</span>
+    </h1>
+    <p class="hero-subtitle" data-i18n="tagline">From Farm to Fork — No Middlemen</p>
+    
+    <!-- Chain Illustration -->
+    <div class="chain-demo">
+      <div class="chain-node old-chain">
+        <div class="chain-icon">👨‍🌾</div>
+        <div class="chain-label">Farmer</div>
+        <div class="chain-price earn-less">Earns ₹18</div>
+      </div>
+      <div class="chain-arrow old">→<br><small>Middleman 1</small></div>
+      <div class="chain-node old-chain">
+        <div class="chain-icon">🔴</div>
+        <div class="chain-label middleman-cross">Middleman</div>
+      </div>
+      <div class="chain-arrow old">→<br><small>Middleman 2</small></div>
+      <div class="chain-node old-chain">
+        <div class="chain-icon">🏪</div>
+        <div class="chain-label">Market</div>
+        <div class="chain-price pay-more">Consumer Pays ₹50</div>
+      </div>
+    </div>
+
+    <div class="chain-vs">
+      <div class="chain-vs-line"></div>
+      <span class="chain-vs-text">VS</span>
+      <div class="chain-vs-line"></div>
+    </div>
+
+    <div class="chain-demo new-chain-demo">
+      <div class="chain-node new-chain">
+        <div class="chain-icon">👨‍🌾</div>
+        <div class="chain-label">Farmer</div>
+        <div class="chain-price earn-more">Earns ₹29 ↑62%</div>
+      </div>
+      <div class="chain-arrow new">
+        <div class="chain-direct">
+          <span>🌾 KrishiSanjivani</span>
+          <span class="chain-direct-badge">Direct</span>
+        </div>
+        <span>→</span>
+      </div>
+      <div class="chain-node new-chain">
+        <div class="chain-icon">🛒</div>
+        <div class="chain-label">You</div>
+        <div class="chain-price pay-less">Pay ₹32 ↓36%</div>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <a href="auth.html?mode=signup&role=farmer" class="btn btn-secondary btn-lg hero-btn-farmer">
+        🌾 I'm a Farmer — Start Selling
+      </a>
+      <a href="auth.html?mode=signup&role=buyer" class="btn btn-primary btn-lg hero-btn-buyer">
+        🛒 I'm a Buyer — Shop Direct
+      </a>
+    </div>
+    <p class="hero-note">Free to join · No commission on first 3 sales · Secure Payments</p>
+  </div>
+  
+  <div class="hero-scroll">
+    <span>Scroll to explore</span>
+    <div class="scroll-arrow">↓</div>
+  </div>
+</section>
+
+<!-- STATS SECTION -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card" data-count="50000" data-suffix="+">
+        <div class="stat-icon">👨‍🌾</div>
+        <div class="stat-number" id="stat-farmers">50,000+</div>
+        <div class="stat-label">Farmers Connected</div>
+      </div>
+      <div class="stat-card" data-count="200000" data-suffix="+">
+        <div class="stat-icon">🛒</div>
+        <div class="stat-number" id="stat-buyers">2,00,000+</div>
+        <div class="stat-label">Happy Buyers</div>
+      </div>
+      <div class="stat-card" data-count="35" data-suffix="%">
+        <div class="stat-icon">💰</div>
+        <div class="stat-number" id="stat-savings">35%</div>
+        <div class="stat-label">Avg. Farmer Earning Increase</div>
+      </div>
+      <div class="stat-card" data-count="18" data-suffix="%">
+        <div class="stat-icon">🏷️</div>
+        <div class="stat-number" id="stat-consumer">18%</div>
+        <div class="stat-label">Consumer Price Reduction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header text-center" style="justify-content:center;flex-direction:column;gap:8px">
+      <div class="section-tag">Platform Features</div>
+      <h2 class="features-title">Everything a Farmer Needs</h2>
+      <p class="features-subtitle">One platform. Every feature. Built for Bharat.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card" onclick="location.href='marketplace.html'">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#138808,#52C41A)">🌾</div>
+        <h3>Buy &amp; Sell Produce</h3>
+        <p>Direct farm-to-consumer marketplace with photos, prices, and location.</p>
+        <div class="feature-tag">Core Marketplace</div>
+      </div>
+      <div class="feature-card" onclick="location.href='weather.html'">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#0070C0,#00B4D8)">☁️</div>
+        <h3>Weather Forecast</h3>
+        <p>5-day forecast with farm-specific advice. Know when to spray, sow, or harvest.</p>
+        <div class="feature-tag">Live Data</div>
+      </div>
+      <div class="feature-card chatbot-trigger" id="open-chatbot-demo">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">🤖</div>
+        <h3>AI Chatbot (KrishiBot)</h3>
+        <p>Ask about prices, orders, schemes in Hindi, Marathi or English — 24/7.</p>
+        <div class="feature-tag">AI Powered</div>
+      </div>
+      <div class="feature-card" onclick="location.href='schemes.html'">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#D97706,#F59E0B)">🏛️</div>
+        <h3>Govt. Schemes</h3>
+        <p>PM-KISAN, crop insurance, MahaDBT and 15+ schemes — all in one place.</p>
+        <div class="feature-tag">MahaDBT</div>
+      </div>
+      <div class="feature-card" onclick="location.href='equipment-rental.html'">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#FF6B00,#FF9A3C)">🚜</div>
+        <h3>Equipment Rental</h3>
+        <p>Rent tractors, drones, tillers by the day. No need to buy expensive machinery.</p>
+        <div class="feature-tag">Peer-to-Peer</div>
+      </div>
+      <div class="feature-card" onclick="location.href='rights-acts.html'">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#DC2626,#F87171)">📜</div>
+        <h3>Farmer Rights &amp; Acts</h3>
+        <p>Understand MSP, APMC, contract farming and more — in plain language.</p>
+        <div class="feature-tag">Legal Aid</div>
+      </div>
+      <div class="feature-card" onclick="location.href='order-tracking.html'">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#059669,#34D399)">🚚</div>
+        <h3>Smart Logistics</h3>
+        <p>AI-optimized delivery routes. Track every order live on the map.</p>
+        <div class="feature-tag">Route AI</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#1A237E,#3949AB)">🔊</div>
+        <h3>Voice Assist</h3>
+        <p>Read-aloud and voice search in Hindi &amp; Marathi for low-literacy users.</p>
+        <div class="feature-tag">Accessibility</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="container">
+    <div class="section-header" style="justify-content:center;flex-direction:column;gap:8px;text-align:center">
+      <div class="section-tag">Process</div>
+      <h2 class="features-title">How It Works</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="how-step">
+        <div class="how-step-num">1</div>
+        <div class="how-step-icon">📱</div>
+        <h3>Sign Up Free</h3>
+        <p>Register as Farmer, Buyer or Bulk Buyer using phone / email / Google.</p>
+      </div>
+      <div class="how-connector">→</div>
+      <div class="how-step">
+        <div class="how-step-num">2</div>
+        <div class="how-step-icon">📸</div>
+        <h3>List or Browse</h3>
+        <p>Farmers list produce with photos. Buyers browse and filter by crop, distance, price.</p>
+      </div>
+      <div class="how-connector">→</div>
+      <div class="how-step">
+        <div class="how-step-num">3</div>
+        <div class="how-step-icon">💳</div>
+        <h3>Pay Securely</h3>
+        <p>Checkout with Razorpay. "Delivery Now" or "Scheduled" — you choose.</p>
+      </div>
+      <div class="how-connector">→</div>
+      <div class="how-step">
+        <div class="how-step-num">4</div>
+        <div class="how-step-icon">🚚</div>
+        <h3>Track &amp; Receive</h3>
+        <p>Live map tracking with AI-optimized routes. Fresh produce at your door.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USP BANNER -->
+<section class="usp-section">
+  <div class="container">
+    <div class="usp-banner">
+      <div class="usp-item">
+        <span class="usp-icon">🌐</span>
+        <span data-i18n="nav_language">3 Languages</span>
+      </div>
+      <div class="usp-divider"></div>
+      <div class="usp-item">
+        <span class="usp-icon">🔒</span>
+        <span>Secure Payments</span>
+      </div>
+      <div class="usp-divider"></div>
+      <div class="usp-item">
+        <span class="usp-icon">🤖</span>
+        <span>AI Powered</span>
+      </div>
+      <div class="usp-divider"></div>
+      <div class="usp-item">
+        <span class="usp-icon">📡</span>
+        <span>Works Offline</span>
+      </div>
+      <div class="usp-divider"></div>
+      <div class="usp-item">
+        <span class="usp-icon">🔊</span>
+        <span>Voice Assist</span>
+      </div>
+      <div class="usp-divider"></div>
+      <div class="usp-item">
+        <span class="usp-icon">0️⃣</span>
+        <span>Zero Middlemen</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="features-title text-center" style="margin-bottom:2rem">Voices from the Field 🌾</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"मैंने पहले ₹18/kg पर टमाटर बेचे। KrishiSanjivani पर ₹30/kg मिले। इससे बड़ा फायदा क्या?"</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👨‍🌾</div>
+          <div>
+            <strong>Raju Patil</strong>
+            <span>Onion Farmer, Nashik</span>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"शेतकऱ्याशी थेट संपर्क. ताजी भाजी, कमी किंमत. प्रत्येक आठवड्याला ₹400 वाचतात!"</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👩</div>
+          <div>
+            <strong>Priya Sharma</strong>
+            <span>Home Buyer, Pune</span>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"As an FPO, we now pool 50 farmers' produce under one listing. Bulk buyers bid directly. Game changer!"</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">🏢</div>
+          <div>
+            <strong>Sahyadri FPO</strong>
+            <span>Farmer Producer Organization, Satara</span>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-content">
+        <h2>Ready to eliminate the middleman?</h2>
+        <p>Join 50,000+ farmers and 2,00,000+ buyers already on KrishiSanjivani.</p>
+        <div class="cta-actions">
+          <a href="auth.html?mode=signup" class="btn btn-secondary btn-lg">🌾 Get Started Free</a>
+          <a href="dashboard.html" class="btn btn-outline btn-lg" style="border-color:#fff;color:#fff;">Explore as Guest</a>
+        </div>
+      </div>
+      <div class="cta-illustration">🌾🚚🛒</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:12px">
+          <div class="nav-logo-icon">🌾</div>
+          <span class="nav-logo-text">KrishiSanjivani</span>
+        </div>
+        <p>Empowering farmers. Delighting consumers. No middlemen.</p>
+        <p style="margin-top:8px;font-size:12px;opacity:0.6">Built for Smart India Hackathon 2026</p>
+      </div>
+      <div class="footer-links">
+        <h4>Platform</h4>
+        <a href="marketplace.html">Marketplace</a>
+        <a href="equipment-rental.html">Equipment Rental</a>
+        <a href="weather.html">Weather</a>
+        <a href="schemes.html">Govt. Schemes</a>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="help.html">Help Center</a>
+        <a href="rights-acts.html">Farmer Rights</a>
+        <a href="auth.html">Login / Sign Up</a>
+        <a href="admin-login.html">Admin</a>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <a href="tel:18001234567">📞 1800-123-4567</a>
+        <a href="mailto:support@krishisanjivani.gov.in">📧 support@krishisanjivani.gov.in</a>
+        <p style="margin-top:8px;font-size:12px;opacity:0.6">Available 9am–6pm, Mon–Sat</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 KrishiSanjivani. Government of India Initiative.</p>
+      <div class="footer-badges">
+        <span class="badge badge-green">🔒 Secure</span>
+        <span class="badge badge-blue">🇮🇳 Made in India</span>
+        <span class="badge badge-gold">🏆 SIH 2026</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- AI CHATBOT -->
+<button id="chatbot-btn" title="Chat with KrishiBot">
+  🤖
+  <div class="chatbot-badge">1</div>
+</button>
+<div id="chatbot-panel" class="hidden">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">🌾</div>
+    <div class="chatbot-info">
+      <strong data-i18n="chatbot_title">KrishiBot</strong>
+      <span>AI Assistant • Always Online</span>
+    </div>
+    <button class="chatbot-close" id="chatbot-close">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbot-messages"></div>
+  <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+  <div class="chatbot-input-row">
+    <input type="text" class="chatbot-input" id="chatbot-input" data-i18n-placeholder="chatbot_placeholder" placeholder="Ask me anything...">
+    <button class="chatbot-send" id="chatbot-send">➤</button>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/whatsapp-widget.js"></script>
+
+<script>
+  initFirebase();
+  
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initChatbot();
+
+    // Low data mode
+    const ldBtn = document.getElementById('low-data-btn');
+    const isLowData = localStorage.getItem('ks_low_data') === '1';
+    if (isLowData) { document.body.classList.add('low-data'); ldBtn.classList.add('active'); }
+    ldBtn?.addEventListener('click', () => {
+      document.body.classList.toggle('low-data');
+      const active = document.body.classList.contains('low-data');
+      localStorage.setItem('ks_low_data', active ? '1' : '0');
+      ldBtn.classList.toggle('active', active);
+    });
+
+    // Open chatbot from feature card
+    document.getElementById('open-chatbot-demo')?.addEventListener('click', () => {
+      document.getElementById('chatbot-btn').click();
+    });
+
+    // Animate particles
+    createParticles();
+
+    // Auth redirect if already logged in
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // Already logged in — update nav
+        const loginBtn = document.querySelector('a[href="auth.html"]');
+        if (loginBtn) {
+          loginBtn.textContent = 'Dashboard';
+          loginBtn.href = 'dashboard.html';
+        }
+      }
+    });
+  });
+
+  function createParticles() {
+    const container = document.getElementById('hero-particles');
+    if (!container) return;
+    const symbols = ['🌾', '🌿', '🍃', '✨', '💫', '🌱'];
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      p.style.cssText = `
+        position:absolute;
+        left:${Math.random()*100}%;
+        top:${Math.random()*100}%;
+        font-size:${16 + Math.random()*20}px;
+        opacity:${0.1 + Math.random()*0.25};
+        animation: float ${4+Math.random()*4}s ease-in-out ${Math.random()*4}s infinite;
+        pointer-events:none;
+      `;
+      container.appendChild(p);
+    }
+  }
+</script>
+</body>
+</html>

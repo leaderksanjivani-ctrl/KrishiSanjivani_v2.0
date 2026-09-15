@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace — KrishiSanjivani</title>
+  <meta name="description" content="Browse fresh farm produce directly from farmers with zero middlemen. Better prices for farmers and consumers.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/marketplace.css">
+  <style>
+    .cart-float-btn {
+      position: fixed; bottom: 85px; right: 24px;
+      background: linear-gradient(135deg, var(--c-green), var(--c-green-dark));
+      color: #fff; border: none; padding: 12px 20px;
+      border-radius: var(--r-full); font-weight: 700; font-size: var(--fs-sm);
+      box-shadow: var(--shadow-xl); cursor: pointer; display: flex; align-items: center; gap: 8px;
+      z-index: 99; transition: transform var(--tr-fast);
+    }
+    .cart-float-btn:hover { transform: scale(1.05); }
+    .cart-float-badge {
+      background: #fff; color: var(--c-green-dark); padding: 2px 8px; border-radius: var(--r-full); font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
+    <select id="lang-select" title="Language">
+      <option value="en">🌐 EN</option>
+      <option value="hi">हिं</option>
+      <option value="mr">मरा</option>
+    </select>
+    <a href="cart.html" class="nav-btn" title="Cart">
+      🛒
+      <span class="nav-badge cart-badge" id="cart-nav-badge" style="display:none">0</span>
+    </a>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">👤</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- MARKETPLACE SEARCH & FILTER HEADER -->
+  <div class="market-header">
+    <div class="container">
+      <div class="market-search-bar">
+        <div class="market-search-wrap">
+          <span class="market-search-icon">🔍</span>
+          <input type="text" id="market-search" class="market-search-input" placeholder="Search crops, farmers, cities (e.g. Tomatoes, Nashik)..." data-i18n-placeholder="market_search_placeholder">
+          <button class="market-voice-btn" id="voice-search-btn" title="Voice Search">🎙️</button>
+        </div>
+        <button class="btn btn-outline" id="toggle-filter-mobile" style="display:none">⚡ Filters</button>
+      </div>
+
+      <!-- CROP FILTER CHIPS -->
+      <div class="filter-chips" id="crop-chips">
+        <button class="filter-chip active" data-crop="all">🌱 All Produce</button>
+        <button class="filter-chip" data-crop="tomato">🍅 Tomato</button>
+        <button class="filter-chip" data-crop="onion">🧅 Onion</button>
+        <button class="filter-chip" data-crop="potato">🥔 Potato</button>
+        <button class="filter-chip" data-crop="wheat">🌾 Wheat</button>
+        <button class="filter-chip" data-crop="rice">🍚 Rice</button>
+        <button class="filter-chip" data-crop="banana">🍌 Banana</button>
+        <button class="filter-chip" data-crop="mango">🥭 Mango</button>
+        <button class="filter-chip bulk-active" data-crop="fpo">🏛️ FPO / Bulk Pools</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="market-layout">
+
+      <!-- SIDEBAR FILTERS -->
+      <aside class="market-sidebar">
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">📊 Price Range (₹/kg)</div>
+          <div class="sidebar-card-body">
+            <div class="price-range">
+              <span>₹10</span>
+              <input type="range" id="price-filter" min="10" max="200" value="200">
+              <span id="price-val">₹200</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">📍 Max Distance</div>
+          <div class="sidebar-card-body">
+            <div class="distance-btns" id="dist-btns">
+              <button class="dist-btn" data-dist="5">5 km</button>
+              <button class="dist-btn active" data-dist="25">25 km</button>
+              <button class="dist-btn" data-dist="50">50 km</button>
+              <button class="dist-btn" data-dist="100">100+ km</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">🏛️ Seller Type</div>
+          <div class="sidebar-card-body" style="display:flex;flex-direction:column;gap:8px">
+            <label style="font-size:13px;display:flex;align-items:center;gap:6px;cursor:pointer">
+              <input type="checkbox" id="filter-individual" checked> 👨‍🌾 Individual Farmers
+            </label>
+            <label style="font-size:13px;display:flex;align-items:center;gap:6px;cursor:pointer">
+              <input type="checkbox" id="filter-fpo" checked> 🏛️ FPO Cooperatives
+            </label>
+            <label style="font-size:13px;display:flex;align-items:center;gap:6px;cursor:pointer">
+              <input type="checkbox" id="filter-express"> ⚡ Delivery Now Only
+            </label>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">🔊 Accessibility</div>
+          <div class="sidebar-card-body">
+            <button class="btn btn-outline btn-sm w-100" id="read-page-btn">🔊 Read Page Summary</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN LISTINGS -->
+      <main class="market-main">
+        <div class="flex-between mb-md">
+          <div class="listing-count" id="listing-count-text">Showing <strong>8</strong> items</div>
+          <div class="flex gap-xs align-center">
+            <span style="font-size:12px;color:var(--c-text-muted)">Sort by:</span>
+            <select id="sort-select" style="padding:6px 12px;border-radius:var(--r-md);border:1px solid var(--c-border);font-size:13px;outline:none">
+              <option value="newest">Newest First</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="distance">Nearest First</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="listings-grid" id="listings-grid">
+          <!-- Rendered dynamically -->
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FLOATING CART BUTTON -->
+<button class="cart-float-btn" onclick="location.href='cart.html'">
+  🛒 Cart <span class="cart-float-badge" id="float-cart-count">0</span>
+</button>
+
+<!-- AI CHATBOT -->
+<button id="chatbot-btn" title="Chat with KrishiBot">
+  🤖<div class="chatbot-badge" style="display:none">1</div>
+</button>
+<div id="chatbot-panel" class="hidden">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">🌾</div>
+    <div class="chatbot-info">
+      <strong data-i18n="chatbot_title">KrishiBot</strong>
+      <span>AI Assistant • Always Online</span>
+    </div>
+    <button class="chatbot-close" id="chatbot-close">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbot-messages"></div>
+  <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+  <div class="chatbot-input-row">
+    <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything...">
+    <button class="chatbot-send" id="chatbot-send">➤</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/whatsapp-widget.js"></script>
+
+
+<script>
+  initFirebase();
+
+  let allListings = [];
+  let currentCrop = 'all';
+
+  const MOCK_LISTINGS = [
+    { id: 'm1', crop: 'Tomato', farmerName: 'Raju Patil', location: 'Nashik (12km)', price: 30, mandiPrice: 38, qty: 250, unit: 'kg', isFPO: false, deliveryNow: true, rating: 4.8, photo: '' },
+    { id: 'm2', crop: 'Onion', farmerName: 'Sahyadri FPO', location: 'Satara (18km)', price: 22, mandiPrice: 28, qty: 1200, unit: 'kg', isFPO: true, deliveryNow: false, rating: 4.9, photo: '' },
+    { id: 'm3', crop: 'Potato', farmerName: 'Suresh Kumar', location: 'Pune (8km)', price: 18, mandiPrice: 24, qty: 500, unit: 'kg', isFPO: false, deliveryNow: true, rating: 4.7, photo: '' },
+    { id: 'm4', crop: 'Wheat', farmerName: 'Anil Shinde', location: 'Ahmednagar (35km)', price: 21, mandiPrice: 26, qty: 2000, unit: 'kg', isFPO: false, deliveryNow: false, rating: 4.6, photo: '' },
+    { id: 'm5', crop: 'Rice', farmerName: 'Konkan Farmers Collective', location: 'Raigad (22km)', price: 40, mandiPrice: 48, qty: 1500, unit: 'kg', isFPO: true, deliveryNow: true, rating: 4.9, photo: '' },
+    { id: 'm6', crop: 'Banana', farmerName: 'Ganesh Thorne', location: 'Jalgaon (45km)', price: 25, mandiPrice: 32, qty: 600, unit: 'kg', isFPO: false, deliveryNow: false, rating: 4.5, photo: '' },
+    { id: 'm7', crop: 'Mango', farmerName: 'Devgad Alphonso Co-op', location: 'Ratnagiri (60km)', price: 75, mandiPrice: 95, qty: 400, unit: 'kg', isFPO: true, deliveryNow: true, rating: 5.0, photo: '' },
+    { id: 'm8', crop: 'Tomato', farmerName: 'Vijay Deshmukh', location: 'Baramati (15km)', price: 28, mandiPrice: 38, qty: 350, unit: 'kg', isFPO: false, deliveryNow: true, rating: 4.8, photo: '' }
+  ];
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initI18n();
+    initNav();
+    initChatbot();
+    updateCartCount();
+
+    // Check search URL params
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('crop')) {
+      currentCrop = params.get('crop').toLowerCase();
+      setActiveChip(currentCrop);
+    }
+    if (params.get('q')) {
+      document.getElementById('market-search').value = params.get('q');
+    }
+
+    await loadListings();
+
+    // Listeners
+    document.getElementById('crop-chips').addEventListener('click', (e) => {
+      const chip = e.target.closest('.filter-chip');
+      if (!chip) return;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentCrop = chip.dataset.crop;
+      filterAndRender();
+    });
+
+    document.getElementById('market-search').addEventListener('input', filterAndRender);
+    document.getElementById('price-filter').addEventListener('input', (e) => {
+      document.getElementById('price-val').textContent = `₹${e.target.value}`;
+      filterAndRender();
+    });
+    document.getElementById('sort-select').addEventListener('change', filterAndRender);
+    document.getElementById('filter-individual').addEventListener('change', filterAndRender);
+    document.getElementById('filter-fpo').addEventListener('change', filterAndRender);
+    document.getElementById('filter-express').addEventListener('change', filterAndRender);
+
+    document.querySelectorAll('.dist-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.dist-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterAndRender();
+      });
+    });
+
+    // Voice search
+    document.getElementById('voice-search-btn').addEventListener('click', () => {
+      startVoiceRecognition((text) => {
+        document.getElementById('market-search').value = text;
+        filterAndRender();
+      });
+    });
+
+    // Read summary
+    document.getElementById('read-page-btn')?.addEventListener('click', () => {
+      readAloud(`Marketplace listing ${allListings.length} fresh produce items directly from local farmers.`);
+    });
+  });
+
+  async function loadListings() {
+    try {
+      const snap = await db.collection(COLLECTIONS.listings)
+        .where('status', '==', 'active')
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      if (!snap.empty) {
+        allListings = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      } else {
+        allListings = MOCK_LISTINGS;
+      }
+    } catch (e) {
+      console.warn('Firestore fetch failed, fallback to mock data:', e);
+      allListings = MOCK_LISTINGS;
+    }
+    filterAndRender();
+  }
+
+  function filterAndRender() {
+    const search = document.getElementById('market-search').value.toLowerCase().trim();
+    const maxPrice = parseFloat(document.getElementById('price-filter').value);
+    const allowInd = document.getElementById('filter-individual').checked;
+    const allowFPO = document.getElementById('filter-fpo').checked;
+    const expressOnly = document.getElementById('filter-express').checked;
+    const sortVal = document.getElementById('sort-select').value;
+
+    let filtered = allListings.filter(item => {
+      // Crop match
+      if (currentCrop === 'fpo' && !item.isFPO) return false;
+      if (currentCrop !== 'all' && currentCrop !== 'fpo' && item.crop?.toLowerCase() !== currentCrop) return false;
+
+      // Price match
+      if (item.price > maxPrice) return false;
+
+      // Type match
+      if (item.isFPO && !allowFPO) return false;
+      if (!item.isFPO && !allowInd) return false;
+      if (expressOnly && !item.deliveryNow) return false;
+
+      // Search query
+      if (search) {
+        const text = `${item.crop} ${item.farmerName} ${item.location}`.toLowerCase();
+        if (!text.includes(search)) return false;
+      }
+
+      return true;
+    });
+
+    // Sorting
+    if (sortVal === 'price_low') filtered.sort((a, b) => a.price - b.price);
+    else if (sortVal === 'price_high') filtered.sort((a, b) => b.price - a.price);
+
+    renderGrid(filtered);
+  }
+
+  function renderGrid(items) {
+    const grid = document.getElementById('listings-grid');
+    const countText = document.getElementById('listing-count-text');
+    countText.innerHTML = `Showing <strong>${items.length}</strong> produce items`;
+
+    if (items.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-state-icon">🌾</div>
+        <h3>No produce matches your filters</h3>
+        <p>Try resetting search keywords or expanding distance/price filters</p>
+        <button class="btn btn-outline mt-md" onclick="resetFilters()">Reset Filters</button>
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = items.map(item => {
+      const emoji = getCropEmoji(item.crop);
+      const mandi = item.mandiPrice || Math.round(item.price * 1.25);
+      const saving = Math.round(((mandi - item.price) / mandi) * 100);
+
+      return `
+        <div class="listing-card" onclick="location.href='product-detail.html?id=${item.id}'">
+          <div class="listing-card-img">
+            ${item.photos?.[0] ? `<img src="${item.photos[0]}" alt="${item.crop}">` : `<span class="listing-card-emoji">${emoji}</span>`}
+            <div class="listing-card-badges">
+              ${item.isFPO ? '<span class="badge badge-gold">✓ FPO</span>' : ''}
+              ${item.deliveryNow ? '<span class="listing-card-delivery-now">⚡ Delivery Now</span>' : ''}
+            </div>
+          </div>
+          <div class="listing-card-body">
+            <div class="flex-between align-center">
+              <span class="listing-card-crop">${item.crop}</span>
+              ${saving > 0 ? `<span class="savings-chip">↓${saving}% saved vs mandi</span>` : ''}
+            </div>
+            <div class="listing-card-farmer">
+              <span>👨‍🌾 ${item.farmerName || 'Farmer'}</span>
+              <span>• ${item.location || 'Local Farm'}</span>
+            </div>
+            <div class="flex-between align-center mt-xs">
+              <div class="listing-card-price">
+                ₹${item.price}<span>/${item.unit || 'kg'}</span>
+              </div>
+              <div style="font-size:12px;color:var(--c-text-muted)">
+                Stock: <strong>${item.qty} ${item.unit || 'kg'}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="listing-card-actions">
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addToCart('${item.id}', '${item.crop}', ${item.price})">
+              🛒 Add to Cart
+            </button>
+            <a href="product-detail.html?id=${item.id}" class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">View</a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function getCropEmoji(crop) {
+    const map = { tomato:'🍅', onion:'🧅', potato:'🥔', wheat:'🌾', rice:'🍚', sugarcane:'🌿', cotton:'🌸', soybean:'🫘', maize:'🌽', groundnut:'🥜', banana:'🍌', mango:'🥭' };
+    return map[crop?.toLowerCase()] || '🌿';
+  }
+
+  function addToCart(listingId, crop, price) {
+    const cart = JSON.parse(localStorage.getItem('ks_cart') || '[]');
+    const existing = cart.find(i => i.listingId === listingId);
+    if (existing) existing.qty++;
+    else cart.push({ listingId, crop, price, qty: 1 });
+    localStorage.setItem('ks_cart', JSON.stringify(cart));
+    updateCartCount();
+    showToast(`✅ ${crop} added to cart!`, 'success');
+  }
+
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('ks_cart') || '[]');
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    document.querySelectorAll('.cart-badge, .cart-float-badge').forEach(b => {
+      b.textContent = count;
+      b.style.display = count > 0 ? 'flex' : 'none';
+    });
+  }
+
+  function setActiveChip(cropKey) {
+    document.querySelectorAll('.filter-chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.crop === cropKey);
+    });
+  }
+
+  function resetFilters() {
+    document.getElementById('market-search').value = '';
+    document.getElementById('price-filter').value = 200;
+    document.getElementById('price-val').textContent = '₹200';
+    currentCrop = 'all';
+    setActiveChip('all');
+    filterAndRender();
+  }
+</script>
+</body>
+</html>
