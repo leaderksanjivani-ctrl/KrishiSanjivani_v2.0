@@ -34,11 +34,6 @@
   <div class="nav-spacer"></div>
   <div class="nav-actions">
     <a href="auth.html" class="btn btn-ghost btn-sm">User Login</a>
-    <select id="lang-select" title="Language">
-      <option value="en">🌐 EN</option>
-      <option value="hi">हिं</option>
-      <option value="mr">मरा</option>
-    </select>
   </div>
 </nav>
 
@@ -139,10 +134,12 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/icon-system.js"></script><script>document.addEventListener('DOMContentLoaded', initIconSystem);</script>
 <script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
 <script>
   initFirebase();
 
   document.addEventListener('DOMContentLoaded', async () => {
+    initGovernmentShell();
     await initI18n();
 
     document.getElementById('btn-admin-login').addEventListener('click', handleAdminLogin);

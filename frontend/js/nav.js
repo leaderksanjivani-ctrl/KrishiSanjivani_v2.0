@@ -53,19 +53,6 @@ async function initNav() {
     document.addEventListener('click', () => notifDropdown.classList.add('hidden'));
   }
 
-  // Low data toggle
-  const ldBtn = document.getElementById('low-data-btn');
-  if (ldBtn) {
-    const isLowData = localStorage.getItem('ks_low_data') === '1';
-    if (isLowData) { document.body.classList.add('low-data'); ldBtn.classList.add('active'); }
-    ldBtn.addEventListener('click', () => {
-      document.body.classList.toggle('low-data');
-      const active = document.body.classList.contains('low-data');
-      localStorage.setItem('ks_low_data', active ? '1' : '0');
-      ldBtn.classList.toggle('active', active);
-      showToast(active ? '📡 Low Data Mode ON' : '📶 Normal Mode', 'info');
-    });
-  }
 }
 
 function initGovernmentShell() {
@@ -86,6 +73,7 @@ function initGovernmentShell() {
       </div></div>
     </div></div>`;
   document.body.prepend(utility);
+  document.querySelectorAll('#lang-select').forEach(select => select.remove());
   const nav = document.getElementById('main-nav');
   if (nav) {
     nav.classList.add('ks-site-header');
@@ -123,19 +111,43 @@ function initPortalFooter() {
 function initAccessibilityControls() {
   const root = document.documentElement;
   const storedSize = Number(localStorage.getItem('ks_text_size') || 16);
-  root.style.setProperty('--base-font-size', `${storedSize}px`);
+  applyTextSize(storedSize);
   document.querySelectorAll('[data-text-size]').forEach(button => button.addEventListener('click', () => {
     const current = Number(getComputedStyle(root).getPropertyValue('--base-font-size').replace('px', '')) || 16;
     const action = button.dataset.textSize;
     const next = action === 'reset' ? 16 : Math.min(22, Math.max(12, current + (action === 'increase' ? 2 : -2)));
-    root.style.setProperty('--base-font-size', `${next}px`); localStorage.setItem('ks_text_size', next);
+    applyTextSize(next);
   }));
   document.querySelectorAll('[data-language]').forEach(button => button.addEventListener('click', () => loadLanguage(button.dataset.language)));
   const toggle = document.querySelector('.ks-accessibility-toggle'); const panel = document.querySelector('.ks-accessibility-panel');
   toggle?.addEventListener('click', () => { const open = panel.hidden; panel.hidden = !open; toggle.setAttribute('aria-expanded', String(open)); });
+  document.addEventListener('click', event => {
+    if (panel && toggle && !event.target.closest('.ks-accessibility')) {
+      panel.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && panel && toggle) { panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); }
+  });
   document.querySelector('[data-accessibility="contrast"]')?.addEventListener('change', e => document.body.classList.toggle('high-contrast', e.target.checked));
   document.querySelector('[data-accessibility="links"]')?.addEventListener('change', e => document.body.classList.toggle('highlight-links', e.target.checked));
   document.querySelector('[data-accessibility="read"]')?.addEventListener('click', () => { const text = document.querySelector('main, .page-wrapper, .hero')?.innerText || document.body.innerText; if (typeof readAloud === 'function') readAloud(text); });
+}
+
+function applyTextSize(size) {
+  const root = document.documentElement;
+  const scale = size / 16;
+  root.style.setProperty('--base-font-size', `${size}px`);
+  root.style.setProperty('--fs-xs', `${Math.round(12 * scale)}px`);
+  root.style.setProperty('--fs-sm', `${Math.round(13 * scale)}px`);
+  root.style.setProperty('--fs-base', `${size}px`);
+  root.style.setProperty('--fs-md', `${Math.round(16 * scale)}px`);
+  root.style.setProperty('--fs-lg', `${Math.round(18 * scale)}px`);
+  root.style.setProperty('--fs-xl', `${Math.round(20 * scale)}px`);
+  root.style.setProperty('--fs-2xl', `${Math.round(24 * scale)}px`);
+  root.style.setProperty('--fs-3xl', `${Math.round(30 * scale)}px`);
+  localStorage.setItem('ks_text_size', size);
 }
 
 async function initAnnouncementTicker() {

@@ -140,7 +140,6 @@
   "chatbot_placeholder": "Ask me anything...",
   "chatbot_greeting": "Hello! I'm KrishiBot. How can I help you today? Ask about crop prices, orders, schemes, or how to sell.",
   "chatbot_fallback": "I'm not sure about that. Let me redirect you to our Help page.",
-  "low_data_mode": "Low Data Mode",
   "offline_mode": "You are offline. Showing cached data.",
   "farmer_saved": "Farmer earned ₹{x} more than mandi rate",
   "consumer_saved": "You saved ₹{x} by buying direct",

@@ -180,6 +180,7 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/icon-system.js"></script><script>document.addEventListener('DOMContentLoaded', initIconSystem);</script>
 <script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
 
 <script>
   initFirebase();
@@ -187,6 +188,7 @@
   let currentOrder = null;
 
   document.addEventListener('DOMContentLoaded', async () => {
+    initGovernmentShell();
     await initI18n();
 
     const orderJson = localStorage.getItem('ks_current_order');

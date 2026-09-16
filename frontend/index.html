@@ -19,12 +19,6 @@
   </a>
   <div class="nav-spacer"></div>
   <div class="nav-actions">
-    <button class="nav-low-data" id="low-data-btn" data-i18n="low_data_mode">Low Data</button>
-    <select id="lang-select" title="Select Language">
-      <option value="en">🌐 EN</option>
-      <option value="hi">हिं</option>
-      <option value="mr">मरा</option>
-    </select>
     <a href="auth.html" class="btn btn-outline btn-sm" data-i18n="btn_login">Login</a>
     <a href="auth.html?mode=signup" class="btn btn-primary btn-sm" data-i18n="btn_signup">Sign Up</a>
   </div>
@@ -433,17 +427,6 @@
     initCarousel();
     await initI18n();
     initChatbot();
-
-    // Low data mode
-    const ldBtn = document.getElementById('low-data-btn');
-    const isLowData = localStorage.getItem('ks_low_data') === '1';
-    if (isLowData) { document.body.classList.add('low-data'); ldBtn.classList.add('active'); }
-    ldBtn?.addEventListener('click', () => {
-      document.body.classList.toggle('low-data');
-      const active = document.body.classList.contains('low-data');
-      localStorage.setItem('ks_low_data', active ? '1' : '0');
-      ldBtn.classList.toggle('active', active);
-    });
 
     // Open chatbot from feature card
     document.getElementById('open-chatbot-demo')?.addEventListener('click', () => {

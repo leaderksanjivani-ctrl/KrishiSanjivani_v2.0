@@ -151,9 +151,11 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/icon-system.js"></script><script>document.addEventListener('DOMContentLoaded', initIconSystem);</script>
 <script src="js/i18n.js"></script>
+<script src="js/nav.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    initGovernmentShell();
     const params = new URLSearchParams(window.location.search);
     const orderId = params.get('orderId') || 'ORD-882910';
     document.getElementById('inv-id').textContent = orderId;
