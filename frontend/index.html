@@ -7,10 +7,7 @@
   <meta name="description" content="KrishiSanjivani connects farmers directly with consumers and bulk buyers, eliminating middlemen for better prices for all.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/index.css">
-  <style>
-    /* Page-specific overrides */
-    body { background: #0A1628; }
-  </style>
+  <link rel="stylesheet" href="css/redesign.css">
 </head>
 <body>
 
@@ -33,6 +30,16 @@
   </div>
 </nav>
 
+<!-- GOVERNMENT PORTAL CAROUSEL -->
+<section class="ks-carousel" aria-label="KrishiSanjivani highlights">
+  <div class="ks-carousel-slide active" style="--slide-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80')"><div class="ks-carousel-copy"><span class="ks-carousel-kicker">Direct farmer marketplace</span><h1>Sell your harvest directly, buy fresh produce at fair prices</h1><a class="btn btn-secondary" href="marketplace.html">Explore Marketplace</a></div></div>
+  <div class="ks-carousel-slide" style="--slide-image:url('https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=1800&q=80')"><div class="ks-carousel-copy"><span class="ks-carousel-kicker">Government scheme support</span><h1>Check your PM-KISAN benefits and application updates</h1><a class="btn btn-secondary" href="schemes.html">View Schemes</a></div></div>
+  <div class="ks-carousel-slide" style="--slide-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1800&q=80')"><div class="ks-carousel-copy"><span class="ks-carousel-kicker">Shared farm equipment</span><h1>Rent the right equipment for the season, near your farm</h1><a class="btn btn-secondary" href="equipment-rental.html">Find Equipment</a></div></div>
+  <div class="ks-carousel-slide" style="--slide-image:url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1800&q=80')"><div class="ks-carousel-copy"><span class="ks-carousel-kicker">How it works</span><h1>List, connect, pay securely, and track every delivery</h1><a class="btn btn-secondary" href="#how-it-works">See How It Works</a></div></div>
+  <div class="ks-carousel-slide" style="--slide-image:url('https://images.unsplash.com/photo-1500076656116-558758c991c1?auto=format&fit=crop&w=1800&q=80')"><div class="ks-carousel-copy"><span class="ks-carousel-kicker">Growing together</span><h1>50,000 farmers connected with better prices and trusted buyers</h1><a class="btn btn-secondary" href="auth.html?mode=signup">Join KrishiSanjivani</a></div></div>
+  <button class="ks-carousel-control prev" type="button" aria-label="Previous slide">‹</button><button class="ks-carousel-control next" type="button" aria-label="Next slide">›</button><div class="ks-carousel-dots" role="tablist" aria-label="Carousel slides"></div>
+</section>
+
 <!-- HERO SECTION -->
 <section class="hero">
   <div class="hero-bg">
@@ -46,25 +53,25 @@
     </div>
     <h1 class="hero-title">
       <span class="hero-title-line1" data-i18n="app_name">KrishiSanjivani</span>
-      <span class="hero-title-line2">No Middlemen. Better Prices. Always.</span>
+      <span class="hero-title-line2">Sell your harvest directly. Buy fresh produce at a fair price.</span>
     </h1>
     <p class="hero-subtitle" data-i18n="tagline">From Farm to Fork — No Middlemen</p>
     
     <!-- Chain Illustration -->
     <div class="chain-demo">
       <div class="chain-node old-chain">
-        <div class="chain-icon">👨‍🌾</div>
+        <div class="chain-icon"><i data-lucide="user-round"></i></div>
         <div class="chain-label">Farmer</div>
         <div class="chain-price earn-less">Earns ₹18</div>
       </div>
-      <div class="chain-arrow old">→<br><small>Middleman 1</small></div>
+      <div class="chain-arrow old"><i data-lucide="arrow-right"></i><br><small>Middleman 1</small></div>
       <div class="chain-node old-chain">
-        <div class="chain-icon">🔴</div>
+        <div class="chain-icon"><i data-lucide="circle-x"></i></div>
         <div class="chain-label middleman-cross">Middleman</div>
       </div>
-      <div class="chain-arrow old">→<br><small>Middleman 2</small></div>
+      <div class="chain-arrow old"><i data-lucide="arrow-right"></i><br><small>Middleman 2</small></div>
       <div class="chain-node old-chain">
-        <div class="chain-icon">🏪</div>
+        <div class="chain-icon"><i data-lucide="store"></i></div>
         <div class="chain-label">Market</div>
         <div class="chain-price pay-more">Consumer Pays ₹50</div>
       </div>
@@ -78,19 +85,19 @@
 
     <div class="chain-demo new-chain-demo">
       <div class="chain-node new-chain">
-        <div class="chain-icon">👨‍🌾</div>
+        <div class="chain-icon"><i data-lucide="user-round"></i></div>
         <div class="chain-label">Farmer</div>
         <div class="chain-price earn-more">Earns ₹29 ↑62%</div>
       </div>
       <div class="chain-arrow new">
         <div class="chain-direct">
-          <span>🌾 KrishiSanjivani</span>
+          <span><i data-lucide="leaf"></i> KrishiSanjivani</span>
           <span class="chain-direct-badge">Direct</span>
         </div>
-        <span>→</span>
+        <i data-lucide="arrow-right"></i>
       </div>
       <div class="chain-node new-chain">
-        <div class="chain-icon">🛒</div>
+        <div class="chain-icon"><i data-lucide="shopping-cart"></i></div>
         <div class="chain-label">You</div>
         <div class="chain-price pay-less">Pay ₹32 ↓36%</div>
       </div>
@@ -98,10 +105,10 @@
 
     <div class="hero-cta">
       <a href="auth.html?mode=signup&role=farmer" class="btn btn-secondary btn-lg hero-btn-farmer">
-        🌾 I'm a Farmer — Start Selling
+        <i data-lucide="wheat"></i> I'm a Farmer — Start Selling
       </a>
       <a href="auth.html?mode=signup&role=buyer" class="btn btn-primary btn-lg hero-btn-buyer">
-        🛒 I'm a Buyer — Shop Direct
+        <i data-lucide="shopping-cart"></i> I'm a Buyer — Shop Direct
       </a>
     </div>
     <p class="hero-note">Free to join · No commission on first 3 sales · Secure Payments</p>
@@ -147,7 +154,7 @@
     <div class="section-header text-center" style="justify-content:center;flex-direction:column;gap:8px">
       <div class="section-tag">Platform Features</div>
       <h2 class="features-title">Everything a Farmer Needs</h2>
-      <p class="features-subtitle">One platform. Every feature. Built for Bharat.</p>
+      <p class="features-subtitle">One simple place to sell, buy and manage your farm needs.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card" onclick="location.href='marketplace.html'">
@@ -413,6 +420,8 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/voice.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/carousel.js"></script>
 <script src="js/chatbot.js"></script>
 <script src="js/whatsapp-widget.js"></script>
 
@@ -420,6 +429,8 @@
   initFirebase();
   
   document.addEventListener('DOMContentLoaded', async () => {
+    initNav();
+    initCarousel();
     await initI18n();
     initChatbot();
 

@@ -7,6 +7,7 @@
   <meta name="description" content="5-day agricultural weather forecast with farm-specific advice and heavy rain alerts.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="css/redesign.css">
   <style>
     .weather-hero {
       background: linear-gradient(135deg, #0284C7, #0369A1);
@@ -56,14 +57,14 @@
       <div>
         <div style="display:flex;align-items:center;gap:8px;font-size:13px;opacity:0.85">
           <span>📍 Farm Location:</span>
-          <strong id="w-location-name">Nashik, Maharashtra</strong>
+          <strong id="w-location-name">Your farm location</strong>
         </div>
         <div style="font-size:4rem;font-weight:800;margin:8px 0;display:flex;align-items:center;gap:16px">
-          <span>☀️</span>
-          <span>28°C</span>
+          <span id="w-current-icon">☀️</span>
+          <span id="w-current-temp">Loading...</span>
         </div>
-        <div style="font-size:var(--fs-lg);font-weight:600">Clear &amp; Sunny Day</div>
-        <div style="font-size:12px;opacity:0.8;margin-top:4px">Humidity: 45% · Wind: 12 km/h · Rain: 0%</div>
+        <div id="w-current-desc" style="font-size:var(--fs-lg);font-weight:600">Loading local forecast</div>
+        <div id="w-current-meta" style="font-size:12px;opacity:0.8;margin-top:4px">Fetching current conditions...</div>
       </div>
       <div>
         <button class="btn btn-secondary btn-lg" id="read-weather-btn">
@@ -73,7 +74,7 @@
     </div>
 
     <!-- ALERT BANNER -->
-    <div class="alert-banner">
+    <div class="alert-banner" id="weather-alert">
       <span style="font-size:2rem">🌧️</span>
       <div>
         <strong style="font-size:14px;display:block">Rain Advisory for Thursday Afternoon</strong>
@@ -84,7 +85,7 @@
     <!-- 5-DAY FORECAST -->
     <h2 style="font-size:var(--fs-2xl);font-weight:800;margin-bottom:var(--sp-md)">📅 5-Day Agricultural Forecast</h2>
 
-    <div class="weather-5day-grid">
+    <div class="weather-5day-grid" id="weather-forecast-grid">
       <div class="weather-day-card today">
         <strong style="font-size:13px;color:#0284C7">Today (Sat)</strong>
         <div style="font-size:2.5rem">☀️</div>
@@ -171,6 +172,7 @@
 <script src="js/nav.js"></script>
 <script src="js/voice.js"></script>
 <script src="js/chatbot.js"></script>
+<script src="js/weather.js"></script>
 
 <script>
   initFirebase();

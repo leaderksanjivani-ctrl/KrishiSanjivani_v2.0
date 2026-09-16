@@ -7,6 +7,7 @@
   <meta name="description" content="Manage your KrishiSanjivani profile, active listings, order history, earnings, and bank details.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="css/redesign.css">
   <style>
     .profile-hero {
       background: linear-gradient(135deg, #0F172A, #1E293B);
@@ -122,22 +123,22 @@
     <div class="tab-panel" id="panel-bank">
       <div style="max-width:540px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r-2xl);padding:var(--sp-xl)">
         <h3 style="font-size:var(--fs-xl);font-weight:800;margin-bottom:8px">🏛️ Bank Account &amp; Aadhaar</h3>
-        <p style="font-size:12px;color:var(--c-text-muted);margin-bottom:16px">Required for Direct Benefit Transfer (MahaDBT) and direct sales payouts.</p>
+        <p style="font-size:12px;color:var(--c-text-muted);margin-bottom:16px">Used only for payouts and DBT. These details are never shown publicly.</p>
 
         <div style="display:flex;flex-direction:column;gap:12px">
           <div>
             <label style="font-size:12px;font-weight:700">Bank Account Number</label>
-            <input type="text" class="input" placeholder="e.g. 501002349102" value="501002349102">
+            <input type="text" id="bank-account" class="input" placeholder="e.g. 501002349102" inputmode="numeric" autocomplete="off">
           </div>
           <div>
             <label style="font-size:12px;font-weight:700">IFSC Code</label>
-            <input type="text" class="input" placeholder="e.g. SBIN0001234" value="SBIN0001234">
+            <input type="text" id="bank-ifsc" class="input" placeholder="e.g. SBIN0001234" autocomplete="off">
           </div>
           <div>
             <label style="font-size:12px;font-weight:700">Aadhaar Number (12 Digits)</label>
-            <input type="text" class="input" placeholder="XXXX XXXX XXXX" value="8829 4012 9931">
+            <input type="text" id="bank-aadhaar" class="input" placeholder="XXXX XXXX XXXX" inputmode="numeric" autocomplete="off">
           </div>
-          <button class="btn btn-primary btn-lg mt-sm" onclick="showToast('✅ Bank details saved successfully!', 'success')">
+          <button class="btn btn-primary btn-lg mt-sm" id="save-bank-btn">
             💾 Save Bank &amp; Aadhaar
           </button>
         </div>
@@ -157,7 +158,7 @@
             <label style="font-size:12px;font-weight:700">Location / City</label>
             <input type="text" id="edit-loc" class="input" value="Nashik, Maharashtra">
           </div>
-          <button class="btn btn-primary btn-lg mt-sm" onclick="showToast('✅ Account details updated!', 'success')">
+          <button class="btn btn-primary btn-lg mt-sm" id="save-profile-btn">
             Update Profile
           </button>
         </div>
@@ -193,6 +194,9 @@
 
       loadMyListings(user.uid);
       loadMyOrders(user.uid);
+      loadProfileDetails(user.uid);
+      document.getElementById('save-bank-btn').addEventListener('click', () => saveBankDetails(user.uid));
+      document.getElementById('save-profile-btn').addEventListener('click', () => saveProfileDetails(user.uid));
     });
 
     // Tab switching
@@ -241,6 +245,40 @@
     } catch (e) {
       container.innerHTML = '<p class="text-muted">Could not load listings</p>';
     }
+  }
+
+  async function loadProfileDetails(uid) {
+    const snap = await db.collection(COLLECTIONS.users).doc(uid).get();
+    if (!snap.exists) return;
+    const data = snap.data();
+    document.getElementById('bank-account').value = data.bankAccount || '';
+    document.getElementById('bank-ifsc').value = data.ifsc || '';
+    document.getElementById('bank-aadhaar').value = data.aadhaarMasked || '';
+    document.getElementById('edit-name').value = data.name || '';
+    document.getElementById('edit-loc').value = data.locationText || '';
+    document.getElementById('prof-earnings-val').textContent = `₹${Number(data.totalEarnings || 0).toLocaleString('en-IN')}`;
+    document.getElementById('prof-savings-val').textContent = `₹${Number(data.mandiSavings || 0).toLocaleString('en-IN')}`;
+  }
+
+  async function saveBankDetails(uid) {
+    const account = document.getElementById('bank-account').value.replace(/\s/g, '');
+    const ifsc = document.getElementById('bank-ifsc').value.trim().toUpperCase();
+    const aadhaar = document.getElementById('bank-aadhaar').value.replace(/\s/g, '');
+    if (!/^\d{9,18}$/.test(account)) return showToast('Enter a valid bank account number', 'warning');
+    if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) return showToast('Enter a valid IFSC code', 'warning');
+    if (!/^\d{12}$/.test(aadhaar)) return showToast('Enter a valid 12-digit Aadhaar number', 'warning');
+    await db.collection(COLLECTIONS.users).doc(uid).update({ bankAccount: account, ifsc, aadhaarMasked: `XXXX XXXX ${aadhaar.slice(-4)}`, aadhaarLast4: aadhaar.slice(-4), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    document.getElementById('bank-aadhaar').value = `XXXX XXXX ${aadhaar.slice(-4)}`;
+    showToast('Bank and Aadhaar details saved securely', 'success');
+  }
+
+  async function saveProfileDetails(uid) {
+    const name = document.getElementById('edit-name').value.trim();
+    const locationText = document.getElementById('edit-loc').value.trim();
+    if (!name || !locationText) return showToast('Name and location are required', 'warning');
+    await db.collection(COLLECTIONS.users).doc(uid).update({ name, locationText, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    document.getElementById('prof-name').textContent = name;
+    showToast('Account details updated', 'success');
   }
 
   async function loadMyOrders(uid) {

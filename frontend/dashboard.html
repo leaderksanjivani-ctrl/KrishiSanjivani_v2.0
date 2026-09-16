@@ -7,6 +7,7 @@
   <meta name="description" content="KrishiSanjivani dashboard — sell produce, buy fresh, track orders, check weather and government schemes.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/redesign.css">
 </head>
 <body>
 
@@ -352,10 +353,19 @@
 
   async function loadUserStats(uid, profile) {
     try {
-      // Orders count
-      const ordersSnap = await db.collection(COLLECTIONS.orders).where('buyerId', '==', uid).get();
-      document.getElementById('stat-orders').textContent = ordersSnap.size;
-      document.getElementById('orders-count').textContent = `${ordersSnap.size} orders`;
+      const updateOrderStats = (snap) => {
+        const orders = snap.docs.map(doc => doc.data());
+        const count = orders.length;
+        document.getElementById('stat-orders').textContent = count;
+        document.getElementById('orders-count').textContent = `${count} orders`;
+        const orderEarnings = orders.reduce((sum, order) => sum + Number(order.farmerPayout || order.amount || order.totalAmount || 0), 0);
+        if (profile.role === 'farmer' && orderEarnings) {
+          document.getElementById('stat-earnings').textContent = `₹${orderEarnings.toLocaleString('en-IN')}`;
+          document.getElementById('earnings-amount').textContent = `₹${orderEarnings.toLocaleString('en-IN')}`;
+        }
+      };
+      db.collection(COLLECTIONS.orders).where('buyerId', '==', uid).onSnapshot(updateOrderStats, () => {});
+      db.collection(COLLECTIONS.orders).where('farmerId', '==', uid).onSnapshot(updateOrderStats, () => {});
 
       // Listings count (for farmers)
       if (profile.role === 'farmer') {
@@ -367,7 +377,7 @@
       }
 
       // Earnings
-      const earnings = profile.totalEarnings || 0;
+      const earnings = Number(profile.totalEarnings || 0);
       const saved = profile.mandiSavings || 0;
       document.getElementById('stat-earnings').textContent = `₹${earnings.toLocaleString('en-IN')}`;
       document.getElementById('earnings-amount').textContent = `₹${earnings.toLocaleString('en-IN')}`;
@@ -513,19 +523,25 @@
   }
 
   function loadWeatherWidget(location) {
-    // Mock weather for now
-    const weathers = [
-      { icon: '☀️', temp: '28°C', desc: 'Clear sky', tip: '✅ Good day for harvesting' },
-      { icon: '⛅', temp: '25°C', desc: 'Partly cloudy', tip: '💧 Ideal for irrigation' },
-      { icon: '🌧️', temp: '22°C', desc: 'Light rain', tip: '⚠️ Delay pesticide spraying' },
-      { icon: '🌤️', temp: '30°C', desc: 'Sunny', tip: '☀️ Dry crops if needed' }
-    ];
-    const w = weathers[Math.floor(Math.random() * weathers.length)];
-    document.getElementById('wb-icon').textContent = w.icon;
-    document.getElementById('wb-temp').textContent = w.temp;
-    document.getElementById('wb-desc').textContent = w.desc;
-    document.getElementById('wb-tip').textContent = w.tip;
-    document.getElementById('weather-tile-text').textContent = `${w.icon} ${w.temp}`;
+    const coords = location?.lat && location?.lng ? location : APP_CONFIG.defaultLocation;
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=auto`)
+      .then(response => response.json())
+      .then(data => {
+        const current = data.current || {};
+        const code = Number(current.weather_code || 0);
+        const rainy = code >= 51;
+        const icon = rainy ? '🌧️' : (code >= 1 ? '⛅' : '☀️');
+        const desc = rainy ? 'Rain possible' : (code >= 1 ? 'Partly cloudy' : 'Clear sky');
+        const tip = rainy ? '⚠️ Delay pesticide spraying' : '✅ Good day for field work';
+        document.getElementById('wb-icon').textContent = icon;
+        document.getElementById('wb-temp').textContent = `${Math.round(current.temperature_2m ?? 0)}°C`;
+        document.getElementById('wb-desc').textContent = desc;
+        document.getElementById('wb-tip').textContent = tip;
+        document.getElementById('weather-tile-text').textContent = `${icon} ${Math.round(current.temperature_2m ?? 0)}°C`;
+      }).catch(() => {
+        document.getElementById('wb-desc').textContent = 'Weather unavailable';
+        document.getElementById('weather-tile-text').textContent = 'Open forecast';
+      });
   }
 
   function getCropEmoji(crop) {

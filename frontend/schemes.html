@@ -7,6 +7,7 @@
   <meta name="description" content="Explore PM-KISAN, crop insurance, irrigation subsidies, and MahaDBT Maharashtra Direct Benefit Transfer schemes.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="css/redesign.css">
   <style>
     .mahadbt-banner {
       background: linear-gradient(135deg, #D97706, #B45309);
@@ -57,6 +58,7 @@
       <div style="max-width:540px">
         <span class="badge badge-gold mb-xs" style="background:#FFF;color:#B45309">🏛️ MahaDBT Portal</span>
         <h1 style="font-size:var(--fs-2xl);font-weight:800;margin-bottom:8px">Maharashtra Direct Benefit Transfer (MahaDBT)</h1>
+        <button class="btn btn-secondary btn-sm voice-read-btn" id="read-schemes-btn">🔊 Read Page Summary</button>
         <p style="opacity:0.9;font-size:var(--fs-sm)">Apply for state agricultural equipment subsidies, seed distribution, and drip irrigation benefits directly through the official government portal.</p>
       </div>
       <div>
@@ -158,6 +160,7 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/nav.js"></script>
+<script src="js/voice.js"></script>
 <script src="js/chatbot.js"></script>
 
 <script>
@@ -167,6 +170,7 @@
     await initI18n();
     initNav();
     initChatbot();
+    document.getElementById('read-schemes-btn')?.addEventListener('click', () => readAloud('Government schemes include MahaDBT, PM Kisan, crop insurance and equipment subsidies. Select a scheme to learn more.'));
 
     document.getElementById('scheme-search').addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase().trim();

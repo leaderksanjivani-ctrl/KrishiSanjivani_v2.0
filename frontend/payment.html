@@ -7,6 +7,7 @@
   <meta name="description" content="Razorpay secure payment checkout simulation. Instant confirmation for farmers and buyers.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="css/redesign.css">
   <style>
     .payment-container {
       max-width: 520px;
@@ -177,6 +178,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/icon-system.js"></script><script>document.addEventListener('DOMContentLoaded', initIconSystem);</script>
 <script src="js/i18n.js"></script>
 
 <script>
@@ -214,7 +216,7 @@
     }
   }
 
-  function processPayment() {
+  async function processPayment() {
     const box = document.getElementById('payment-content');
     box.innerHTML = `
       <div style="text-align:center;padding:40px 0">
@@ -224,11 +226,18 @@
       </div>
     `;
 
-    setTimeout(() => {
+    setTimeout(async () => {
       // Clear Cart
       localStorage.removeItem('ks_cart');
 
       const orderId = currentOrder ? currentOrder.id : 'ORD-882910';
+      if (currentOrder?.id && db) {
+        try {
+          await db.collection(COLLECTIONS.orders).doc(currentOrder.id).update({ paymentStatus: 'paid', paymentProvider: 'demo-test', paymentId: `demo_${Date.now()}`, paidAt: firebase.firestore.FieldValue.serverTimestamp(), deliveryStatus: 'confirmed' });
+        } catch (error) {
+          console.warn('Payment status update failed:', error);
+        }
+      }
 
       box.innerHTML = `
         <div class="success-overlay">

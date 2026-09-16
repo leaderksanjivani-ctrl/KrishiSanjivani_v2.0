@@ -115,6 +115,7 @@ function initChatbot() {
   const messages = document.getElementById('chatbot-messages');
 
   if (!btn || !panel) return;
+  loadFirestoreFaqs();
 
   // Toggle panel
   btn.addEventListener('click', () => {
@@ -190,6 +191,21 @@ function matchIntent(text) {
 
   // Fallback
   return t('chatbot_fallback') + '\n👉 <a href="help.html">Go to Help Center</a>';
+}
+
+async function loadFirestoreFaqs() {
+  if (!window.db || !window.COLLECTIONS) return;
+  try {
+    const snap = await db.collection(COLLECTIONS.chatbotFaq).get();
+    snap.docs.forEach(doc => {
+      const faq = doc.data();
+      const keywords = Array.isArray(faq.keywords) ? faq.keywords : String(faq.keyword || '').split(',').map(item => item.trim()).filter(Boolean);
+      const response = faq.response || { en: faq.answer || '' };
+      if (keywords.length && response.en) CHATBOT_FAQ.unshift({ keywords, intent: faq.intent || doc.id, response });
+    });
+  } catch (error) {
+    console.warn('Firestore FAQ load failed; using local FAQ set', error);
+  }
 }
 
 function addBotMessage(text) {

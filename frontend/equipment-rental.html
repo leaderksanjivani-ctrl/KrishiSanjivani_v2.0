@@ -7,6 +7,7 @@
   <meta name="description" content="Rent tractors, tillers, harvesters, and spraying drones by the day directly from nearby farmers.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="css/redesign.css">
   <style>
     .rental-hero {
       background: linear-gradient(135deg, #1E1B4B, #312E81);
@@ -24,6 +25,8 @@
       height: 180px; background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
       display: flex; align-items: center; justify-content: center; font-size: 5rem; position: relative;
     }
+    .equipment-img-box img { width: 100%; height: 100%; object-fit: cover; }
+    .equipment-icon-fallback { position: absolute; right: 12px; bottom: 12px; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.9); color: var(--c-green); }
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
       z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
@@ -164,12 +167,12 @@
   let selectedEquipment = null;
 
   const MOCK_EQUIPMENT = [
-    { id: 'eq1', name: 'Mahindra 575 DI Tractor (45 HP)', cat: 'tractor', icon: '🚜', owner: 'Mahadev Kadam', location: 'Nashik (6km)', rate: 800, rating: 4.9 },
-    { id: 'eq2', name: 'KrishiRotavator 6 Feet', cat: 'tiller', icon: '⚙️', owner: 'Suresh Patil', location: 'Nashik (10km)', rate: 400, rating: 4.8 },
-    { id: 'eq3', name: 'AgriFly 10L Pesticide Drone', cat: 'drone', icon: '🚁', owner: 'TechAgri Services FPO', location: 'Satara (15km)', rate: 1200, rating: 5.0 },
-    { id: 'eq4', name: 'Paddy Multi-Crop Harvester', cat: 'harvester', icon: '🌾', owner: 'Konkan Co-op', location: 'Raigad (25km)', rate: 1800, rating: 4.7 },
-    { id: 'eq5', name: '5 HP Kirloskar Diesel Water Pump', cat: 'pump', icon: '💦', owner: 'Ramesh Thorne', location: 'Baramati (8km)', rate: 250, rating: 4.6 },
-    { id: 'eq6', name: 'Sonalika 750 Heavy Duty Tractor', cat: 'tractor', icon: '🚜', owner: 'Vikas Shinde', location: 'Pune (14km)', rate: 950, rating: 4.8 }
+    { id: 'eq1', name: 'Mahindra 575 DI Tractor (45 HP)', cat: 'tractor', icon: 'tractor', photo: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=900&q=80', owner: 'Mahadev Kadam', location: 'Nashik (6km)', rate: 800, rating: 4.9 },
+    { id: 'eq2', name: 'KrishiRotavator 6 Feet', cat: 'tiller', icon: 'settings-2', photo: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=900&q=80', owner: 'Suresh Patil', location: 'Nashik (10km)', rate: 400, rating: 4.8 },
+    { id: 'eq3', name: 'AgriFly 10L Pesticide Drone', cat: 'drone', icon: 'drone', photo: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=900&q=80', owner: 'TechAgri Services FPO', location: 'Satara (15km)', rate: 1200, rating: 5.0 },
+    { id: 'eq4', name: 'Paddy Multi-Crop Harvester', cat: 'harvester', icon: 'wheat', photo: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=900&q=80', owner: 'Konkan Co-op', location: 'Raigad (25km)', rate: 1800, rating: 4.7 },
+    { id: 'eq5', name: '5 HP Kirloskar Diesel Water Pump', cat: 'pump', icon: 'waves', photo: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=80', owner: 'Ramesh Thorne', location: 'Baramati (8km)', rate: 250, rating: 4.6 },
+    { id: 'eq6', name: 'Sonalika 750 Heavy Duty Tractor', cat: 'tractor', icon: 'tractor', photo: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=900&q=80', owner: 'Vikas Shinde', location: 'Pune (14km)', rate: 950, rating: 4.8 }
   ];
 
   document.addEventListener('DOMContentLoaded', async () => {
@@ -198,7 +201,7 @@
     grid.innerHTML = filtered.map(item => `
       <div class="equipment-card">
         <div class="equipment-img-box">
-          ${item.icon}
+          <img src="${item.photo}" alt="${item.name}" loading="lazy"><span class="equipment-icon-fallback"><i data-lucide="${item.icon}"></i></span>
           <span class="badge badge-green" style="position:absolute;top:12px;left:12px">Available</span>
         </div>
         <div class="card-body flex-1 flex-column gap-xs" style="padding:16px">

@@ -20,7 +20,7 @@
 }
 
 .auth-left::before {
-  content: '🌾';
+  content: '';
   position: absolute;
   font-size: 300px;
   opacity: 0.04;

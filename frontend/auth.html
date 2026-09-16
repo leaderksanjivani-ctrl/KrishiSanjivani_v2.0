@@ -7,6 +7,7 @@
   <meta name="description" content="Sign in or create a new KrishiSanjivani account as a farmer, buyer, or bulk buyer.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/redesign.css">
 </head>
 <body>
 
@@ -295,6 +296,7 @@
   const initRole = urlParams.get('role');
 
   document.addEventListener('DOMContentLoaded', async () => {
+    initNav();
     await initI18n();
     
     if (initMode === 'signup') switchTab('signup');

@@ -7,6 +7,7 @@
   <meta name="description" content="Track your fresh produce delivery live on the map with AI-optimized routing.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="css/redesign.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     .tracking-layout {
@@ -64,6 +65,7 @@
       <div>
         <h1 style="font-size:var(--fs-2xl);font-weight:800">🚚 Live Order Tracking</h1>
         <p style="font-size:var(--fs-xs);color:var(--c-text-muted)">Order ID: <strong id="track-order-id">#ORD-882910</strong></p>
+        <button class="btn btn-ghost btn-sm voice-read-btn" id="read-tracking-btn">🔊 Read Status</button>
       </div>
       <a href="invoice.html" id="track-inv-btn" class="btn btn-outline btn-sm">🧾 View Invoice</a>
     </div>
@@ -159,6 +161,7 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/nav.js"></script>
+<script src="js/voice.js"></script>
 <script src="js/route-optimizer.js"></script>
 
 <script>
@@ -176,6 +179,7 @@
     document.getElementById('track-inv-btn').href = `invoice.html?orderId=${orderId}`;
 
     initTrackingMap();
+    document.getElementById('read-tracking-btn')?.addEventListener('click', () => readAloud(document.querySelector('.tracking-layout')?.innerText || 'Order tracking status'));
   });
 
   function initTrackingMap() {

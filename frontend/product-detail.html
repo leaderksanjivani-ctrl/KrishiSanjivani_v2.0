@@ -7,6 +7,7 @@
   <meta name="description" content="View fresh produce details, farmer information, price breakdown vs traditional mandi, and buy direct.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/marketplace.css">
+  <link rel="stylesheet" href="css/redesign.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     .product-layout {
@@ -105,7 +106,7 @@
       <!-- LEFT COLUMN: IMAGE & MAP -->
       <div>
         <div class="product-gallery" id="product-gallery">
-          <span class="product-hero-emoji" id="p-emoji">🍅</span>
+          <span class="product-hero-emoji" id="p-emoji"><i data-lucide="apple"></i></span>
           <span class="badge badge-green" style="position:absolute;top:16px;left:16px">Direct Farm Fresh</span>
           <span class="badge badge-gold" id="p-fpo-badge" style="position:absolute;top:16px;right:16px;display:none">✓ Verified FPO</span>
         </div>
@@ -297,8 +298,9 @@
     document.getElementById('price-direct-val').textContent = `₹${d.price}.00/kg`;
     document.getElementById('price-mandi-val').textContent = `₹${mandi}.00/kg`;
 
-    if (d.photos?.[0]) {
-      document.getElementById('product-gallery').innerHTML = `<img src="${d.photos[0]}" class="product-hero-img" alt="${d.crop}">`;
+    if (d.photos?.[0] || cropPhoto(d.crop)) {
+      const photo = d.photos?.[0] || cropPhoto(d.crop);
+      document.getElementById('product-gallery').innerHTML = `<img src="${photo}" class="product-hero-img" alt="${d.crop}">`;
     } else {
       document.getElementById('p-emoji').textContent = getCropEmoji(d.crop);
     }
@@ -308,6 +310,18 @@
 
     updateSubtotal();
     initFarmMap(d.lat || 20.0000, d.lng || 73.7800);
+  }
+
+  function cropPhoto(crop) {
+    const photos = {
+      tomato: 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=1000&q=80',
+      onion: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=1000&q=80',
+      wheat: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=80',
+      rice: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=80',
+      mango: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=1000&q=80'
+    };
+    const key = String(crop || '').toLowerCase().split(' ')[0];
+    return photos[key] || photos.tomato;
   }
 
   function adjustQty(delta) {

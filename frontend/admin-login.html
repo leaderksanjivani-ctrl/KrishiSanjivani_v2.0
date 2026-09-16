@@ -7,6 +7,7 @@
   <meta name="description" content="Administrator authentication portal for KrishiSanjivani.">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/redesign.css">
   <style>
     .admin-badge-header {
       display: inline-flex;
@@ -19,28 +20,6 @@
       font-weight: 700;
       font-size: 13px;
       margin-bottom: 12px;
-    }
-    .demo-creds-box {
-      background: var(--c-surface-soft, #f8fafc);
-      border: 1px dashed var(--c-border, #cbd5e1);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 16px;
-      font-size: 13px;
-    }
-    .quick-fill-btn {
-      background: white;
-      border: 1px solid var(--c-border);
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 12px;
-      cursor: pointer;
-      color: var(--c-green-dark);
-      margin-top: 6px;
-      font-weight: 600;
-    }
-    .quick-fill-btn:hover {
-      background: var(--c-green-light);
     }
   </style>
 </head>
@@ -119,20 +98,11 @@
       <h2 class="auth-form-title">Admin Sign In</h2>
       <p class="auth-form-subtitle">Enter your administrator credentials to access the panel</p>
 
-      <div class="demo-creds-box">
-        <strong>💡 Quick Admin Login Shortcut:</strong>
-        <div style="margin-top:4px">Email: <code>admin@gmail.com</code> or <code>admin@krishisanjivani.gov.in</code></div>
-        <div class="flex gap-xs mt-xs">
-          <button class="quick-fill-btn" onclick="quickFill('admin@gmail.com')">Fill admin@gmail.com</button>
-          <button class="quick-fill-btn" onclick="quickFill('admin@krishisanjivani.gov.in')">Fill admin@krishisanjivani.gov.in</button>
-        </div>
-      </div>
-
       <div class="form-group">
         <label class="form-label">Admin Email</label>
         <div class="input-wrapper">
           <span class="input-icon">📧</span>
-          <input type="email" class="form-input" id="admin-email" placeholder="admin@gmail.com" value="admin@gmail.com">
+          <input type="email" class="form-input" id="admin-email" placeholder="Enter admin email" autocomplete="off">
         </div>
       </div>
 
@@ -140,7 +110,7 @@
         <label class="form-label">Password</label>
         <div class="input-wrapper">
           <span class="input-icon">🔒</span>
-          <input type="password" class="form-input" id="admin-password" placeholder="Enter admin password" value="admin123">
+          <input type="password" class="form-input" id="admin-password" placeholder="Enter admin password" autocomplete="new-password">
           <button class="input-btn" onclick="togglePasswordVisibility('admin-password')">👁️</button>
         </div>
       </div>
@@ -167,6 +137,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/icon-system.js"></script><script>document.addEventListener('DOMContentLoaded', initIconSystem);</script>
 <script src="js/i18n.js"></script>
 <script>
   initFirebase();
@@ -179,10 +150,6 @@
       if (e.key === 'Enter') handleAdminLogin();
     });
   });
-
-  function quickFill(email) {
-    document.getElementById('admin-email').value = email;
-  }
 
   function togglePasswordVisibility(id) {
     const inp = document.getElementById(id);
@@ -203,23 +170,15 @@
     btn.innerHTML = '<div class="loading-spinner" style="width:18px;height:18px;border-width:2px"></div> Authenticating...';
 
     try {
-      if (!isAdminEmail(email)) {
-        throw new Error('This account does not have administrator access.');
-      }
-
       const cred = await auth.signInWithEmailAndPassword(email, password);
       const user = cred.user;
 
       if (user) {
-        // Ensure Admin Role in Firestore
-        await db.collection(COLLECTIONS.users).doc(user.uid).set({
-          uid: user.uid,
-          name: 'System Administrator',
-          email: user.email,
-          role: 'admin',
-          isVerified: true,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
+        const profile = await db.collection(COLLECTIONS.users).doc(user.uid).get();
+        if (!profile.exists || profile.data().role !== 'admin') {
+          await auth.signOut();
+          throw new Error('This account is not approved for administrator access.');
+        }
 
         showToastMsg('✅ Admin authentication successful!', 'success');
         setTimeout(() => location.href = 'admin-dashboard.html', 700);
