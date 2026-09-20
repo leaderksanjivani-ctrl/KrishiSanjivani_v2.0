@@ -51,7 +51,7 @@ const APP_CONFIG = {
   weatherApiKey: 'OPENWEATHER_API_KEY_PLACEHOLDER', // Replace or use mock
   mapTileUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   mapAttribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  supportedLanguages: ['en', 'hi', 'mr'],
+  supportedLanguages: ['en', 'mr', 'hi', 'gu', 'bn', 'ta', 'te', 'kn', 'ml', 'pa', 'ur', 'or'],
   defaultLanguage: 'en',
   mahaDBTUrl: 'https://mahadbt.maharashtra.gov.in',
   adminEmail: 'admin@krishisanjivani.gov.in',

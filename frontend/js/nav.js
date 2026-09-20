@@ -6,6 +6,7 @@ let currentUser = null;
 let currentUserProfile = null;
 
 async function initNav() {
+  if (typeof initI18n === 'function' && !Object.keys(i18nStrings || {}).length) await initI18n();
   initGovernmentShell();
   await initI18n();
   
@@ -67,14 +68,18 @@ function initGovernmentShell() {
   utility.innerHTML = `
     <a class="ks-skip-link" href="#main-content">Skip to Main Content</a>
     <div class="ks-utility-inner"><span class="ks-tricolor-mark" aria-hidden="true"></span><div class="ks-utility-tools">
-      <span class="ks-language-links"><button data-language="en">EN</button><i>|</i><button data-language="hi">हिं</button><i>|</i><button data-language="mr">मरा</button></span>
+      <label class="ks-language-picker"><span class="sr-only" data-i18n="nav_language">Language</span><span id="ks-language-slot"></span></label>
       <span class="ks-text-size" aria-label="Text size"><button data-text-size="decrease">A-</button><button data-text-size="reset">A</button><button data-text-size="increase">A+</button></span>
-      <div class="ks-accessibility"><button class="ks-accessibility-toggle" aria-expanded="false">◐ Accessibility</button><div class="ks-accessibility-panel" hidden>
-        <label><input type="checkbox" data-accessibility="contrast"> High Contrast</label><label><input type="checkbox" data-accessibility="links"> Highlight Links</label><button data-accessibility="read">🔊 Screen Reader Access</button>
+      <div class="ks-accessibility"><button class="ks-accessibility-toggle" aria-expanded="false" data-i18n="nav_accessibility">Accessibility</button><div class="ks-accessibility-panel" hidden>
+        <label><input type="checkbox" data-accessibility="contrast"> High Contrast</label><label><input type="checkbox" data-accessibility="links"> Highlight Links</label><button data-accessibility="read" data-i18n="nav_screen_reader">Screen Reader Access</button>
       </div></div>
     </div></div>`;
   document.body.prepend(utility);
-  document.querySelectorAll('#lang-select').forEach(select => select.remove());
+  const languageSelect = document.getElementById('lang-select');
+  const languageSlot = document.getElementById('ks-language-slot');
+  if (languageSelect && languageSlot) languageSlot.appendChild(languageSelect);
+  else if (languageSlot) { const select = document.createElement('select'); select.id = 'lang-select'; select.setAttribute('aria-label', 'Language'); languageSlot.appendChild(select); }
+  wireLanguageSelector();
   applyBrandLogos();
   const nav = document.getElementById('main-nav');
   if (nav) {
@@ -82,11 +87,12 @@ function initGovernmentShell() {
     const primary = document.createElement('div');
     primary.className = 'ks-primary-nav';
     primary.innerHTML = `<div class="ks-primary-inner">
-      <a href="index.html" data-nav-page="index.html">Home</a><div class="ks-nav-menu"><a href="marketplace.html" data-nav-page="marketplace.html">Marketplace <span>⌄</span></a><div class="ks-nav-dropdown"><a href="marketplace.html">Buy Produce</a><a href="list-item.html">Sell Produce</a><a href="order-tracking.html">My Orders</a><a href="auction.html">Bol Bhaav Live</a><a href="group-buy.html">Group Buy</a></div></div>
-      <a href="list-item.html" data-nav-page="list-item.html">Sell</a><a href="equipment-rental.html" data-nav-page="equipment-rental.html">Equipment Rental</a><a href="weather.html" data-nav-page="weather.html">Weather</a>
-      <div class="ks-nav-menu"><a href="schemes.html" data-nav-page="schemes.html">Schemes <span>⌄</span></a><div class="ks-nav-dropdown"><a href="schemes.html">Govt. Schemes</a><a href="schemes.html#mahadbt">MahaDBT</a></div></div>
-      <a href="rights-acts.html" data-nav-page="rights-acts.html">Rights &amp; Acts</a><div class="ks-nav-menu"><a href="dashboard.html">Tools <span>⌄</span></a><div class="ks-nav-dropdown"><a href="rate-check.html">Aaj ka Bhaav</a><a href="nearby-facilities.html">Nearby Facilities</a><a href="verify-inputs.html">Verify Inputs</a><a href="ask-expert.html">My Sakhi</a><a href="pre-sowing.html">What Should I Grow?</a><a href="ledger-verify.html">Verify Ledger</a></div></div><a href="help.html" data-nav-page="help.html">Help</a></div>`;
+      <a href="index.html" data-nav-page="index.html" data-i18n="nav_home">Home</a><div class="ks-nav-menu"><a href="marketplace.html" data-nav-page="marketplace.html" data-i18n="nav_marketplace">Marketplace <span>⌄</span></a><div class="ks-nav-dropdown"><a href="marketplace.html" data-i18n="nav_buy_produce">Buy Produce</a><a href="list-item.html" data-i18n="nav_sell_produce">Sell Produce</a><a href="order-tracking.html" data-i18n="nav_my_orders">My Orders</a><a href="auction.html" data-i18n="nav_live_auction">Bol Bhaav Live</a><a href="group-buy.html" data-i18n="nav_group_buy">Group Buy</a></div></div>
+      <a href="list-item.html" data-nav-page="list-item.html" data-i18n="nav_sell">Sell</a><a href="equipment-rental.html" data-nav-page="equipment-rental.html" data-i18n="nav_equipment">Equipment Rental</a><a href="weather.html" data-nav-page="weather.html" data-i18n="nav_weather">Weather</a>
+      <div class="ks-nav-menu"><a href="schemes.html" data-nav-page="schemes.html" data-i18n="nav_schemes">Schemes <span>⌄</span></a><div class="ks-nav-dropdown"><a href="schemes.html" data-i18n="nav_govt_schemes">Govt. Schemes</a><a href="schemes.html#mahadbt">MahaDBT</a></div></div>
+      <a href="rights-acts.html" data-nav-page="rights-acts.html" data-i18n="nav_rights">Rights &amp; Acts</a><div class="ks-nav-menu"><a href="dashboard.html" data-i18n="nav_tools">Tools <span>⌄</span></a><div class="ks-nav-dropdown"><a href="rate-check.html" data-i18n="nav_aaj_bhaav">Aaj ka Bhaav</a><a href="nearby-facilities.html" data-i18n="nav_nearby">Nearby Facilities</a><a href="verify-inputs.html" data-i18n="nav_verify_inputs">Verify Inputs</a><a href="ask-expert.html" data-i18n="nav_my_sakhi">My Sakhi</a><a href="pre-sowing.html" data-i18n="nav_grow">What Should I Grow?</a><a href="ledger-verify.html" data-i18n="nav_verify_ledger">Verify Ledger</a></div></div><a href="help.html" data-nav-page="help.html" data-i18n="nav_help">Help</a></div>`;
     nav.after(primary);
+    applyI18n();
     const currentPage = location.pathname.split('/').pop() || 'index.html';
     primary.querySelector(`[data-nav-page="${currentPage}"]`)?.classList.add('active');
   }
@@ -113,11 +119,12 @@ function initPortalFooter() {
   footer.className = 'footer ks-shared-footer';
   footer.innerHTML = `<div class="container"><div class="footer-grid">
     <div class="footer-brand"><div class="nav-logo"><div class="nav-logo-icon">🌾</div><span class="nav-logo-text">KrishiSanjivani</span></div><p>Empowering farmers and connecting communities with fair, trusted agriculture.</p><p class="ks-footer-note">Smart India Hackathon 2026</p></div>
-    <div class="footer-links"><h4>Platform</h4><a href="marketplace.html">Marketplace</a><a href="equipment-rental.html">Equipment Rental</a><a href="weather.html">Weather</a><a href="schemes.html">Govt. Schemes</a></div>
-    <div class="footer-links"><h4>Support</h4><a href="help.html">Help Center</a><a href="rights-acts.html">Farmer Rights</a><a href="auth.html">Login / Sign Up</a><a href="admin-login.html">Admin</a></div>
-    <div class="footer-links"><h4>Contact</h4><a href="tel:18001234567">1800-123-4567</a><a href="mailto:support@krishisanjivani.gov.in">support@krishisanjivani.gov.in</a><p class="ks-footer-note">Available 9am-6pm, Mon-Sat</p></div>
+    <div class="footer-links"><h4 data-i18n="footer_platform">Platform</h4><a href="marketplace.html" data-i18n="nav_marketplace">Marketplace</a><a href="equipment-rental.html" data-i18n="nav_equipment">Equipment Rental</a><a href="weather.html" data-i18n="nav_weather">Weather</a><a href="schemes.html" data-i18n="nav_govt_schemes">Govt. Schemes</a></div>
+    <div class="footer-links"><h4 data-i18n="footer_support">Support</h4><a href="help.html" data-i18n="footer_help">Help Center</a><a href="rights-acts.html" data-i18n="nav_rights">Farmer Rights</a><a href="auth.html" data-i18n="footer_login">Login / Sign Up</a><a href="admin-login.html" data-i18n="footer_admin">Admin</a></div>
+    <div class="footer-links"><h4 data-i18n="footer_contact">Contact</h4><a href="tel:18001234567">1800-123-4567</a><a href="mailto:support@krishisanjivani.gov.in">support@krishisanjivani.gov.in</a><p class="ks-footer-note" data-i18n="footer_available">Available 9am-6pm, Mon-Sat</p></div>
   </div><div class="footer-bottom"><p>© 2026 KrishiSanjivani | Last Updated: 16 September 2026</p><div class="footer-badges"><span class="badge badge-green">Accessible Website</span><span class="badge badge-green">Secure Payments</span><span class="badge badge-gold">Made in India</span></div></div></div>`;
   document.body.appendChild(footer);
+  applyI18n();
 }
 
 function initAccessibilityControls() {
@@ -130,7 +137,6 @@ function initAccessibilityControls() {
     const next = action === 'reset' ? 16 : Math.min(22, Math.max(12, current + (action === 'increase' ? 2 : -2)));
     applyTextSize(next);
   }));
-  document.querySelectorAll('[data-language]').forEach(button => button.addEventListener('click', () => loadLanguage(button.dataset.language)));
   const toggle = document.querySelector('.ks-accessibility-toggle'); const panel = document.querySelector('.ks-accessibility-panel');
   toggle?.addEventListener('click', () => { const open = panel.hidden; panel.hidden = !open; toggle.setAttribute('aria-expanded', String(open)); });
   document.addEventListener('click', event => {
