@@ -78,8 +78,8 @@ h1, h2, h3, h4, h5, .nav-logo-text, .btn, .section-title, .features-title { font
   box-shadow: 0 1px 8px rgba(43, 43, 43, .04);
   padding: 0 clamp(16px, 3vw, 40px);
 }
-.nav-logo-icon { background: var(--c-green); border-radius: 10px; box-shadow: none; color: #fff; font-size: 0; }
-.nav-logo-icon::before { content: '✦'; font-size: 20px; }
+.nav-logo-icon { background: transparent; border-radius: 50%; box-shadow: none; color: #fff; font-size: 0; overflow:hidden; }
+.nav-logo-icon img { width:100%; height:100%; object-fit:contain; }
 .nav-logo-text { color: var(--c-green); background: none; -webkit-text-fill-color: currentColor; font-weight: 800; }
 .nav-btn:hover, .btn-icon:hover { background: var(--c-green-light); }
 .nav-avatar { background: var(--c-green); }
@@ -177,11 +177,14 @@ h1, h2, h3, h4, h5, .nav-logo-text, .btn, .section-title, .features-title { font
 .auth-brand-name { color: #fff; background: none; -webkit-text-fill-color: currentColor; }
 .auth-brand p, .auth-benefit span { color: rgba(255,255,255,.78); }
 .auth-brand-icon, .auth-benefit-icon, .role-icon { color: var(--c-green); font-size: 0; }
+.auth-brand-icon { width:110px; height:110px; }
+.auth-brand-icon img { width:100%; height:100%; object-fit:contain; }
 .auth-brand-icon::before, .auth-benefit-icon::before, .role-icon::before { content: '✦'; font-size: 28px; }
 .auth-benefit-icon::before { color: var(--c-saffron); }
 
 #chatbot-btn { background: var(--c-green); box-shadow: var(--shadow-green); font-size: 0; }
-#chatbot-btn::before { content: '●'; font-size: 22px; color: #fff; }
+#chatbot-btn::before { content: none !important; }
+#chatbot-btn .ks-icon { width:26px; height:26px; color:#fff; stroke-width:1.8; }
 .chatbot-header { background: var(--c-green); }
 .chatbot-avatar { font-size: 0; }
 .chatbot-avatar::before { content: '●'; font-size: 18px; color: #fff; }
@@ -218,7 +221,7 @@ html { font-size:var(--base-font-size); } body { background:var(--color-bg); }
 .ks-site-header .nav-logo { display:flex; }
 .ks-site-header .nav-actions { display:flex; margin-left:auto; }
 .ks-site-header .nav-actions > * { flex-shrink:0; }
-.nav-logo-text { color:var(--color-primary-dark); background:none; -webkit-text-fill-color:currentColor; } .nav-logo-text::after { content:'  कृषी संजीवनी'; font-family:'Noto Sans Devanagari',sans-serif; font-size:.72em; font-weight:500; color:var(--color-primary-green); } .nav-logo-icon { background:var(--color-primary-green); border-radius:50%; box-shadow:none; }
+.nav-logo-text { color:var(--color-primary-dark); background:none; -webkit-text-fill-color:currentColor; } .nav-logo-text::after { content:'  कृषी संजीवनी'; font-family:'Noto Sans Devanagari',sans-serif; font-size:.72em; font-weight:500; color:var(--color-primary-green); } .nav-logo-icon { background:transparent; border-radius:50%; box-shadow:none; }
 .ks-primary-nav { background:var(--color-primary-green); color:#fff; } .ks-primary-inner { max-width:1280px; margin:auto; min-height:44px; display:flex; align-items:stretch; padding:0 24px; } .ks-primary-inner>a,.ks-nav-menu { min-height:44px; } .ks-primary-inner>a,.ks-nav-menu>a { display:flex; align-items:center; padding:0 16px; color:#fff; font-size:14px; border-bottom:3px solid transparent; } .ks-nav-menu { position:relative; display:flex; align-items:stretch; } .ks-nav-menu>a { height:100%; } .ks-primary-inner a:hover,.ks-primary-inner a.active { background:rgba(255,255,255,.12); border-bottom-color:#fff; }
 .ks-nav-menu>a span { margin-left:6px; font-size:12px; } .ks-nav-dropdown { display:none; position:absolute; left:0; top:44px; min-width:180px; background:#fff; box-shadow:0 5px 14px rgba(0,0,0,.2); border:1px solid #dfe9e0; z-index:1200; } .ks-nav-menu:hover .ks-nav-dropdown,.ks-nav-menu:focus-within .ks-nav-dropdown { display:block; } .ks-nav-dropdown a { display:block; color:var(--color-primary-dark); padding:10px 14px; font-size:13px; } .ks-nav-dropdown a:hover { background:var(--color-light-green); }
 .ks-announcement-ticker { display:flex; min-height:34px; background:var(--color-light-green); color:var(--color-primary-dark); overflow:hidden; font-size:13px; }

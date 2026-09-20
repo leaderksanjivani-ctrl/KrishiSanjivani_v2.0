@@ -49,6 +49,35 @@ service cloud.firestore {
     match /priceHistory/{id} { allow read: if true; allow write: if admin(); }
     match /chatbotFaq/{id} { allow read: if true; allow write: if admin(); }
     match /fpos/{id} { allow read: if true; allow write: if admin() || owner(request.resource.data.ownerId); }
+    match /auctions/{id} {
+      allow read: if true;
+      allow create: if signedIn() && owner(request.resource.data.farmerId);
+      allow update: if admin() || owner(resource.data.farmerId);
+      match /bids/{bidId} {
+        allow read: if signedIn();
+        allow create: if signedIn() && owner(request.resource.data.bidderId) && request.resource.data.amount is number;
+        allow update, delete: if admin();
+      }
+    }
+    match /groupBuys/{id} {
+      allow read: if true;
+      allow create: if signedIn() && owner(request.resource.data.createdBy);
+      allow update: if admin() || owner(resource.data.createdBy) || owner(request.resource.data.participantIds[request.auth.uid]);
+      match /participants/{participantId} {
+        allow read: if signedIn();
+        allow create, update: if signedIn() && owner(participantId);
+        allow delete: if admin() || owner(participantId);
+      }
+    }
+    match /expertQueries/{id} {
+      allow read: if admin() || owner(resource.data.farmerId);
+      allow create: if signedIn() && owner(request.resource.data.farmerId);
+      allow update: if admin() || owner(resource.data.farmerId);
+    }
+    match /verifiedInputs/{id} { allow read: if true; allow write: if admin(); }
+    match /facilities/{id} { allow read: if true; allow write: if admin(); }
+    match /auditLog/{id} { allow read: if admin(); allow create: if signedIn() && (admin() || request.resource.data.actorId == request.auth.uid); allow update, delete: if false; }
+    match /ledgerChain/{id} { allow read: if signedIn(); allow create: if admin() || signedIn(); allow update, delete: if false; }
     match /admin/{document=**} { allow read, write: if admin(); }
     match /{document=**} { allow read, write: if false; }
   }

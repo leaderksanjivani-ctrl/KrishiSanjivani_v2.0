@@ -179,6 +179,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/feature-core.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/voice.js"></script>
@@ -348,6 +349,7 @@
             ${item.photos?.[0] ? `<img src="${item.photos[0]}" alt="${item.crop}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">` : ''}<span class="listing-card-emoji" style="${item.photos?.[0] ? 'display:none' : ''}">${emoji}</span>
             <div class="listing-card-badges">
               ${item.isFPO ? `<span class="badge badge-gold">✓ FPO Pool${item.fpoFarmerCount ? ` — ${item.fpoFarmerCount} farmers` : ''}</span>` : ''}
+              ${item.saleMode === 'auction' && item.auctionStatus === 'live' ? '<span class="badge badge-red">Bol Bhaav - Live Now</span>' : ''}
               ${item.deliveryNow ? '<span class="listing-card-delivery-now">⚡ Delivery Now</span>' : ''}
             </div>
           </div>
@@ -357,7 +359,8 @@
               ${saving > 0 ? `<span class="savings-chip">↓${saving}% saved vs mandi</span>` : ''}
             </div>
             <div class="listing-card-farmer">
-              <span>👨‍🌾 ${item.farmerName || 'Farmer'}</span>
+              <span>👨‍🌾 ${item.farmerName || 'Farmer'} <span class="badge badge-green">Trust ${item.trustScore || KSFeatures.trustScore({ rating: item.farmerRating })}/100</span></span>
+              ${item.harvestDate ? `<span class="feature-muted">Freshness ${KSFeatures.freshness(item.crop, item.harvestDate?.toDate ? item.harvestDate.toDate() : item.harvestDate).percent}%</span>` : ''}
               <span>• ${item.location || 'Local Farm'}</span>
             </div>
             <div class="flex-between align-center mt-xs">

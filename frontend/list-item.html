@@ -82,6 +82,15 @@
         <div class="form-error" id="crop-error" style="display:none">Please select a crop</div>
       </div>
 
+      <div class="form-group">
+        <label class="form-label">Selling mode</label>
+        <select class="form-input" id="sale-mode">
+          <option value="fixed_price">Fixed Price</option>
+          <option value="auction">Bol Bhaav - Live Auction</option>
+        </select>
+        <select class="form-input mt-sm" id="auction-duration" style="display:none"><option value="30">30 minutes</option><option value="60">60 minutes</option><option value="120">120 minutes</option></select>
+      </div>
+
       <!-- FPO TOGGLE -->
       <div class="form-group">
         <label class="flex gap-sm" style="align-items:center;cursor:pointer">
@@ -215,9 +224,11 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/feature-core.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/chatbot.js"></script>
+<script src="js/whatsapp-widget.js"></script>
 <script src="js/voice.js"></script>
 <script>
   initFirebase();
@@ -226,7 +237,9 @@
   const defaultLat = 19.0760, defaultLng = 72.8777;
 
   document.addEventListener('DOMContentLoaded', async () => {
+    initNav();
     await initI18n();
+    document.getElementById('sale-mode').addEventListener('change', e => { document.getElementById('auction-duration').style.display = e.target.value === 'auction' ? 'block' : 'none'; });
     requireAuth(user => {
       initMap();
       initChatbot();
@@ -269,8 +282,9 @@
     const prices = MOCK_PRICES[crop];
     if (prices) {
       document.getElementById('ai-hint-banner').style.display = 'flex';
-      document.getElementById('ai-hint-text').textContent = 
-        `Recent avg price for ${crop.charAt(0).toUpperCase()+crop.slice(1)} near you: ₹${prices.avg}/kg (Mandi: ₹${prices.mandi}/kg). You can earn more by listing here!`;
+      const range = KSFeatures.forecastRange([prices.avg * .92, prices.avg * .97, prices.avg, prices.avg * 1.04, prices.avg * 1.08], 1);
+      document.getElementById('ai-hint-text').textContent =
+        `Suggested price: ₹${range.low}-${range.high}/kg (${range.confidence}% confidence). Mandi: ₹${prices.mandi}/kg. This is advisory - you set the final price.`;
       document.getElementById('use-ai-price').onclick = () => {
         document.getElementById('listing-price').value = prices.avg;
         updatePriceComparison();
@@ -397,6 +411,8 @@
 
       // Create listing document
       const isFPO = document.getElementById('is-fpo-listing').checked;
+      const saleMode = document.getElementById('sale-mode').value;
+      const auctionEndAt = saleMode === 'auction' ? new Date(Date.now() + Number(document.getElementById('auction-duration').value) * 60000).toISOString() : null;
       const listingData = {
         farmerId: user.uid,
         farmerName: profile.name || 'Farmer',
@@ -411,6 +427,11 @@
         location: new firebase.firestore.GeoPoint(parseFloat(lat), parseFloat(lng)),
         locationText: document.getElementById('location-text').value || '',
         status: 'active',
+        saleMode,
+        auctionStatus: saleMode === 'auction' ? 'live' : null,
+        auctionEndAt,
+        startingPrice: saleMode === 'auction' ? parseFloat(price) : null,
+        minIncrement: saleMode === 'auction' ? Math.max(1, parseFloat(price) * 0.02) : null,
         views: 0,
         orders: 0,
         isFPO,
@@ -420,7 +441,10 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      await db.collection(COLLECTIONS.listings).add(listingData);
+      const listingRef = await db.collection(COLLECTIONS.listings).add(listingData);
+      if (saleMode === 'auction') {
+        await db.collection(COLLECTIONS.auctions).doc(listingRef.id).set({ listingId: listingRef.id, farmerId: user.uid, title: `${listingData.crop} - Bol Bhaav`, crop: listingData.crop, locationText: listingData.locationText, startingPrice: listingData.startingPrice, currentBid: listingData.startingPrice, minIncrement: listingData.minIncrement, auctionEndAt, auctionStatus: 'live', bids: [], createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      }
 
       // Add to price history
       const today = new Date().toISOString().split('T')[0];

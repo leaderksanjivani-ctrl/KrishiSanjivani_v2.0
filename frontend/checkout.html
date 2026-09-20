@@ -313,6 +313,8 @@
       deliverySlot: selectedSlot,
       paymentMethod: selectedPay,
       deliveryStatus: 'placed',
+      escrowStatus: 'pending',
+      escrowAutoReleaseAt: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
       createdAt: new Date().toISOString()
     };
 

@@ -24,14 +24,15 @@
   }
 
   async function loadAdminData() {
-    const [users, listings, orders, complaints, bookings] = await Promise.all([
-      readCollection(COLLECTIONS.users), readCollection(COLLECTIONS.listings), readCollection(COLLECTIONS.orders), readCollection(COLLECTIONS.complaints), readCollection(COLLECTIONS.bookings)
+    const [users, listings, orders, complaints, bookings, audit] = await Promise.all([
+      readCollection(COLLECTIONS.users), readCollection(COLLECTIONS.listings), readCollection(COLLECTIONS.orders), readCollection(COLLECTIONS.complaints), readCollection(COLLECTIONS.bookings), readCollection(COLLECTIONS.auditLog)
     ]);
     renderKpis(users, listings, orders);
     renderUsers(users);
     renderListings(listings);
     renderOrders(orders, bookings);
     renderComplaints(complaints);
+    renderAudit(audit);
     renderAnalytics(orders, listings, users);
   }
 
@@ -78,11 +79,17 @@
     if (window.L && !document.getElementById('admin-map')) { const mapBox = document.createElement('div'); mapBox.className = 'chart-box'; mapBox.innerHTML = '<h3 class="mb-sm">Regional order density</h3><div id="admin-map" style="height:260px;border-radius:10px"></div>'; document.querySelector('.chart-grid')?.appendChild(mapBox); const map = L.map('admin-map').setView([19.076, 73.0], 6); L.tileLayer(APP_CONFIG.mapTileUrl, { attribution: APP_CONFIG.mapAttribution }).addTo(map); orders.forEach((order, index) => { const lat = Number(order.location?.latitude || order.lat || 19.076 + (index % 5) * .2); const lng = Number(order.location?.longitude || order.lng || 72.8777 + (index % 5) * .2); L.circleMarker([lat, lng], { radius: 5 + Math.min(10, Number(order.amount || 1) / 1000), color: '#2f6b3c', fillOpacity: .55 }).addTo(map); }); }
   }
 
-  window.adminUpdateUser = async (id, verified) => { await db.collection(COLLECTIONS.users).doc(id).update({ isVerified: verified, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); loadAdminData(); };
-  window.adminSuspendUser = async id => { await db.collection(COLLECTIONS.users).doc(id).update({ suspended: true, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); loadAdminData(); };
-  window.adminFlagListing = async id => { await db.collection(COLLECTIONS.listings).doc(id).update({ flagged: true, status: 'flagged', updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); loadAdminData(); };
-  window.adminRemoveListing = async id => { await db.collection(COLLECTIONS.listings).doc(id).update({ status: 'removed', updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); loadAdminData(); };
-  window.adminUpdateOrder = async (id, status) => { await db.collection(COLLECTIONS.orders).doc(id).update({ deliveryStatus: status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); loadAdminData(); };
-  window.adminUpdateComplaint = async (id, status) => { await db.collection(COLLECTIONS.complaints).doc(id).update({ status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); loadAdminData(); };
+  function renderAudit(events) {
+    const tbody = document.getElementById('audit-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = events.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).slice(0, 100).map(item => `<tr><td>${esc(item.createdAt || 'Pending timestamp')}</td><td><strong>${esc(item.action || 'admin_action')}</strong></td><td>${esc(item.actorEmail || item.actorId || '—')}</td><td>${esc(JSON.stringify(item.details || {}))}</td></tr>`).join('') || '<tr><td colspan="4">No audit events yet.</td></tr>';
+  }
+
+  window.adminUpdateUser = async (id, verified) => { await db.collection(COLLECTIONS.users).doc(id).update({ isVerified: verified, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); await KSFeatures.writeAudit('user_verification_changed', { id, verified }); loadAdminData(); };
+  window.adminSuspendUser = async id => { await db.collection(COLLECTIONS.users).doc(id).update({ suspended: true, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); await KSFeatures.writeAudit('user_suspended', { id }); loadAdminData(); };
+  window.adminFlagListing = async id => { await db.collection(COLLECTIONS.listings).doc(id).update({ flagged: true, status: 'flagged', updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); await KSFeatures.writeAudit('listing_flagged', { id }); loadAdminData(); };
+  window.adminRemoveListing = async id => { await db.collection(COLLECTIONS.listings).doc(id).update({ status: 'removed', updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); await KSFeatures.writeAudit('listing_removed', { id }); loadAdminData(); };
+  window.adminUpdateOrder = async (id, status) => { await db.collection(COLLECTIONS.orders).doc(id).update({ deliveryStatus: status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); await KSFeatures.writeAudit('order_status_changed', { id, status }); loadAdminData(); };
+  window.adminUpdateComplaint = async (id, status) => { await db.collection(COLLECTIONS.complaints).doc(id).update({ status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); await KSFeatures.writeAudit('complaint_status_changed', { id, status }); loadAdminData(); };
   window.refreshAdminData = loadAdminData;
 })();

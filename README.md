@@ -70,6 +70,37 @@ npm start
 ```
 The server will start at `http://localhost:5000` and serve both the API endpoints and static frontend pages.
 
+## SIH 2026 Feature Status
+
+| Feature | Fully Real | Simulated/Demo | Not Done |
+|---|---|---|---|
+| Escrow status, delivery confirmation, 48-hour browser fallback, dispute flag | Firestore order fields and buyer/admin-visible state | 48-hour release is client-checked; Razorpay is still demo/test | Trusted scheduled release/refund Cloud Function |
+| Bol Bhaav auction | Listing mode and Firestore auction listener/bid flow | Browser settlement and current bid snapshot | Server-authoritative winner transaction and bids subcollection migration |
+| FPO pooling and voting | Existing FPO listing metadata | — | Proportional payout and farmer vote collection |
+| Neighbourhood group buy | Firestore pool creation, join code, live progress | Auto-confirm/discount display | Final threshold order conversion and payment settlement |
+| On-call onboarding | — | Web Speech API voice-to-listing and SMS toast simulation | Live telephony/IVR integration |
+| WhatsApp channel | Existing deep-link/backend scaffolding | In-site WhatsApp-style chat demo | Meta Business API production credentials/approval |
+| Trust score | Shared derived score and marketplace badge | Browser calculation from profile fields | Trusted backend aggregation and rating workflow |
+| AI price confidence range | JS trend range and editable advisory price | Browser-only forecast engine | Real Agmarknet-backed variance pipeline |
+| Admin login and governance | Firebase role check, moderation, complaint queue, charts/map | — | Evidence viewer and granular partial-refund workflow |
+| DoCA audit trail | Append-only Firestore collection and admin display | Client-originated audit writes | Backend-enforced audit event generation |
+| Freshness/cold-chain | Harvest date and freshness calculation | — | Cold-chain telemetry |
+| Nearby mandi/cold storage | Leaflet map with seeded facilities | Seeded dataset | Live facility data sync |
+| Input verification | Firestore lookup UI/rules | — | QR scanner and counterfeit reporting workflow |
+| Negotiation/counter-offer | — | — | Not done |
+| FPO CSV upload | — | — | Not done |
+| Hash-chained ledger | Recompute/verify UI and immutable ledger records | Honest non-blockchain implementation | Distributed blockchain infrastructure |
+| Cancellation stock restoration | Shared transaction helper | — | Wired into every cancellation/dispute action |
+| Aaj ka Bhaav rate check | Browser advisory rate range | JS trend model and mock baseline | Agmarknet live rate API |
+| My Sakhi expert connect | Firestore ticket creation and status display | — | Expert-role response console |
+| Pre-sowing advisory | Forward-projected JS trend page | Browser-only forecast | Location-specific seasonal model |
+| eNAM positioning | Existing schemes/navigation can link externally | — | — |
+| DigiLocker e-KYC | — | — | Not done |
+| Bhashini translation/ASR/TTS | Existing EN/HI/MR JSON and Web Speech support | — | Bhashini API integration |
+| OR-Tools routing | Existing JS nearest-neighbour routing | JS-only route approximation | Python/OR-Tools service |
+
+The selected stack path is **browser JS approximation** for forecasting and routing. The admin-facing wording should remain “Forecast engine: JS trend model” until a trusted Python/Cloud Function deployment replaces it.
+
 ### 2. Launch Frontend Directly
 You can also open `frontend/index.html` directly in any web browser or serve it using live server.
 

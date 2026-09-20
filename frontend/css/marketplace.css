@@ -5,9 +5,7 @@
   background: var(--c-surface);
   border-bottom: 1px solid var(--c-border);
   padding: var(--sp-md) 0;
-  position: sticky;
-  top: var(--nav-h);
-  z-index: 90;
+  position: static;
 }
 .market-search-bar {
   display: flex;

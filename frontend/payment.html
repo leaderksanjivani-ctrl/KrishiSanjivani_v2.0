@@ -235,7 +235,7 @@
       const orderId = currentOrder ? currentOrder.id : 'ORD-882910';
       if (currentOrder?.id && db) {
         try {
-          await db.collection(COLLECTIONS.orders).doc(currentOrder.id).update({ paymentStatus: 'paid', paymentProvider: 'demo-test', paymentId: `demo_${Date.now()}`, paidAt: firebase.firestore.FieldValue.serverTimestamp(), deliveryStatus: 'confirmed' });
+          await db.collection(COLLECTIONS.orders).doc(currentOrder.id).update({ paymentStatus: 'paid', paymentProvider: 'demo-test', paymentId: `demo_${Date.now()}`, paidAt: firebase.firestore.FieldValue.serverTimestamp(), deliveryStatus: 'confirmed', escrowStatus: 'held', escrowHeldAt: firebase.firestore.FieldValue.serverTimestamp(), escrowAutoReleaseAt: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString() });
         } catch (error) {
           console.warn('Payment status update failed:', error);
         }

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">KrishiSanjivani logo</title>
+  <desc id="desc">Green circular agricultural mark with leaves, sunrise and cultivated fields.</desc>
+  <defs>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1b4d2e"/><stop offset="1" stop-color="#6da816"/></linearGradient>
+    <clipPath id="round"><circle cx="256" cy="256" r="224"/></clipPath>
+  </defs>
+  <circle cx="256" cy="256" r="224" fill="#fff" stroke="#5d980d" stroke-width="9"/>
+  <g clip-path="url(#round)">
+    <path fill="#f5b51b" d="M205 334a51 51 0 0 1 102 0z"/><path stroke="#f5b51b" stroke-width="6" stroke-linecap="round" d="M256 268v-24m-31 34-15-19m77 19 15-19m-58 10-7-24m34 24 7-24"/>
+    <path fill="url(#green)" d="M31 386c66-53 121-61 177-28 51-45 108-48 167-7 45-23 79-12 106 7v94H31z"/>
+    <path fill="#7cae20" d="M31 419c69-47 133-47 192 0 58-42 118-40 181 2 41-25 76-23 77-23v54H31z"/>
+    <g fill="none" stroke="#075b43" stroke-width="7"><path d="M41 413c72-47 132-43 191 3 59-42 121-40 181 2 35-23 70-22 101-7"/><path d="M48 452c72-44 130-41 184 1 59-39 122-37 180 2 33-20 68-19 99-6"/></g>
+    <path fill="#4e980e" d="M256 184c-28-47-17-84 20-112 25 43 18 79-20 112z"/><path fill="#2c7b27" d="M240 181c-53-9-79-39-82-79 46-5 76 22 82 79z"/><path fill="#70ae13" d="M266 180c7-54 39-78 79-80 1 45-26 73-79 80z"/><path fill="#3b8a1f" d="M253 193c-44-1-70 18-78 51 43 10 70-8 78-51z"/><path fill="#72b21a" d="M267 193c43-6 73 10 87 40-39 17-70 3-87-40z"/><path stroke="#277126" stroke-width="8" d="M256 190v96"/>
+    <path fill="#17633a" d="M72 260h368v65H72z" opacity=".12"/>
+  </g>
+  <text x="256" y="286" text-anchor="middle" font-family="Georgia,serif" font-size="45" font-weight="700" fill="#075b43">Krishi<tspan fill="#5d980d">Sanjivani</tspan></text>
+  <path stroke="#075b43" stroke-width="3" d="M159 299h194"/><text x="256" y="320" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#277126">कृषी संजीवनी</text>
+</svg>

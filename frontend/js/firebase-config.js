@@ -77,7 +77,14 @@ const COLLECTIONS = {
   rightsActs: 'rightsActs',
   chatbotFaq: 'chatbotFaq',
   notifications: 'notifications',
-  fpos: 'fpos'
+  fpos: 'fpos',
+  auctions: 'auctions',
+  groupBuys: 'groupBuys',
+  expertQueries: 'expertQueries',
+  auditLog: 'auditLog',
+  verifiedInputs: 'verifiedInputs',
+  ledgerChain: 'ledgerChain',
+  facilities: 'facilities'
 };
 
 // Mock price data for seeding

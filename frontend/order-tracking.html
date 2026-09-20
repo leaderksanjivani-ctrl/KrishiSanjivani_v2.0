@@ -74,6 +74,16 @@
           <div style="font-size:12px;color:var(--c-blue);margin-top:4px" id="eta-desc">Delivery vehicle is on the way from farm!</div>
         </div>
 
+        <div class="card card-body mb-lg" id="escrow-card">
+          <strong>Payment protection</strong>
+          <div id="escrow-status" class="badge badge-gold" style="margin:10px 0">Loading escrow status...</div>
+          <p id="escrow-help" style="font-size:12px;color:var(--c-text-muted)">Funds remain held until delivery is confirmed.</p>
+          <div class="flex gap-sm">
+            <button class="btn btn-primary btn-sm" id="confirm-delivery" style="display:none">Confirm Delivery</button>
+            <button class="btn btn-outline btn-sm" id="raise-dispute" style="display:none">Dispute non-delivery</button>
+          </div>
+        </div>
+
         <!-- AI ROUTE EFFICIENCY CARD -->
         <div style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border:1.5px solid var(--c-blue);padding:14px;border-radius:var(--r-xl);margin-bottom:var(--sp-lg)">
           <div style="display:flex;gap:10px;align-items:center">
@@ -153,6 +163,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/feature-core.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/voice.js"></script>
@@ -174,7 +185,27 @@
 
     initTrackingMap();
     document.getElementById('read-tracking-btn')?.addEventListener('click', () => readAloud(document.querySelector('.tracking-layout')?.innerText || 'Order tracking status'));
+    watchOrder(orderId);
   });
+
+  function watchOrder(orderId) {
+    if (!db || !orderId || orderId === 'ORD-882910') return;
+    db.collection(COLLECTIONS.orders).doc(orderId).onSnapshot(async snap => {
+      if (!snap.exists) return;
+      const order = snap.data();
+      const status = order.escrowStatus || (order.paymentStatus === 'paid' ? 'held' : 'pending');
+      const badge = document.getElementById('escrow-status');
+      badge.textContent = KSFeatures.escrowLabel(order);
+      badge.className = `badge ${status === 'released' ? 'badge-green' : status === 'disputed' ? 'badge-red' : 'badge-gold'}`;
+      document.getElementById('confirm-delivery').style.display = status === 'held' ? 'inline-flex' : 'none';
+      document.getElementById('raise-dispute').style.display = status === 'held' ? 'inline-flex' : 'none';
+      if (status === 'held' && order.escrowAutoReleaseAt && Date.now() >= new Date(order.escrowAutoReleaseAt).getTime() && auth.currentUser?.uid === order.buyerId) {
+        try { await KSFeatures.releaseEscrow(orderId, '48_hour_auto_release'); } catch (error) { console.warn('Escrow fallback:', error); }
+      }
+    });
+    document.getElementById('confirm-delivery').onclick = async () => { try { await KSFeatures.releaseEscrow(orderId); document.getElementById('escrow-help').textContent = 'Delivery confirmed. Payment has been released.'; } catch (error) { document.getElementById('escrow-help').textContent = error.message; } };
+    document.getElementById('raise-dispute').onclick = async () => { const user = auth.currentUser; if (!user) return; await db.collection(COLLECTIONS.orders).doc(orderId).update({ escrowStatus: 'disputed', disputeRaisedAt: firebase.firestore.FieldValue.serverTimestamp() }); await db.collection(COLLECTIONS.complaints).add({ userId: user.uid, orderId, category: 'Escrow', subject: 'Buyer disputes non-delivery', status: 'open', createdAt: firebase.firestore.FieldValue.serverTimestamp() }); document.getElementById('escrow-help').textContent = 'Dispute filed. An admin will review the order evidence.'; };
+  }
 
   function initTrackingMap() {
     // Route points: Farm -> Driver -> Buyer

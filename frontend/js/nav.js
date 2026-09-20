@@ -33,7 +33,8 @@ async function initNav() {
         'product-detail.html','cart.html','checkout.html',
         'payment.html','invoice.html','order-tracking.html',
         'equipment-rental.html','help.html','profile.html',
-        'weather.html','schemes.html','rights-acts.html'
+        'weather.html','schemes.html','rights-acts.html','auction.html','group-buy.html',
+        'verify-inputs.html','ask-expert.html','rate-check.html','pre-sowing.html','onboarding.html','ledger-verify.html'
       ];
       const page = location.pathname.split('/').pop();
       if (protectedPages.includes(page)) {
@@ -74,16 +75,17 @@ function initGovernmentShell() {
     </div></div>`;
   document.body.prepend(utility);
   document.querySelectorAll('#lang-select').forEach(select => select.remove());
+  applyBrandLogos();
   const nav = document.getElementById('main-nav');
   if (nav) {
     nav.classList.add('ks-site-header');
     const primary = document.createElement('div');
     primary.className = 'ks-primary-nav';
     primary.innerHTML = `<div class="ks-primary-inner">
-      <a href="index.html" data-nav-page="index.html">Home</a><div class="ks-nav-menu"><a href="marketplace.html" data-nav-page="marketplace.html">Marketplace <span>⌄</span></a><div class="ks-nav-dropdown"><a href="marketplace.html">Buy Produce</a><a href="list-item.html">Sell Produce</a><a href="order-tracking.html">My Orders</a></div></div>
+      <a href="index.html" data-nav-page="index.html">Home</a><div class="ks-nav-menu"><a href="marketplace.html" data-nav-page="marketplace.html">Marketplace <span>⌄</span></a><div class="ks-nav-dropdown"><a href="marketplace.html">Buy Produce</a><a href="list-item.html">Sell Produce</a><a href="order-tracking.html">My Orders</a><a href="auction.html">Bol Bhaav Live</a><a href="group-buy.html">Group Buy</a></div></div>
       <a href="list-item.html" data-nav-page="list-item.html">Sell</a><a href="equipment-rental.html" data-nav-page="equipment-rental.html">Equipment Rental</a><a href="weather.html" data-nav-page="weather.html">Weather</a>
       <div class="ks-nav-menu"><a href="schemes.html" data-nav-page="schemes.html">Schemes <span>⌄</span></a><div class="ks-nav-dropdown"><a href="schemes.html">Govt. Schemes</a><a href="schemes.html#mahadbt">MahaDBT</a></div></div>
-      <a href="rights-acts.html" data-nav-page="rights-acts.html">Rights &amp; Acts</a><a href="help.html" data-nav-page="help.html">Help</a></div>`;
+      <a href="rights-acts.html" data-nav-page="rights-acts.html">Rights &amp; Acts</a><div class="ks-nav-menu"><a href="dashboard.html">Tools <span>⌄</span></a><div class="ks-nav-dropdown"><a href="rate-check.html">Aaj ka Bhaav</a><a href="nearby-facilities.html">Nearby Facilities</a><a href="verify-inputs.html">Verify Inputs</a><a href="ask-expert.html">My Sakhi</a><a href="pre-sowing.html">What Should I Grow?</a><a href="ledger-verify.html">Verify Ledger</a></div></div><a href="help.html" data-nav-page="help.html">Help</a></div>`;
     nav.after(primary);
     const currentPage = location.pathname.split('/').pop() || 'index.html';
     primary.querySelector(`[data-nav-page="${currentPage}"]`)?.classList.add('active');
@@ -93,6 +95,16 @@ function initGovernmentShell() {
   initAccessibilityControls();
   initAnnouncementTicker();
   initPortalFooter();
+  applyBrandLogos();
+}
+
+function applyBrandLogos() {
+  document.querySelectorAll('.nav-logo-icon').forEach(mark => {
+    mark.innerHTML = '<img src="assets/krishisanjivani-logo.svg" alt="KrishiSanjivani logo">';
+  });
+  document.querySelectorAll('.auth-brand-icon').forEach(mark => {
+    mark.innerHTML = '<img src="assets/krishisanjivani-logo.svg" alt="KrishiSanjivani logo">';
+  });
 }
 
 function initPortalFooter() {
