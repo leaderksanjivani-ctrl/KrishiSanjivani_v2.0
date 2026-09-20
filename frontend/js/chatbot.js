@@ -123,7 +123,8 @@ function initChatbot() {
     panel.classList.toggle('hidden', !chatbotOpen);
     btn.querySelector('.chatbot-badge').style.display = 'none';
     if (chatbotOpen && messages.children.length === 0) {
-      addBotMessage(t('chatbot_greeting'));
+      const greeting = t('chatbot_greeting') + (typeof isGuestMode === 'function' && isGuestMode() ? `\n\n${t('guest_chat_note')}` : '');
+      translateGuestResponse(greeting).then(addBotMessage);
       // Show suggestions
       showSuggestions(['💰 Crop prices', '📦 My order', '🏛️ Schemes', '🚜 Rent equipment', '☁️ Weather']);
     }
@@ -166,10 +167,27 @@ function sendChatMessage() {
   input.value = '';
 
   // Find matching intent
-  setTimeout(() => {
+  setTimeout(async () => {
     const response = matchIntent(text);
-    addBotMessage(response);
+    addBotMessage(await translateGuestResponse(response));
   }, 400);
+}
+
+async function translateGuestResponse(response) {
+  if (!response || !currentLang || ['en', 'hi', 'mr'].includes(currentLang)) return response;
+  try {
+    const apiBase = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.aiApiBase) || '/api';
+    const result = await fetch(`${apiBase}/ai/translate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: response, targetLanguage: currentLang })
+    });
+    if (!result.ok) return response;
+    return (await result.json()).text || response;
+  } catch (error) {
+    console.warn('Guest chatbot translation unavailable; using English response.', error);
+    return response;
+  }
 }
 
 function matchIntent(text) {

@@ -39,7 +39,7 @@
       <div class="section-title" data-i18n="listing_title">List Your Produce</div>
       <div class="section-subtitle">Share your farm fresh produce directly with buyers</div>
     </div>
-    <button class="voice-btn" onclick="readAloud('List your produce. Fill in the crop details, set your price, upload a photo and publish.')">🔊</button>
+    <button class="voice-btn" onclick="readAloud(document.querySelector('main, .page-wrapper')?.innerText || 'List your produce.')">🔊</button>
   </div>
 
   <!-- AI PRICE HINT BANNER -->

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms & Conditions | KrishiSanjivani</title>
+  <meta name="description" content="Read the platform terms for buyers, farmers, and administrators using KrishiSanjivani.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/redesign.css">
+  <style>
+    body { background: #f7f6f1; }
+    .legal-shell { max-width: 980px; margin: 56px auto 72px; padding: 0 20px; }
+    .legal-card { background: #fff; border: 1px solid #e7e2d7; border-radius: 20px; box-shadow: 0 10px 26px rgba(32, 48, 37, 0.06); padding: 32px clamp(20px, 4vw, 40px); }
+    .legal-card h1 { font-size: clamp(2rem, 4vw, 3rem); color: #204d2c; margin-bottom: 8px; }
+    .legal-card h2 { font-size: 1.2rem; margin-top: 28px; color: #204d2c; }
+    .legal-card p, .legal-card li { color: #465349; line-height: 1.7; }
+    .legal-card ul { padding-left: 18px; }
+    .legal-card strong { color: #1b3a27; }
+    .legal-badge { display: inline-block; background: #eaf5eb; color: #214d30; border: 1px solid #cfe5d4; border-radius: 999px; padding: 7px 12px; font-weight: 700; margin-bottom: 14px; }
+  </style>
+</head>
+<body>
+  <nav id="main-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🌾</div>
+      <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html?mode=signup" class="btn btn-primary btn-sm">Sign Up</a>
+    </div>
+  </nav>
+
+  <main class="legal-shell">
+    <div class="legal-card">
+      <span class="legal-badge">Terms &amp; Conditions</span>
+      <h1>Terms &amp; Conditions</h1>
+      <p>These terms govern the use of KrishiSanjivani and apply to farmers, buyers, bulk buyers, and administrators using the platform. By registering or transacting through KrishiSanjivani, users agree to be bound by these rules.</p>
+
+      <h2>1. Platform Role</h2>
+      <p>KrishiSanjivani operates as a digital marketplace facilitator. It enables farmers to list produce and buyers to discover, compare, and purchase direct-from-farm goods. The platform is not a direct party to every farmer-buyer transaction and does not replace statutory obligations, legal contracts, or delivery warranties created by the parties themselves.</p>
+
+      <h2>2. Payments and Escrow</h2>
+      <ul>
+        <li>Payments may be processed through Razorpay or equivalent secure payment gateway integrations.</li>
+        <li>Payment details are subject to the respective gateway's terms and privacy obligations.</li>
+        <li>Funds are processed for the purpose of safe checkout and may be released to the seller subject to order verification, delivery confirmation, or any platform policy in force at the time.</li>
+      </ul>
+
+      <h2>3. Dispute Resolution</h2>
+      <p>If a buyer or seller has a dispute concerning pricing, quality, quantity, delivery, or payment release, they may raise a grievance through the help center or complaint workflow. The grievance will be routed to the designated admin flow for review and resolution. Users agree to cooperate with requests for documentation, proof of delivery, and item verification.</p>
+
+      <h2>4. Account Suspension</h2>
+      <p>KrishiSanjivani reserves the right to suspend or restrict user accounts for reasons including but not limited to fraud, fake listings, abusive conduct, non-payment, repeated violations, or any activity that threatens the integrity of the marketplace or legal compliance.</p>
+
+      <h2>5. Liability Limitation</h2>
+      <p>KrishiSanjivani provides the platform and information on an “as is” basis. We do not guarantee uninterrupted service, zero defects, or the uninterrupted accuracy of all external data sources such as weather APIs, pricing feeds, or third-party payment services. We are not liable for losses arising from genuine marketplace disputes, natural factors, force majeure events, or acts beyond reasonable control.</p>
+
+      <h2>6. User Responsibilities</h2>
+      <ul>
+        <li>Provide truthful information during signup and listing.</li>
+        <li>Use the platform only for lawful agricultural trade and supported purposes.</li>
+        <li>Not upload defamatory, misleading, or fraudulent product photos or false pricing claims.</li>
+        <li>Not bypass security controls or abuse admin or grievance channels.</li>
+      </ul>
+
+      <h2>7. Changes to Terms</h2>
+      <p>KrishiSanjivani may update these terms from time to time to reflect legal, operational, or feature changes. Continued use of the platform after updates indicates acceptance of the revised terms.</p>
+
+      <h2>8. Contact</h2>
+      <p>For legal or compliance questions, contact <a href="mailto:support@krishisanjivani.gov.in">support@krishisanjivani.gov.in</a>.</p>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/nav.js"></script>
+  <script>initFirebase(); document.addEventListener('DOMContentLoaded', initNav);</script>
+</body>
+</html>

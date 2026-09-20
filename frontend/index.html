@@ -3,8 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiSanjivani — From Farm to Fork, No Middlemen</title>
-  <meta name="description" content="KrishiSanjivani connects farmers directly with consumers and bulk buyers, eliminating middlemen for better prices for all.">
+  <title>KrishiSanjivani | Buy Fresh Produce Direct from Farmers</title>
+  <meta name="description" content="Buy fresh produce direct from farmers, discover government support, rent farm equipment, and access transparent digital agriculture tools.">
+  <meta property="og:title" content="KrishiSanjivani | Buy Fresh Produce Direct from Farmers">
+  <meta property="og:description" content="Smart Platform | Transparent Markets | Empowered Farmers">
+  <meta property="og:image" content="assets/krishisanjivani-logo.svg">
+  <meta property="og:url" content="https://krishi-sanjivani-v2-0.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="KrishiSanjivani | Buy Fresh Produce Direct from Farmers">
+  <meta name="twitter:description" content="Smart Platform | Transparent Markets | Empowered Farmers">
+  <meta name="twitter:image" content="assets/krishisanjivani-logo.svg">
+  <meta name="theme-color" content="#2f6b3c">
+  <link rel="icon" type="image/svg+xml" href="assets/krishisanjivani-logo.svg">
+  <link rel="apple-touch-icon" href="assets/krishisanjivani-logo.svg">
+  <link rel="canonical" href="https://krishi-sanjivani-v2-0.vercel.app/">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/redesign.css">
@@ -19,6 +32,7 @@
   </a>
   <div class="nav-spacer"></div>
   <div class="nav-actions">
+    <button class="btn btn-ghost btn-sm" type="button" data-i18n="guest_explore" onclick="enterGuestMode('dashboard.html')">Explore as Guest</button>
     <a href="auth.html" class="btn btn-outline btn-sm" data-i18n="btn_login">Login</a>
     <a href="auth.html?mode=signup" class="btn btn-primary btn-sm" data-i18n="btn_signup">Sign Up</a>
   </div>
@@ -151,54 +165,26 @@
       <p class="features-subtitle">One simple place to sell, buy and manage your farm needs.</p>
     </div>
     <div class="features-grid">
-      <div class="feature-card" onclick="location.href='marketplace.html'">
-        <div class="feature-icon" style="background:linear-gradient(135deg,#138808,#52C41A)">🌾</div>
-        <h3>Buy &amp; Sell Produce</h3>
-        <p>Direct farm-to-consumer marketplace with photos, prices, and location.</p>
-        <div class="feature-tag">Core Marketplace</div>
-      </div>
-      <div class="feature-card" onclick="location.href='weather.html'">
-        <div class="feature-icon" style="background:linear-gradient(135deg,#0070C0,#00B4D8)">☁️</div>
-        <h3>Weather Forecast</h3>
-        <p>5-day forecast with farm-specific advice. Know when to spray, sow, or harvest.</p>
-        <div class="feature-tag">Live Data</div>
-      </div>
-      <div class="feature-card chatbot-trigger" id="open-chatbot-demo">
-        <div class="feature-icon" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">🤖</div>
-        <h3>AI Chatbot (KrishiBot)</h3>
-        <p>Ask about prices, orders, schemes in Hindi, Marathi or English — 24/7.</p>
-        <div class="feature-tag">AI Powered</div>
-      </div>
-      <div class="feature-card" onclick="location.href='schemes.html'">
-        <div class="feature-icon" style="background:linear-gradient(135deg,#D97706,#F59E0B)">🏛️</div>
-        <h3>Govt. Schemes</h3>
-        <p>PM-KISAN, crop insurance, MahaDBT and 15+ schemes — all in one place.</p>
-        <div class="feature-tag">MahaDBT</div>
-      </div>
-      <div class="feature-card" onclick="location.href='equipment-rental.html'">
-        <div class="feature-icon" style="background:linear-gradient(135deg,#FF6B00,#FF9A3C)">🚜</div>
-        <h3>Equipment Rental</h3>
-        <p>Rent tractors, drones, tillers by the day. No need to buy expensive machinery.</p>
-        <div class="feature-tag">Peer-to-Peer</div>
-      </div>
-      <div class="feature-card" onclick="location.href='rights-acts.html'">
-        <div class="feature-icon" style="background:linear-gradient(135deg,#DC2626,#F87171)">📜</div>
-        <h3>Farmer Rights &amp; Acts</h3>
-        <p>Understand MSP, APMC, contract farming and more — in plain language.</p>
-        <div class="feature-tag">Legal Aid</div>
-      </div>
-      <div class="feature-card" onclick="location.href='order-tracking.html'">
-        <div class="feature-icon" style="background:linear-gradient(135deg,#059669,#34D399)">🚚</div>
-        <h3>Smart Logistics</h3>
-        <p>AI-optimized delivery routes. Track every order live on the map.</p>
-        <div class="feature-tag">Route AI</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon" style="background:linear-gradient(135deg,#1A237E,#3949AB)">🔊</div>
-        <h3>Voice Assist</h3>
-        <p>Read-aloud and voice search in Hindi &amp; Marathi for low-literacy users.</p>
-        <div class="feature-tag">Accessibility</div>
-      </div>
+      <a class="feature-card" href="list-item.html"><div class="feature-icon" style="background:linear-gradient(135deg,#138808,#52C41A)">🌾</div><h3>Sell</h3><p>List your harvest with price, quantity, photos, and farm location.</p><div class="feature-tag">List Produce</div></a>
+      <a class="feature-card" href="marketplace.html"><div class="feature-icon" style="background:linear-gradient(135deg,#FF6B00,#FF9A3C)">🛒</div><h3>Buy</h3><p>Browse fresh produce directly from farmers at transparent prices.</p><div class="feature-tag">Browse Market</div></a>
+      <a class="feature-card" href="marketplace.html?mode=search"><div class="feature-icon" style="background:linear-gradient(135deg,#0070C0,#00B4D8)">🔍</div><h3>Search</h3><p>Find crops, farmers, and nearby listings quickly.</p><div class="feature-tag">Find Crops</div></a>
+      <a class="feature-card" href="equipment-rental.html"><div class="feature-icon" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">🚜</div><h3>Rent</h3><p>Find tractors, drones, and farm equipment near you.</p><div class="feature-tag">Equipment</div></a>
+      <a class="feature-card" href="profile.html?tab=orders"><div class="feature-icon" style="background:linear-gradient(135deg,#059669,#34D399)">📦</div><h3>My Orders</h3><p>Review your purchases and order history in one place.</p><div class="feature-tag">Orders</div></a>
+      <a class="feature-card" href="order-tracking.html"><div class="feature-icon" style="background:linear-gradient(135deg,#D97706,#F59E0B)">🚚</div><h3>Track</h3><p>Follow delivery progress and pickup updates live.</p><div class="feature-tag">Live Delivery</div></a>
+      <a class="feature-card" href="profile.html?tab=earnings"><div class="feature-icon" style="background:linear-gradient(135deg,#1A237E,#3949AB)">💰</div><h3>Earnings</h3><p>See farmer earnings, savings, and payout information.</p><div class="feature-tag">Farmer Tools</div></a>
+      <a class="feature-card" href="weather.html"><div class="feature-icon" style="background:linear-gradient(135deg,#06B6D4,#0EA5E9)">☁️</div><h3>Weather</h3><p>Plan sowing, spraying, irrigation, and harvest decisions.</p><div class="feature-tag">Forecast</div></a>
+      <a class="feature-card" href="schemes.html"><div class="feature-icon" style="background:linear-gradient(135deg,#DC2626,#F87171)">🏛️</div><h3>Schemes</h3><p>Explore PM-KISAN, MahaDBT, insurance, and support programs.</p><div class="feature-tag">Government Support</div></a>
+      <a class="feature-card" href="rights-acts.html"><div class="feature-icon" style="background:linear-gradient(135deg,#9D174D,#F472B6)">📜</div><h3>Rights</h3><p>Understand MSP, APMC, contracts, and farmer protections.</p><div class="feature-tag">Farmer Acts</div></a>
+      <a class="feature-card" href="help.html"><div class="feature-icon" style="background:linear-gradient(135deg,#374151,#6B7280)">❓</div><h3>Help</h3><p>Get support for listings, payments, orders, and account issues.</p><div class="feature-tag">Support</div></a>
+      <a class="feature-card" href="profile.html"><div class="feature-icon" style="background:linear-gradient(135deg,#064E3B,#10B981)">👤</div><h3>Profile</h3><p>Manage your account, language, location, and preferences.</p><div class="feature-tag">My Account</div></a>
+      <a class="feature-card" href="auction.html"><div class="feature-icon" style="background:linear-gradient(135deg,#166534,#65A30D)">📊</div><h3>Bol Bhaav</h3><p>Join live auctions and discover competitive produce prices.</p><div class="feature-tag">Live Auctions</div></a>
+      <a class="feature-card" href="group-buy.html"><div class="feature-icon" style="background:linear-gradient(135deg,#0F766E,#14B8A6)">👥</div><h3>Group Buy</h3><p>Pool demand with other buyers for better bulk pricing.</p><div class="feature-tag">Pool Demand</div></a>
+      <a class="feature-card" href="nearby-facilities.html"><div class="feature-icon" style="background:linear-gradient(135deg,#0369A1,#38BDF8)">📍</div><h3>Nearby</h3><p>Locate mandis, cold storage, and other farm facilities.</p><div class="feature-tag">Local Facilities</div></a>
+      <a class="feature-card" href="verify-inputs.html"><div class="feature-icon" style="background:linear-gradient(135deg,#854D0E,#EAB308)">✅</div><h3>Verify Inputs</h3><p>Check seed, fertilizer, and input batch information.</p><div class="feature-tag">Batch Lookup</div></a>
+      <a class="feature-card" href="ask-expert.html"><div class="feature-icon" style="background:linear-gradient(135deg,#9F1239,#FB7185)">💬</div><h3>My Sakhi</h3><p>Ask an agriculture expert about your crop and farm.</p><div class="feature-tag">Expert Help</div></a>
+      <a class="feature-card" href="rate-check.html"><div class="feature-icon" style="background:linear-gradient(135deg,#B45309,#F59E0B)">₹</div><h3>Aaj ka Bhaav</h3><p>Check today's advisory market rates for key crops.</p><div class="feature-tag">Today's Rate</div></a>
+      <a class="feature-card" href="onboarding.html"><div class="feature-icon" style="background:linear-gradient(135deg,#14532D,#22C55E)">📞</div><h3>Call to Register</h3><p>Try the voice-led onboarding flow for quick registration.</p><div class="feature-tag">Voice Simulation</div></a>
+      <a class="feature-card" href="ledger-verify.html"><div class="feature-icon" style="background:linear-gradient(135deg,#334155,#64748B)">🔗</div><h3>Verify Ledger</h3><p>Check the integrity of a transaction hash chain.</p><div class="feature-tag">Hash-Chain Check</div></a>
     </div>
   </div>
 </section>
@@ -330,7 +316,7 @@
         <p>Join 50,000+ farmers and 2,00,000+ buyers already on KrishiSanjivani.</p>
         <div class="cta-actions">
           <a href="auth.html?mode=signup" class="btn btn-secondary btn-lg">🌾 Get Started Free</a>
-          <a href="dashboard.html" class="btn btn-outline btn-lg" style="border-color:#fff;color:#fff;">Explore as Guest</a>
+          <a href="dashboard.html" class="btn btn-outline btn-lg" style="border-color:#fff;color:#fff;" onclick="enterGuestMode('dashboard.html');return false;">Explore as Guest</a>
         </div>
       </div>
       <div class="cta-illustration">🌾🚚🛒</div>
@@ -361,6 +347,8 @@
         <h4>Support</h4>
         <a href="help.html">Help Center</a>
         <a href="rights-acts.html">Farmer Rights</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
         <a href="auth.html">Login / Sign Up</a>
         <a href="admin-login.html">Admin</a>
       </div>

@@ -4,6 +4,179 @@
 
 let currentUser = null;
 let currentUserProfile = null;
+const GUEST_USER = { uid: 'guest-demo', isGuest: true, displayName: 'Guest Visitor', email: '' };
+
+const SITE_META = {
+  'index.html': {
+    title: 'KrishiSanjivani | Buy Fresh Produce Direct from Farmers',
+    description: 'Transparent farm-to-fork marketplace with fair pricing, live weather, schemes, equipment rental, and secure digital payments.',
+    image: 'assets/krishisanjivani-logo.svg',
+    url: 'https://krishi-sanjivani-v2-0.vercel.app/'
+  },
+  'marketplace.html': {
+    title: 'Marketplace | Buy Fresh Produce Direct from Farmers | KrishiSanjivani',
+    description: 'Buy fresh produce direct from farmers at fair prices with secure checkout and transparent sourcing.',
+    image: 'assets/krishisanjivani-logo.svg',
+    url: 'https://krishi-sanjivani-v2-0.vercel.app/marketplace.html'
+  },
+  'equipment-rental.html': {
+    title: 'Equipment Rental Near You | KrishiSanjivani',
+    description: 'Rent farm equipment and machinery near your location for timely sowing, harvesting, and field operations.',
+    image: 'assets/krishisanjivani-logo.svg',
+    url: 'https://krishi-sanjivani-v2-0.vercel.app/equipment-rental.html'
+  },
+  'weather.html': {
+    title: 'Weather Forecast for Farmers | KrishiSanjivani',
+    description: 'Check local weather and crop-safe recommendations to plan your irrigation, spraying, and harvesting schedule.',
+    image: 'assets/krishisanjivani-logo.svg',
+    url: 'https://krishi-sanjivani-v2-0.vercel.app/weather.html'
+  },
+  'schemes.html': {
+    title: 'Government Schemes & MahaDBT | KrishiSanjivani',
+    description: 'Discover farmer support schemes, PM-KISAN updates, crop support, and MahaDBT assistance in one place.',
+    image: 'assets/krishisanjivani-logo.svg',
+    url: 'https://krishi-sanjivani-v2-0.vercel.app/schemes.html'
+  },
+  'rights-acts.html': {
+    title: 'Farmer Rights & Acts | KrishiSanjivani',
+    description: 'Learn about legal rights, MSP guidance, contract farming knowledge, and relevant agricultural acts in accessible language.',
+    image: 'assets/krishisanjivani-logo.svg',
+    url: 'https://krishi-sanjivani-v2-0.vercel.app/rights-acts.html'
+  },
+  'help.html': {
+    title: 'Help Center | KrishiSanjivani',
+    description: 'Get assistance for listings, orders, payments, grievance handling, and platform support.',
+    image: 'assets/krishisanjivani-logo.svg',
+    url: 'https://krishi-sanjivani-v2-0.vercel.app/help.html'
+  },
+  'auth.html': {
+    title: 'Login or Sign Up | KrishiSanjivani',
+    description: 'Create a farmer, buyer, or bulk buyer account and join the direct agriculture marketplace.',
+    image: 'assets/krishisanjivani-logo.svg',
+    url: 'https://krishi-sanjivani-v2-0.vercel.app/auth.html'
+  }
+};
+
+function isGuestMode() { return localStorage.getItem('ks_guest_mode') === 'true'; }
+
+function injectSiteMeta() {
+  const page = location.pathname.split('/').pop() || 'index.html';
+  const meta = SITE_META[page] || SITE_META['index.html'];
+  if (!document.querySelector('meta[name="description"]')) {
+    const descriptionTag = document.createElement('meta');
+    descriptionTag.name = 'description';
+    descriptionTag.content = meta.description;
+    document.head.appendChild(descriptionTag);
+  }
+  document.title = meta.title;
+  const ogTitle = document.querySelector('meta[property="og:title"]') || document.createElement('meta');
+  ogTitle.setAttribute('property', 'og:title');
+  ogTitle.setAttribute('content', meta.title);
+  if (!ogTitle.parentNode) document.head.appendChild(ogTitle);
+  const ogDesc = document.querySelector('meta[property="og:description"]') || document.createElement('meta');
+  ogDesc.setAttribute('property', 'og:description');
+  ogDesc.setAttribute('content', meta.description);
+  if (!ogDesc.parentNode) document.head.appendChild(ogDesc);
+  const ogImage = document.querySelector('meta[property="og:image"]') || document.createElement('meta');
+  ogImage.setAttribute('property', 'og:image');
+  ogImage.setAttribute('content', meta.image);
+  if (!ogImage.parentNode) document.head.appendChild(ogImage);
+  const ogUrl = document.querySelector('meta[property="og:url"]') || document.createElement('meta');
+  ogUrl.setAttribute('property', 'og:url');
+  ogUrl.setAttribute('content', meta.url);
+  if (!ogUrl.parentNode) document.head.appendChild(ogUrl);
+  const twitterCard = document.querySelector('meta[name="twitter:card"]') || document.createElement('meta');
+  twitterCard.setAttribute('name', 'twitter:card');
+  twitterCard.setAttribute('content', 'summary_large_image');
+  if (!twitterCard.parentNode) document.head.appendChild(twitterCard);
+  const twitterTitle = document.querySelector('meta[name="twitter:title"]') || document.createElement('meta');
+  twitterTitle.setAttribute('name', 'twitter:title');
+  twitterTitle.setAttribute('content', meta.title);
+  if (!twitterTitle.parentNode) document.head.appendChild(twitterTitle);
+  const twitterDesc = document.querySelector('meta[name="twitter:description"]') || document.createElement('meta');
+  twitterDesc.setAttribute('name', 'twitter:description');
+  twitterDesc.setAttribute('content', meta.description);
+  if (!twitterDesc.parentNode) document.head.appendChild(twitterDesc);
+  const twitterImage = document.querySelector('meta[name="twitter:image"]') || document.createElement('meta');
+  twitterImage.setAttribute('name', 'twitter:image');
+  twitterImage.setAttribute('content', meta.image);
+  if (!twitterImage.parentNode) document.head.appendChild(twitterImage);
+}
+
+function injectFavicon() {
+  const favicon = document.querySelector('link[rel="icon"]');
+  if (!favicon) {
+    const icon = document.createElement('link');
+    icon.rel = 'icon';
+    icon.type = 'image/svg+xml';
+    icon.href = 'assets/krishisanjivani-logo.svg';
+    document.head.appendChild(icon);
+  }
+  const apple = document.querySelector('link[rel="apple-touch-icon"]');
+  if (!apple) {
+    const touch = document.createElement('link');
+    touch.rel = 'apple-touch-icon';
+    touch.href = 'assets/krishisanjivani-logo.svg';
+    document.head.appendChild(touch);
+  }
+  const theme = document.querySelector('meta[name="theme-color"]');
+  if (!theme) {
+    const color = document.createElement('meta');
+    color.name = 'theme-color';
+    color.content = '#2f6b3c';
+    document.head.appendChild(color);
+  }
+}
+
+function initCookieConsent() {
+  const key = 'ks_cookie_consent';
+  if (localStorage.getItem(key) === 'accepted') return;
+  const banner = document.createElement('div');
+  banner.id = 'cookie-banner';
+  banner.innerHTML = `
+    <div class="cookie-banner-wrap">
+      <div>
+        <strong data-i18n="cookie_title">Your privacy matters</strong>
+        <p data-i18n="cookie_text">We use local storage for language preference and low-data mode, and Firebase for account and order data. You can accept or continue without making a purchase.</p>
+      </div>
+      <button class="btn btn-primary btn-sm" id="cookie-accept-btn" data-i18n="cookie_accept">Accept</button>
+    </div>
+  `;
+  document.body.appendChild(banner);
+  const accept = document.getElementById('cookie-accept-btn');
+  accept?.addEventListener('click', () => {
+    localStorage.setItem(key, 'accepted');
+    banner.remove();
+  });
+}
+
+function applyConsentStyles() {
+  if (document.getElementById('cookie-banner-style')) return;
+  const style = document.createElement('style');
+  style.id = 'cookie-banner-style';
+  style.textContent = `
+    #cookie-banner { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 9999; }
+    .cookie-banner-wrap {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      background: #ffffff; color: #20432a; border: 1px solid rgba(39,125,67,.15);
+      border-radius: 18px; box-shadow: 0 18px 40px rgba(16,38,24,.14); padding: 16px 18px; max-width: 760px; margin: 0 auto;
+    }
+    .cookie-banner-wrap strong { display:block; font-size: 1rem; margin-bottom: 4px; }
+    .cookie-banner-wrap p { margin: 0; color: #4f5d56; line-height: 1.5; font-size: 0.92rem; }
+    @media (max-width: 640px) { .cookie-banner-wrap { flex-direction: column; align-items: flex-start; } }
+  `;
+  document.head.appendChild(style);
+}
+
+function enterGuestMode(destination = 'dashboard.html') {
+  localStorage.setItem('ks_guest_mode', 'true');
+  location.href = destination;
+}
+
+function exitGuestMode() {
+  localStorage.removeItem('ks_guest_mode');
+  location.href = 'auth.html';
+}
 
 async function initNav() {
   if (typeof initI18n === 'function' && !Object.keys(i18nStrings || {}).length) await initI18n();
@@ -12,6 +185,12 @@ async function initNav() {
   
   // Auth state listener
   auth.onAuthStateChanged(async (user) => {
+    if (!user && isGuestMode()) {
+      currentUser = GUEST_USER;
+      currentUserProfile = { uid: GUEST_USER.uid, name: 'Guest Visitor', role: 'buyer', language: localStorage.getItem('ks_lang') || 'en', isGuest: true };
+      updateNavForGuest();
+      return;
+    }
     currentUser = user;
     if (user) {
       // Load profile
@@ -38,7 +217,7 @@ async function initNav() {
         'verify-inputs.html','ask-expert.html','rate-check.html','pre-sowing.html','onboarding.html','ledger-verify.html'
       ];
       const page = location.pathname.split('/').pop();
-      if (protectedPages.includes(page)) {
+      if (protectedPages.includes(page) && !isGuestMode()) {
         location.href = 'auth.html?redirect=' + encodeURIComponent(page);
       }
     }
@@ -58,6 +237,10 @@ async function initNav() {
 }
 
 function initGovernmentShell() {
+  injectFavicon();
+  injectSiteMeta();
+  applyConsentStyles();
+  initCookieConsent();
   if (document.querySelector('.ks-utility-bar')) return;
   const iconScript = document.createElement('script');
   iconScript.src = 'js/icon-system.js';
@@ -75,6 +258,7 @@ function initGovernmentShell() {
       </div></div>
     </div></div>`;
   document.body.prepend(utility);
+  showPrototypeNotice();
   const languageSelect = document.getElementById('lang-select');
   const languageSlot = document.getElementById('ks-language-slot');
   if (languageSelect && languageSlot) languageSlot.appendChild(languageSelect);
@@ -104,6 +288,32 @@ function initGovernmentShell() {
   applyBrandLogos();
 }
 
+function showPrototypeNotice() {
+  if (document.getElementById('sih-prototype-notice')) return;
+  const copy = {
+    en: ['SIH prototype preview', 'This website is an SIH 2026 prototype. Some data and actions are simulated for demonstration.', 'Close'],
+    mr: ['SIH प्रोटोटाइप पूर्वदृश्य', 'ही वेबसाइट SIH 2026 प्रोटोटाइप आहे. काही माहिती आणि कृती प्रात्यक्षिकासाठी सिम्युलेटेड आहेत.', 'बंद करा'],
+    hi: ['SIH प्रोटोटाइप पूर्वावलोकन', 'यह वेबसाइट SIH 2026 प्रोटोटाइप है। कुछ डेटा और कार्य प्रदर्शन के लिए सिम्युलेटेड हैं।', 'बंद करें'],
+    gu: ['SIH પ્રોટોટાઇપ પૂર્વાવલોકન', 'આ વેબસાઇટ SIH 2026 પ્રોટોટાઇપ છે. કેટલાક ડેટા અને ક્રિયાઓ પ્રદર્શન માટે સિમ્યુલેટેડ છે.', 'બંધ કરો'],
+    bn: ['SIH প্রোটোটাইপ প্রিভিউ', 'এই ওয়েবসাইটটি SIH 2026 প্রোটোটাইপ। কিছু তথ্য ও কাজ প্রদর্শনের জন্য সিমুলেটেড।', 'বন্ধ করুন'],
+    ta: ['SIH முன்மாதிரி முன்னோட்டம்', 'இந்த இணையதளம் SIH 2026 முன்மாதிரி. சில தரவுகளும் செயல்களும் விளக்கத்திற்காக உருவகப்படுத்தப்பட்டவை.', 'மூடுக'],
+    te: ['SIH ప్రోటోటైప్ ప్రివ్యూ', 'ఈ వెబ్‌సైట్ SIH 2026 ప్రోటోటైప్. కొన్ని డేటా మరియు చర్యలు ప్రదర్శన కోసం అనుకరించబడ్డాయి.', 'మూసివేయండి'],
+    kn: ['SIH ಮಾದರಿ ಪೂರ್ವವೀಕ್ಷಣೆ', 'ಈ ವೆಬ್‌ಸೈಟ್ SIH 2026 ಮಾದರಿ. ಕೆಲವು ಡೇಟಾ ಮತ್ತು ಕ್ರಿಯೆಗಳು ಪ್ರದರ್ಶನಕ್ಕಾಗಿ ಅನುಕರಿಸಲಾಗಿದೆ.', 'ಮುಚ್ಚಿ'],
+    ml: ['SIH പ്രോട്ടോടൈപ്പ് പ്രിവ്യൂ', 'ഈ വെബ്സൈറ്റ് SIH 2026 പ്രോട്ടോടൈപ്പാണ്. ചില ഡാറ്റയും പ്രവർത്തനങ്ങളും പ്രദർശനത്തിനായി അനുകരിച്ചവയാണ്.', 'അടയ്ക്കുക'],
+    pa: ['SIH ਪ੍ਰੋਟੋਟਾਈਪ ਝਲਕ', 'ਇਹ ਵੈੱਬਸਾਈਟ SIH 2026 ਪ੍ਰੋਟੋਟਾਈਪ ਹੈ। ਕੁਝ ਡਾਟਾ ਅਤੇ ਕਾਰਵਾਈਆਂ ਪ੍ਰਦਰਸ਼ਨ ਲਈ ਸਿਮੂਲੇਟ ਕੀਤੀਆਂ ਗਈਆਂ ਹਨ।', 'ਬੰਦ ਕਰੋ'],
+    ur: ['SIH پروٹوٹائپ پیش نظارہ', 'یہ ویب سائٹ SIH 2026 پروٹوٹائپ ہے۔ کچھ ڈیٹا اور اقدامات مظاہرے کے لیے فرضی ہیں۔', 'بند کریں'],
+    or: ['SIH ପ୍ରୋଟୋଟାଇପ୍ ପୂର୍ବଦର୍ଶନ', 'ଏହି ୱେବସାଇଟ୍ SIH 2026 ପ୍ରୋଟୋଟାଇପ୍। କିଛି ତଥ୍ୟ ଏବଂ କାର୍ଯ୍ୟ ପ୍ରଦର୍ଶନ ପାଇଁ ସିମୁଲେଟେଡ୍।', 'ବନ୍ଦ କରନ୍ତୁ']
+  };
+  const selected = copy[typeof currentLang !== 'undefined' ? currentLang : 'en'] || copy.en;
+  const notice = document.createElement('aside');
+  notice.id = 'sih-prototype-notice';
+  notice.className = 'sih-notice';
+  notice.innerHTML = `<button class="sih-notice-close" aria-label="${selected[2]}">&times;</button><strong>${selected[0]}</strong><p>${selected[1]}</p>`;
+  document.body.appendChild(notice);
+  notice.querySelector('.sih-notice-close').onclick = () => notice.remove();
+  setTimeout(() => notice.remove(), 3500);
+}
+
 function applyBrandLogos() {
   document.querySelectorAll('.nav-logo-icon').forEach(mark => {
     mark.innerHTML = '<img src="assets/krishisanjivani-logo.svg" alt="KrishiSanjivani logo">';
@@ -120,8 +330,8 @@ function initPortalFooter() {
   footer.innerHTML = `<div class="container"><div class="footer-grid">
     <div class="footer-brand"><div class="nav-logo"><div class="nav-logo-icon">🌾</div><span class="nav-logo-text">KrishiSanjivani</span></div><p>Empowering farmers and connecting communities with fair, trusted agriculture.</p><p class="ks-footer-note">Smart India Hackathon 2026</p></div>
     <div class="footer-links"><h4 data-i18n="footer_platform">Platform</h4><a href="marketplace.html" data-i18n="nav_marketplace">Marketplace</a><a href="equipment-rental.html" data-i18n="nav_equipment">Equipment Rental</a><a href="weather.html" data-i18n="nav_weather">Weather</a><a href="schemes.html" data-i18n="nav_govt_schemes">Govt. Schemes</a></div>
-    <div class="footer-links"><h4 data-i18n="footer_support">Support</h4><a href="help.html" data-i18n="footer_help">Help Center</a><a href="rights-acts.html" data-i18n="nav_rights">Farmer Rights</a><a href="auth.html" data-i18n="footer_login">Login / Sign Up</a><a href="admin-login.html" data-i18n="footer_admin">Admin</a></div>
-    <div class="footer-links"><h4 data-i18n="footer_contact">Contact</h4><a href="tel:18001234567">1800-123-4567</a><a href="mailto:support@krishisanjivani.gov.in">support@krishisanjivani.gov.in</a><p class="ks-footer-note" data-i18n="footer_available">Available 9am-6pm, Mon-Sat</p></div>
+    <div class="footer-links"><h4 data-i18n="footer_support">Support</h4><a href="help.html" data-i18n="footer_help">Help Center</a><a href="rights-acts.html" data-i18n="nav_rights">Farmer Rights</a><a href="privacy-policy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a></div>
+    <div class="footer-links"><h4 data-i18n="footer_contact">Contact</h4><a href="tel:18001234567">1800-123-4567</a><a href="mailto:support@krishisanjivani.gov.in">support@krishisanjivani.gov.in</a><a href="auth.html" data-i18n="footer_login">Login / Sign Up</a><a href="admin-login.html" data-i18n="footer_admin">Admin</a><p class="ks-footer-note" data-i18n="footer_available">Available 9am-6pm, Mon-Sat</p></div>
   </div><div class="footer-bottom"><p>© 2026 KrishiSanjivani | Last Updated: 16 September 2026</p><div class="footer-badges"><span class="badge badge-green">Accessible Website</span><span class="badge badge-green">Secure Payments</span><span class="badge badge-gold">Made in India</span></div></div></div>`;
   document.body.appendChild(footer);
   applyI18n();
@@ -209,7 +419,16 @@ function updateNavForGuest() {
   const avatar = document.getElementById('nav-avatar');
   if (avatar) {
     avatar.textContent = '👤';
-    avatar.href = 'auth.html';
+    avatar.href = isGuestMode() ? 'javascript:exitGuestMode()' : 'auth.html';
+    avatar.title = isGuestMode() ? 'Exit guest preview' : 'Login';
+  }
+  const navActions = document.querySelector('.nav-actions');
+  if (navActions && isGuestMode() && !document.getElementById('guest-mode-badge')) {
+    const badge = document.createElement('span');
+    badge.id = 'guest-mode-badge';
+    badge.className = 'badge badge-gold';
+    badge.textContent = 'Guest Preview';
+    navActions.insertBefore(badge, navActions.firstChild);
   }
 }
 
@@ -267,6 +486,7 @@ function showToast(message, type = 'success', duration = 3000) {
 }
 
 async function signOut() {
+  if (isGuestMode()) { exitGuestMode(); return; }
   await auth.signOut();
   localStorage.removeItem('ks_cart');
   location.href = 'index.html';
@@ -275,6 +495,7 @@ async function signOut() {
 function requireAuth(callback) {
   auth.onAuthStateChanged(user => {
     if (user) callback(user);
+    else if (isGuestMode()) callback(GUEST_USER);
     else location.href = 'auth.html';
   });
 }

@@ -5,6 +5,8 @@
 let currentLang = 'en';
 let i18nStrings = {};
 let baseI18nStrings = {};
+let phraseStrings = {};
+const autoOriginalText = new WeakMap();
 
 const SUPPORTED_LANGUAGES = [
   { code: 'en', label: 'English', native: 'English', html: 'en' },
@@ -22,6 +24,7 @@ const SUPPORTED_LANGUAGES = [
 ];
 
 const BUILTIN_EN = {
+  guest_explore: 'Explore as Guest',
   nav_home: 'Home', nav_marketplace: 'Marketplace', nav_sell: 'Sell', nav_equipment: 'Equipment Rental',
   nav_weather: 'Weather', nav_schemes: 'Schemes', nav_rights: 'Rights & Acts', nav_tools: 'Tools', nav_help: 'Help',
   nav_buy_produce: 'Buy Produce', nav_sell_produce: 'Sell Produce', nav_my_orders: 'My Orders', nav_live_auction: 'Bol Bhaav Live',
@@ -42,6 +45,10 @@ async function loadLanguage(lang) {
     if (!Object.keys(baseI18nStrings).length) {
       const baseRes = await fetch('i18n/en.json');
       baseI18nStrings = baseRes.ok ? await baseRes.json() : {};
+    }
+    if (!Object.keys(phraseStrings).length) {
+      const phraseRes = await fetch('i18n/phrases.json');
+      phraseStrings = phraseRes.ok ? await phraseRes.json() : {};
     }
     const res = await fetch(`i18n/${selected}.json`);
     if (!res.ok) throw new Error('Language file not found');
@@ -82,9 +89,49 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n-aria]').forEach(el => {
     el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
   });
+  applyPhraseTranslations();
   // Update html lang attribute
   document.documentElement.lang = SUPPORTED_LANGUAGES.find(item => item.code === currentLang)?.html || 'en';
   document.querySelectorAll('[data-language-name]').forEach(el => { el.textContent = SUPPORTED_LANGUAGES.find(item => item.code === currentLang)?.native || 'English'; });
+}
+
+function phraseKey(value) {
+  return value.replace(/\s+/g, ' ').trim();
+}
+
+function applyPhraseTranslations() {
+  const phrases = { ...(phraseStrings.en || {}), ...(phraseStrings[currentLang] || {}) };
+  Object.keys(baseI18nStrings).forEach(key => {
+    const source = baseI18nStrings[key];
+    const translated = i18nStrings[key];
+    if (typeof source === 'string' && typeof translated === 'string' && source !== translated) phrases[source] = translated;
+  });
+  const phraseLookup = Object.keys(phrases).reduce((lookup, key) => { lookup[key.toLowerCase()] = phrases[key]; return lookup; }, {});
+  const translate = value => phrases[phraseKey(value)] || phraseLookup[phraseKey(value).toLowerCase()] || value;
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode: node => {
+      const parent = node.parentElement;
+      if (!parent || parent.closest('script,style,textarea,[data-i18n],[data-translation-skip],select,option')) return NodeFilter.FILTER_REJECT;
+      return phraseKey(node.nodeValue) && phraseKey(node.nodeValue).length > 1 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    const original = autoOriginalText.get(node) || phraseKey(node.nodeValue);
+    autoOriginalText.set(node, original);
+    const translated = translate(original);
+    if (translated !== original) node.nodeValue = node.nodeValue.replace(phraseKey(node.nodeValue), translated);
+  });
+  const title = document.title;
+  const translatedTitle = translate(title);
+  if (translatedTitle !== title) document.title = translatedTitle;
+  document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(input => {
+    if (!input.hasAttribute('data-i18n-placeholder')) {
+      const translated = translate(input.placeholder);
+      if (translated !== input.placeholder) input.placeholder = translated;
+    }
+  });
 }
 
 function wireLanguageSelector() {

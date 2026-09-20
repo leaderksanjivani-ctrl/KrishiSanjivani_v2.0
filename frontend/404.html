@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found | KrishiSanjivani</title>
+  <meta name="description" content="The page you were looking for could not be found on KrishiSanjivani.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/redesign.css">
+  <style>
+    body { background: #f5f3ee; }
+    .notfound-shell { min-height: calc(100vh - 120px); display: grid; place-items: center; padding: 40px 20px; }
+    .notfound-card { max-width: 720px; background:#fff; border:1px solid #e5e3dd; border-radius:24px; box-shadow:0 18px 36px rgba(31,63,39,0.08); padding: 40px 28px; text-align:center; }
+    .notfound-card h1 { font-size: clamp(2.3rem, 6vw, 4rem); color:#1f4b2d; margin: 16px 0 12px; }
+    .notfound-card p { color:#4f5b53; line-height:1.7; font-size:1.05rem; }
+    .notfound-actions { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:20px; }
+  </style>
+</head>
+<body>
+  <nav id="main-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🌾</div>
+      <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <a href="index.html" class="btn btn-outline btn-sm">Home</a>
+      <a href="auth.html" class="btn btn-primary btn-sm">Login</a>
+    </div>
+  </nav>
+
+  <main class="notfound-shell">
+    <div class="notfound-card">
+      <div class="nav-logo-icon" style="width: 88px; height: 88px; margin: 0 auto;">
+        <img src="assets/krishisanjivani-logo.svg" alt="KrishiSanjivani logo" style="width:100%; height:100%; object-fit:contain;">
+      </div>
+      <h1>404</h1>
+      <p>This page couldn’t be found. It may have moved, or the link may be outdated. Let's get you back to the right place.</p>
+      <div class="notfound-actions">
+        <a href="index.html" class="btn btn-primary">Back to Home</a>
+        <a href="dashboard.html" class="btn btn-secondary">Open Dashboard</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/nav.js"></script>
+  <script>initFirebase(); document.addEventListener('DOMContentLoaded', initNav);</script>
+</body>
+</html>

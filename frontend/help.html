@@ -240,7 +240,7 @@
     });
 
     document.getElementById('read-help-btn').addEventListener('click', () => {
-      readAloud('KrishiSanjivani Help Center. You can browse FAQs or submit a support ticket.');
+      readAloud(document.querySelector('main, .page-wrapper')?.innerText || 'KrishiSanjivani Help Center');
     });
   });
 </script>

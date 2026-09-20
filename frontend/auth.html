@@ -73,6 +73,7 @@
   <!-- RIGHT PANEL — AUTH FORMS -->
   <div class="auth-right">
     <div class="auth-card">
+      <button class="btn btn-outline btn-full mb-md" id="guest-preview-btn" type="button" data-i18n="guest_explore">Explore as Guest</button>
       <!-- TABS -->
       <div class="auth-tabs">
         <button class="auth-tab active" id="tab-login" onclick="switchTab('login')" data-i18n="btn_login">Login</button>
@@ -214,6 +215,12 @@
               <button class="input-btn" onclick="togglePasswordVisibility('signup-password')">👁️</button>
             </div>
           </div>
+          <div class="form-group" style="margin: 18px 0 12px;">
+            <label class="flex gap-xs" style="align-items:flex-start;cursor:pointer; font-size:13px; color:var(--c-text-secondary);">
+              <input type="checkbox" id="signup-terms-check" required>
+              <span>I agree to the <a href="terms.html" target="_blank" class="text-green">Terms &amp; Conditions</a> and <a href="privacy-policy.html" target="_blank" class="text-green">Privacy Policy</a>.</span>
+            </label>
+          </div>
           <button class="btn btn-primary btn-full" onclick="proceedToRoleSelect()">
             Next → Choose Role
           </button>
@@ -293,6 +300,7 @@
   document.addEventListener('DOMContentLoaded', async () => {
     initNav();
     await initI18n();
+    document.getElementById('guest-preview-btn').addEventListener('click', () => enterGuestMode(redirectPage));
     
     if (initMode === 'signup') switchTab('signup');
     if (initRole) selectRole(initRole);
@@ -355,12 +363,14 @@
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const pw = document.getElementById('signup-password').value;
+    const accepted = document.getElementById('signup-terms-check')?.checked;
 
     if (!name) { showError('signup-error', 'Please enter your name'); return; }
     if (!email && !document.getElementById('signup-phone').value.trim()) {
       showError('signup-error', 'Please enter email or phone'); return;
     }
     if (pw.length < 6) { showError('signup-error', 'Password must be at least 6 characters'); return; }
+    if (!accepted) { showError('signup-error', 'Please accept the Terms & Conditions and Privacy Policy to continue.'); return; }
 
     document.getElementById('signup-error').style.display = 'none';
     document.getElementById('signup-step1').style.display = 'none';

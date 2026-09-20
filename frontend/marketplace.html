@@ -261,7 +261,7 @@
 
     // Read summary
     document.getElementById('read-page-btn')?.addEventListener('click', () => {
-      readAloud(`Marketplace listing ${allListings.length} fresh produce items directly from local farmers.`);
+      readAloud(document.querySelector('main, .page-wrapper')?.innerText || `Marketplace listing ${allListings.length} fresh produce items directly from local farmers.`);
     });
   });
 

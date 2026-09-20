@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | KrishiSanjivani</title>
+  <meta name="description" content="Read how KrishiSanjivani collects, stores, uses, and protects farmer and buyer data.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/redesign.css">
+  <style>
+    body { background: #f7f6f1; }
+    .legal-shell { max-width: 980px; margin: 56px auto 72px; padding: 0 20px; }
+    .legal-card { background: #fff; border: 1px solid #e7e2d7; border-radius: 20px; box-shadow: 0 10px 26px rgba(32, 48, 37, 0.06); padding: 32px clamp(20px, 4vw, 40px); }
+    .legal-card h1 { font-size: clamp(2rem, 4vw, 3rem); color: #204d2c; margin-bottom: 8px; }
+    .legal-card h2 { font-size: 1.2rem; margin-top: 28px; color: #204d2c; }
+    .legal-card p, .legal-card li { color: #465349; line-height: 1.7; }
+    .legal-card ul { padding-left: 18px; }
+    .legal-card strong { color: #1b3a27; }
+    .legal-badge { display: inline-block; background: #eaf5eb; color: #214d30; border: 1px solid #cfe5d4; border-radius: 999px; padding: 7px 12px; font-weight: 700; margin-bottom: 14px; }
+  </style>
+</head>
+<body>
+  <nav id="main-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">🌾</div>
+      <span class="nav-logo-text" data-i18n="app_name">KrishiSanjivani</span>
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html?mode=signup" class="btn btn-primary btn-sm">Sign Up</a>
+    </div>
+  </nav>
+
+  <main class="legal-shell">
+    <div class="legal-card">
+      <span class="legal-badge">Privacy Policy</span>
+      <h1>Privacy Policy</h1>
+      <p>KrishiSanjivani is a digital agriculture marketplace that connects farmers, buyers, and bulk purchasers. This policy explains what information we collect, why we collect it, how it is stored, how long it is retained, and how users can request deletion.</p>
+
+      <h2>1. Information We Collect</h2>
+      <p>We may collect the following information when you register, list produce, buy produce, or use support features:</p>
+      <ul>
+        <li><strong>Personal identity data:</strong> full name, phone number, email address, role type (farmer, buyer, bulk buyer, admin).</li>
+        <li><strong>Location information:</strong> village, district, and delivery/pickup location data needed for route matching and logistics.</li>
+        <li><strong>Identity verification data:</strong> Aadhaar-related details only as required for e-KYC or compliance workflows, where applicable.</li>
+        <li><strong>Payment data:</strong> transaction metadata and related payment details handled by Razorpay as part of the checkout flow.</li>
+        <li><strong>Produce listing data:</strong> crop type, quantity, photos, harvest date, harvest quality, and pricing information.</li>
+        <li><strong>Usage data:</strong> orders, ratings, browsing preferences, delivery status, and support requests.</li>
+      </ul>
+
+      <h2>2. Why We Use This Information</h2>
+      <ul>
+        <li>To create and secure user accounts.</li>
+        <li>To validate transactions and enable direct farmer-to-buyer commerce.</li>
+        <li>To show relevant produce, weather, equipment, and scheme information.</li>
+        <li>To support logistics, route optimization, and order tracking.</li>
+        <li>To comply with fraud prevention, grievance resolution, and lawful platform governance.</li>
+      </ul>
+
+      <h2>3. How Data Is Stored</h2>
+      <p>KrishiSanjivani stores user and platform data in Firebase services, including authentication, Firestore, and Storage. Produce photographs, user records, order metadata, and related operational data are stored in the Firebase project configured for the platform. Sensitive payment information is not stored in plaintext on the frontend; payment processing is delegated to Razorpay and secure backend orchestration when configured.</p>
+
+      <h2>4. Data Retention</h2>
+      <p>We retain personal and transaction data only for as long as necessary to provide services, fulfill legal or operational obligations, manage disputes, and support audit activities. Typical retention windows are:</p>
+      <ul>
+        <li>Account/profile data: while the account remains active and for a limited period after closure to handle compliance or support needs.</li>
+        <li>Order and payment records: as required for payment reconciliation, grievance handling, and customer support.</li>
+        <li>Produce listing and review data: while the listing remains active or until the user deletes it or requests removal.</li>
+      </ul>
+
+      <h2>5. User Rights and Deletion Requests</h2>
+      <p>If you want your account data deleted, you may contact the KrishiSanjivani support team at support@krishisanjivani.gov.in or submit a grievance request through the help center. We will process reasonable deletion requests subject to legal, accounting, fraud-prevention, or operational requirements that require retention.</p>
+
+      <h2>6. Security</h2>
+      <p>We maintain reasonable technical and administrative safeguards to protect user data. However, no internet-based service can guarantee absolute security, and users should not share secret OTP codes or sensitive account credentials with anyone.</p>
+
+      <h2>7. Platform Role</h2>
+      <p>KrishiSanjivani acts as a marketplace facilitator and does not replace the underlying legal obligations between farmers, buyers, or financial institutions. The platform may connect parties, facilitate listings, and coordinate payments but should not be treated as a direct party to every transaction.</p>
+
+      <h2>8. Contact</h2>
+      <p>For privacy questions or data deletion requests, email <a href="mailto:support@krishisanjivani.gov.in">support@krishisanjivani.gov.in</a>.</p>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/nav.js"></script>
+  <script>initFirebase(); document.addEventListener('DOMContentLoaded', initNav);</script>
+</body>
+</html>

@@ -1,14 +1,16 @@
 // ============================================================
 // KrishiSanjivani — Firebase Configuration
 // ============================================================
-const firebaseConfig = {
-  apiKey: "AIzaSyAClRCT0dgJXogYkqDByR7EwaXMtqLA50k",
-  authDomain: "sih-26-e957a.firebaseapp.com",
-  projectId: "sih-26-e957a",
-  storageBucket: "sih-26-e957a.firebasestorage.app",
-  messagingSenderId: "888353769211",
-  appId: "1:888353769211:web:b68d25da7c048d59f0125e",
-  measurementId: "G-3SLXT81Y7S"
+// Keep all live credentials outside the public repo. The app reads environment-provided config
+// at runtime, and the public frontend should never include secret or signing keys.
+const firebaseConfig = window.__APP_FIREBASE_CONFIG__ || {
+  apiKey: 'REPLACE_WITH_FIREBASE_API_KEY',
+  authDomain: 'your-project.firebaseapp.com',
+  projectId: 'your-project-id',
+  storageBucket: 'your-project.firebasestorage.app',
+  messagingSenderId: '000000000000',
+  appId: '1:000000000000:web:0000000000000000000000',
+  measurementId: 'G-0000000000'
 };
 
 // Initialize Firebase (loaded via CDN in each HTML)
@@ -38,10 +40,10 @@ function initFirebase() {
   }
 }
 
-// Razorpay Config (Test Mode)
-const RAZORPAY_KEY_ID = 'rzp_test_PLACEHOLDER_KEY'; // Replace with your Razorpay test key
-const PLATFORM_FEE_PERCENT = 2; // 2% platform fee
-const DELIVERY_BASE_CHARGE = 30; // ₹30 base delivery
+// Razorpay Config (public key only)
+const RAZORPAY_KEY_ID = 'rzp_test_PLACEHOLDER_KEY';
+const PLATFORM_FEE_PERCENT = 2;
+const DELIVERY_BASE_CHARGE = 30;
 
 // App Config
 const APP_CONFIG = {
@@ -52,6 +54,7 @@ const APP_CONFIG = {
   mapTileUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   mapAttribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   supportedLanguages: ['en', 'mr', 'hi', 'gu', 'bn', 'ta', 'te', 'kn', 'ml', 'pa', 'ur', 'or'],
+  aiApiBase: '/api',
   defaultLanguage: 'en',
   mahaDBTUrl: 'https://mahadbt.maharashtra.gov.in',
   adminEmail: 'admin@krishisanjivani.gov.in',

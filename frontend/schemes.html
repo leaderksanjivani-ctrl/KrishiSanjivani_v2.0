@@ -165,7 +165,7 @@
     await initI18n();
     initNav();
     initChatbot();
-    document.getElementById('read-schemes-btn')?.addEventListener('click', () => readAloud('Government schemes include MahaDBT, PM Kisan, crop insurance and equipment subsidies. Select a scheme to learn more.'));
+    document.getElementById('read-schemes-btn')?.addEventListener('click', () => readAloud(document.querySelector('main, .page-wrapper')?.innerText || 'Government schemes'));
 
     document.getElementById('scheme-search').addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase().trim();

@@ -288,6 +288,24 @@
 
     // Require authentication
     auth.onAuthStateChanged(async (user) => {
+      if (!user && isGuestMode()) {
+        const profile = { uid: 'guest-demo', name: 'Guest Visitor', role: 'buyer', location: null, isGuest: true };
+        currentUser = GUEST_USER;
+        currentUserProfile = profile;
+        document.getElementById('user-name').textContent = 'Guest';
+        updateGreeting();
+        updateRoleBadge(profile.role);
+        reorderTilesByRole(profile.role);
+        document.getElementById('orders-count').textContent = 'Guest preview';
+        document.getElementById('earnings-amount').textContent = 'Demo mode';
+        document.getElementById('stat-earnings').textContent = 'Demo';
+        document.getElementById('stat-listings').textContent = 'Demo';
+        document.getElementById('stat-orders').textContent = 'Demo';
+        document.getElementById('stat-saved').textContent = 'Demo';
+        initNav();
+        initChatbot();
+        return;
+      }
       if (!user) { location.href = 'auth.html'; return; }
 
       // Check profile exists

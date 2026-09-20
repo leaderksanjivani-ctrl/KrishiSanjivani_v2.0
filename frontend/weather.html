@@ -178,7 +178,7 @@
     initChatbot();
 
     document.getElementById('read-weather-btn').addEventListener('click', () => {
-      readAloud('Today in Nashik: 28 degrees Celsius, clear and sunny. Rain advisory for Tuesday. Good conditions for harvesting today.');
+      readAloud(document.querySelector('main, .page-wrapper')?.innerText || 'Weather forecast');
     });
   });
 </script>

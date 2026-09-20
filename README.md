@@ -104,6 +104,14 @@ The selected stack path is **browser JS approximation** for forecasting and rout
 ### 2. Launch Frontend Directly
 You can also open `frontend/index.html` directly in any web browser or serve it using live server.
 
+### 3. Gemini voice and translation setup
+
+The frontend never contains the Gemini secret. Copy `backend/.env.example` to `backend/.env`, set `GEMINI_API_KEY` there, and run the backend. The voice module calls `/api/ai/translate` for selected-language translation and speech normalization, then uses the browser's native speech engine for read-aloud and microphone capture. If Gemini or the backend is unavailable, browser speech continues as a fallback.
+
+For a separate deployed backend, set `window.KS_AI_API_BASE` before `frontend/js/voice.js` loads, for example `https://your-api-domain.example/api`. The current `vercel.json` serves static frontend files and does not deploy `backend/server.js` automatically.
+
+The Gemini key previously pasted into chat must be revoked and replaced in the provider console because it is now exposed. Never commit the replacement key or put it in frontend JavaScript.
+
 ---
 
 ## 🔒 Environment Setup (`backend/.env`)
