@@ -130,24 +130,31 @@ function injectFavicon() {
 
 function initCookieConsent() {
   const key = 'ks_cookie_consent';
-  if (localStorage.getItem(key) === 'accepted') return;
+  const visitKey = 'ks_cookie_banner_seen';
+  if (localStorage.getItem(key) === 'accepted' || sessionStorage.getItem(visitKey) === 'shown') return;
   const banner = document.createElement('div');
   banner.id = 'cookie-banner';
   banner.innerHTML = `
     <div class="cookie-banner-wrap">
-      <div>
+      <div class="cookie-banner-copy">
         <strong data-i18n="cookie_title">Your privacy matters</strong>
-        <p data-i18n="cookie_text">We use local storage for language preference and low-data mode, and Firebase for account and order data. You can accept or continue without making a purchase.</p>
+        <p data-i18n="cookie_text">We use essential browser storage to remember your language, accessibility choices, and privacy preference. Account and order information is securely handled through Firebase. We do not use advertising cookies.</p>
+        <a href="privacy-policy.html">Read our Privacy Policy</a>
       </div>
-      <button class="btn btn-primary btn-sm" id="cookie-accept-btn" data-i18n="cookie_accept">Accept</button>
+      <div class="cookie-banner-actions">
+        <button class="btn btn-primary btn-sm" id="cookie-accept-btn" data-i18n="cookie_accept">Accept</button>
+        <button class="cookie-banner-dismiss" id="cookie-dismiss-btn" type="button" aria-label="Dismiss privacy notice">Later</button>
+      </div>
     </div>
   `;
   document.body.appendChild(banner);
+  sessionStorage.setItem(visitKey, 'shown');
   const accept = document.getElementById('cookie-accept-btn');
   accept?.addEventListener('click', () => {
     localStorage.setItem(key, 'accepted');
     banner.remove();
   });
+  document.getElementById('cookie-dismiss-btn')?.addEventListener('click', () => banner.remove());
 }
 
 function applyConsentStyles() {
@@ -161,9 +168,13 @@ function applyConsentStyles() {
       background: #ffffff; color: #20432a; border: 1px solid rgba(39,125,67,.15);
       border-radius: 18px; box-shadow: 0 18px 40px rgba(16,38,24,.14); padding: 16px 18px; max-width: 760px; margin: 0 auto;
     }
+    .cookie-banner-copy { flex: 1; }
     .cookie-banner-wrap strong { display:block; font-size: 1rem; margin-bottom: 4px; }
     .cookie-banner-wrap p { margin: 0; color: #4f5d56; line-height: 1.5; font-size: 0.92rem; }
-    @media (max-width: 640px) { .cookie-banner-wrap { flex-direction: column; align-items: flex-start; } }
+    .cookie-banner-copy a { display: inline-block; margin-top: 8px; color: #267d43; font-size: .82rem; font-weight: 700; text-decoration: underline; }
+    .cookie-banner-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .cookie-banner-dismiss { border: 0; background: transparent; color: #4f5d56; cursor: pointer; font: inherit; font-size: .85rem; padding: 8px 4px; }
+    @media (max-width: 640px) { .cookie-banner-wrap { flex-direction: column; align-items: flex-start; } .cookie-banner-actions { width: 100%; justify-content: flex-end; } }
   `;
   document.head.appendChild(style);
 }
@@ -289,7 +300,8 @@ function initGovernmentShell() {
 }
 
 function showPrototypeNotice() {
-  if (document.getElementById('sih-prototype-notice')) return;
+  const visitKey = 'ks_prototype_notice_seen';
+  if (document.getElementById('sih-prototype-notice') || sessionStorage.getItem(visitKey) === 'shown') return;
   const copy = {
     en: ['SIH prototype preview', 'This website is an SIH 2026 prototype. Some data and actions are simulated for demonstration.', 'Close'],
     mr: ['SIH प्रोटोटाइप पूर्वदृश्य', 'ही वेबसाइट SIH 2026 प्रोटोटाइप आहे. काही माहिती आणि कृती प्रात्यक्षिकासाठी सिम्युलेटेड आहेत.', 'बंद करा'],
@@ -310,6 +322,7 @@ function showPrototypeNotice() {
   notice.className = 'sih-notice';
   notice.innerHTML = `<button class="sih-notice-close" aria-label="${selected[2]}">&times;</button><strong>${selected[0]}</strong><p>${selected[1]}</p>`;
   document.body.appendChild(notice);
+  sessionStorage.setItem(visitKey, 'shown');
   notice.querySelector('.sih-notice-close').onclick = () => notice.remove();
   setTimeout(() => notice.remove(), 3500);
 }

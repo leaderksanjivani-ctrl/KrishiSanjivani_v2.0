@@ -182,7 +182,7 @@ h1, h2, h3, h4, h5, .nav-logo-text, .btn, .section-title, .features-title { font
 .auth-brand-icon::before, .auth-benefit-icon::before, .role-icon::before { content: '✦'; font-size: 28px; }
 .auth-benefit-icon::before { color: var(--c-saffron); }
 
-#chatbot-btn { background: var(--c-green); box-shadow: var(--shadow-green); font-size: 0; }
+#chatbot-btn { background: var(--c-green); box-shadow: var(--shadow-green); font-size: 1.6rem; }
 #chatbot-btn::before { content: none !important; }
 #chatbot-btn .ks-icon { width:26px; height:26px; color:#fff; stroke-width:1.8; }
 .chatbot-header { background: var(--c-green); }

@@ -121,7 +121,7 @@ function initChatbot() {
   btn.addEventListener('click', () => {
     chatbotOpen = !chatbotOpen;
     panel.classList.toggle('hidden', !chatbotOpen);
-    btn.querySelector('.chatbot-badge').style.display = 'none';
+    btn.querySelector('.chatbot-badge')?.style.setProperty('display', 'none');
     if (chatbotOpen && messages.children.length === 0) {
       const greeting = t('chatbot_greeting') + (typeof isGuestMode === 'function' && isGuestMode() ? `\n\n${t('guest_chat_note')}` : '');
       translateGuestResponse(greeting).then(addBotMessage);
@@ -131,19 +131,19 @@ function initChatbot() {
     if (chatbotOpen) input.focus();
   });
 
-  closeBtn.addEventListener('click', () => {
+  closeBtn?.addEventListener('click', () => {
     chatbotOpen = false;
     panel.classList.add('hidden');
   });
 
   // Send message
-  sendBtn.addEventListener('click', sendChatMessage);
-  input.addEventListener('keydown', e => {
+  sendBtn?.addEventListener('click', sendChatMessage);
+  input?.addEventListener('keydown', e => {
     if (e.key === 'Enter') sendChatMessage();
   });
 
   // Suggestion chips
-  document.getElementById('chatbot-suggestions').addEventListener('click', e => {
+  document.getElementById('chatbot-suggestions')?.addEventListener('click', e => {
     const btn = e.target.closest('.chat-suggest-btn');
     if (btn) {
       input.value = btn.textContent.replace(/[💰📦🏛️🚜☁️🌾⚖️📜❓]/g, '').trim();
