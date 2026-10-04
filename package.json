@@ -1,0 +1,10 @@
+{
+  "name": "krishisanjivani",
+  "version": "1.0.0",
+  "description": "KrishiSanjivani - AI-Powered Direct Marketplace & Agritech Platform",
+  "scripts": {
+    "dev": "npm --prefix backend run dev",
+    "start": "npm --prefix backend start",
+    "test": "npm --prefix backend test"
+  }
+}
