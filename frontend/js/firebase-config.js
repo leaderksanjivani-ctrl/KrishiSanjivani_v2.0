@@ -4,13 +4,13 @@
 // Keep all live credentials outside the public repo. The app reads environment-provided config
 // at runtime, and the public frontend should never include secret or signing keys.
 const firebaseConfig = window.__APP_FIREBASE_CONFIG__ || {
-  apiKey: 'REPLACE_WITH_FIREBASE_API_KEY',
-  authDomain: 'your-project.firebaseapp.com',
-  projectId: 'your-project-id',
-  storageBucket: 'your-project.firebasestorage.app',
-  messagingSenderId: '000000000000',
-  appId: '1:000000000000:web:0000000000000000000000',
-  measurementId: 'G-0000000000'
+  apiKey: 'AIzaSyAClRCT0dgJXogYkqDByR7EwaXMtqLA50k',
+  authDomain: 'sih-26-e957a.firebaseapp.com',
+  projectId: 'sih-26-e957a',
+  storageBucket: 'sih-26-e957a.firebasestorage.app',
+  messagingSenderId: '888353769211',
+  appId: '1:888353769211:web:b68d25da7c048d59f0125e',
+  measurementId: 'G-3SLXT81Y7S'
 };
 
 // Initialize Firebase (loaded via CDN in each HTML)

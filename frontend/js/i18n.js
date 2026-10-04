@@ -32,7 +32,12 @@ const BUILTIN_EN = {
   nav_verify_inputs: 'Verify Inputs', nav_my_sakhi: 'My Sakhi', nav_grow: 'What Should I Grow?', nav_verify_ledger: 'Verify Ledger',
   nav_language: 'Language', nav_accessibility: 'Accessibility', nav_screen_reader: 'Screen Reader Access',
   footer_platform: 'Platform', footer_support: 'Support', footer_contact: 'Contact', footer_help: 'Help Center',
-  footer_login: 'Login / Sign Up', footer_admin: 'Admin', footer_available: 'Available 9am-6pm, Mon-Sat'
+  footer_login: 'Login / Sign Up', footer_admin: 'Admin', footer_available: 'Available 9am-6pm, Mon-Sat',
+  cookie_title: 'We Value Your Privacy & Security 🍪',
+  cookie_text: 'We use essential cookies and local browser storage to provide a secure and customized experience—remembering your preferred language, accessibility choices, and authentication state via Firebase. We do not use advertising cookies or sell personal data.',
+  cookie_accept: 'Accept All',
+  cookie_essential: 'Essential Only',
+  cookie_preferences: 'Customize ⚙️'
 };
 
 function languageOptions(selected) {

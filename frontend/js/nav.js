@@ -131,30 +131,85 @@ function injectFavicon() {
 function initCookieConsent() {
   const key = 'ks_cookie_consent';
   const visitKey = 'ks_cookie_banner_seen';
-  if (localStorage.getItem(key) === 'accepted' || sessionStorage.getItem(visitKey) === 'shown') return;
+  if (localStorage.getItem(key) || localStorage.getItem(visitKey) === 'shown' || sessionStorage.getItem(visitKey) === 'shown') return;
   const banner = document.createElement('div');
   banner.id = 'cookie-banner';
   banner.innerHTML = `
     <div class="cookie-banner-wrap">
-      <div class="cookie-banner-copy">
-        <strong data-i18n="cookie_title">Your privacy matters</strong>
-        <p data-i18n="cookie_text">We use essential browser storage to remember your language, accessibility choices, and privacy preference. Account and order information is securely handled through Firebase. We do not use advertising cookies.</p>
-        <a href="privacy-policy.html">Read our Privacy Policy</a>
+      <div class="cookie-banner-header">
+        <div class="cookie-banner-title-box">
+          <span class="cookie-icon">🍪</span>
+          <strong data-i18n="cookie_title">We Value Your Privacy & Data Security</strong>
+        </div>
+        <div class="cookie-badges">
+          <span class="cookie-badge active"><span class="badge-dot"></span> Essential & Auth</span>
+          <span class="cookie-badge active"><span class="badge-dot"></span> Preferences</span>
+          <span class="cookie-badge disabled">🚫 No Ad Tracking</span>
+        </div>
       </div>
+      <div class="cookie-banner-copy">
+        <p data-i18n="cookie_text">We use essential browser cookies and local storage to provide a secure, personalized agricultural experience—remembering your preferred language, accessibility settings, and Firebase authentication. We respect your data and never sell or track your personal information for ads.</p>
+        <div class="cookie-banner-links">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+        </div>
+      </div>
+      
+      <div class="cookie-settings-panel hidden" id="cookie-settings-panel">
+        <div class="cookie-setting-row">
+          <div class="cookie-setting-info">
+            <strong>Necessary & Authentication</strong>
+            <p>Required for logging in, storing security tokens, and saving core application state.</p>
+          </div>
+          <input type="checkbox" checked disabled />
+        </div>
+        <div class="cookie-setting-row">
+          <div class="cookie-setting-info">
+            <strong>Language & Preferences</strong>
+            <p>Saves your selected language, contrast settings, and font size preferences.</p>
+          </div>
+          <input type="checkbox" id="pref-cookies-toggle" checked />
+        </div>
+        <div class="cookie-setting-row">
+          <div class="cookie-setting-info">
+            <strong>Anonymous Performance Analytics</strong>
+            <p>Helps us understand platform usage without identifying individual farmers or buyers.</p>
+          </div>
+          <input type="checkbox" id="analytics-cookies-toggle" checked />
+        </div>
+      </div>
+
       <div class="cookie-banner-actions">
-        <button class="btn btn-primary btn-sm" id="cookie-accept-btn" data-i18n="cookie_accept">Accept</button>
-        <button class="cookie-banner-dismiss" id="cookie-dismiss-btn" type="button" aria-label="Dismiss privacy notice">Later</button>
+        <button class="cookie-btn cookie-btn-primary" id="cookie-accept-btn" data-i18n="cookie_accept">Accept All</button>
+        <button class="cookie-btn cookie-btn-secondary" id="cookie-essential-btn" data-i18n="cookie_essential">Essential Only</button>
+        <button class="cookie-btn cookie-btn-outline" id="cookie-settings-btn" type="button" data-i18n="cookie_preferences">Customize ⚙️</button>
       </div>
     </div>
   `;
   document.body.appendChild(banner);
+  localStorage.setItem(visitKey, 'shown');
   sessionStorage.setItem(visitKey, 'shown');
-  const accept = document.getElementById('cookie-accept-btn');
-  accept?.addEventListener('click', () => {
-    localStorage.setItem(key, 'accepted');
+
+  const saveConsent = (type) => {
+    localStorage.setItem(key, type);
     banner.remove();
+  };
+
+  document.getElementById('cookie-accept-btn')?.addEventListener('click', () => saveConsent('all'));
+  document.getElementById('cookie-essential-btn')?.addEventListener('click', () => saveConsent('essential'));
+  
+  const settingsBtn = document.getElementById('cookie-settings-btn');
+  const settingsPanel = document.getElementById('cookie-settings-panel');
+  settingsBtn?.addEventListener('click', () => {
+    if (settingsPanel) {
+      const isHidden = settingsPanel.classList.contains('hidden');
+      settingsPanel.classList.toggle('hidden');
+      settingsBtn.textContent = isHidden ? 'Save Preferences ✓' : 'Customize ⚙️';
+      if (!isHidden) {
+        saveConsent('custom');
+      }
+    }
   });
-  document.getElementById('cookie-dismiss-btn')?.addEventListener('click', () => banner.remove());
 }
 
 function applyConsentStyles() {
@@ -162,19 +217,178 @@ function applyConsentStyles() {
   const style = document.createElement('style');
   style.id = 'cookie-banner-style';
   style.textContent = `
-    #cookie-banner { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 9999; }
-    .cookie-banner-wrap {
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      background: #ffffff; color: #20432a; border: 1px solid rgba(39,125,67,.15);
-      border-radius: 18px; box-shadow: 0 18px 40px rgba(16,38,24,.14); padding: 16px 18px; max-width: 760px; margin: 0 auto;
+    #cookie-banner {
+      position: fixed;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      z-index: 99999;
+      animation: cookie-banner-slide .3s ease-out;
     }
-    .cookie-banner-copy { flex: 1; }
-    .cookie-banner-wrap strong { display:block; font-size: 1rem; margin-bottom: 4px; }
-    .cookie-banner-wrap p { margin: 0; color: #4f5d56; line-height: 1.5; font-size: 0.92rem; }
-    .cookie-banner-copy a { display: inline-block; margin-top: 8px; color: #267d43; font-size: .82rem; font-weight: 700; text-decoration: underline; }
-    .cookie-banner-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .cookie-banner-dismiss { border: 0; background: transparent; color: #4f5d56; cursor: pointer; font: inherit; font-size: .85rem; padding: 8px 4px; }
-    @media (max-width: 640px) { .cookie-banner-wrap { flex-direction: column; align-items: flex-start; } .cookie-banner-actions { width: 100%; justify-content: flex-end; } }
+    @keyframes cookie-banner-slide {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .cookie-banner-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #1a3322;
+      border: 1px solid rgba(39, 125, 67, 0.25);
+      border-radius: 20px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+      padding: 18px 22px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .cookie-banner-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .cookie-banner-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cookie-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+    .cookie-banner-title-box strong {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #133a1e;
+    }
+    .cookie-badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .cookie-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: #eaf5ed;
+      color: #1e6435;
+      border: 1px solid rgba(30,100,53,0.15);
+    }
+    .cookie-badge.disabled {
+      background: #f1f3f2;
+      color: #64748b;
+      border-color: rgba(100,116,139,0.2);
+    }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+    .cookie-banner-copy p {
+      margin: 0;
+      color: #3b5245;
+      line-height: 1.55;
+      font-size: 0.88rem;
+    }
+    .cookie-banner-links {
+      display: flex;
+      gap: 14px;
+      margin-top: 6px;
+    }
+    .cookie-banner-links a {
+      color: #267d43;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+    .cookie-banner-links a:hover {
+      color: #144925;
+    }
+    .cookie-banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .cookie-btn {
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cookie-btn-primary {
+      background: #267d43;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(38, 125, 67, 0.25);
+    }
+    .cookie-btn-primary:hover {
+      background: #1e6435;
+    }
+    .cookie-btn-secondary {
+      background: #e2f0e7;
+      color: #1e6435;
+    }
+    .cookie-btn-secondary:hover {
+      background: #d1e7d9;
+    }
+    .cookie-btn-outline {
+      background: transparent;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+    }
+    .cookie-btn-outline:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+    .cookie-settings-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #f8fbf9;
+      border: 1px solid rgba(39, 125, 67, 0.15);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 4px;
+    }
+    .cookie-settings-panel.hidden {
+      display: none;
+    }
+    .cookie-setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .cookie-setting-info strong {
+      display: block;
+      font-size: 0.85rem;
+      color: #1a3322;
+    }
+    .cookie-setting-info p {
+      margin: 2px 0 0 0;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+    @media (max-width: 640px) {
+      #cookie-banner { left: 12px; right: 12px; bottom: 12px; }
+      .cookie-banner-wrap { padding: 14px; }
+      .cookie-banner-actions { flex-direction: column; width: 100%; }
+      .cookie-btn { width: 100%; text-align: center; }
+    }
   `;
   document.head.appendChild(style);
 }
@@ -292,8 +506,7 @@ function initGovernmentShell() {
     primary.querySelector(`[data-nav-page="${currentPage}"]`)?.classList.add('active');
   }
   const main = document.querySelector('main, .page-wrapper, .hero');
-  if (main && !main.id) main.id = 'main-content';
-  initAccessibilityControls();
+  if (main && !main.id)   initAccessibilityControls();
   initAnnouncementTicker();
   initPortalFooter();
   applyBrandLogos();
@@ -301,7 +514,7 @@ function initGovernmentShell() {
 
 function showPrototypeNotice() {
   const visitKey = 'ks_prototype_notice_seen';
-  if (document.getElementById('sih-prototype-notice') || sessionStorage.getItem(visitKey) === 'shown') return;
+  if (document.getElementById('sih-prototype-notice') || localStorage.getItem(visitKey) === 'shown' || sessionStorage.getItem(visitKey) === 'shown') return;
   const copy = {
     en: ['SIH prototype preview', 'This website is an SIH 2026 prototype. Some data and actions are simulated for demonstration.', 'Close'],
     mr: ['SIH प्रोटोटाइप पूर्वदृश्य', 'ही वेबसाइट SIH 2026 प्रोटोटाइप आहे. काही माहिती आणि कृती प्रात्यक्षिकासाठी सिम्युलेटेड आहेत.', 'बंद करा'],
@@ -311,6 +524,42 @@ function showPrototypeNotice() {
     ta: ['SIH முன்மாதிரி முன்னோட்டம்', 'இந்த இணையதளம் SIH 2026 முன்மாதிரி. சில தரவுகளும் செயல்களும் விளக்கத்திற்காக உருவகப்படுத்தப்பட்டவை.', 'மூடுக'],
     te: ['SIH ప్రోటోటైప్ ప్రివ్యూ', 'ఈ వెబ్‌సైట్ SIH 2026 ప్రోటోటైప్. కొన్ని డేటా మరియు చర్యలు ప్రదర్శన కోసం అనుకరించబడ్డాయి.', 'మూసివేయండి'],
     kn: ['SIH ಮಾದರಿ ಪೂರ್ವವೀಕ್ಷಣೆ', 'ಈ ವೆಬ್‌ಸೈಟ್ SIH 2026 ಮಾದರಿ. ಕೆಲವು ಡೇಟಾ ಮತ್ತು ಕ್ರಿಯೆಗಳು ಪ್ರದರ್ಶನಕ್ಕಾಗಿ ಅನುಕರಿಸಲಾಗಿದೆ.', 'ಮುಚ್ಚಿ'],
+    ml: ['SIH പ്രോട്ടോടൈപ്പ് പ്രിവ്യൂ', 'ഈ വെബ്സൈറ്റ് SIH 2026 പ്രോട്ടോടൈപ്പാണ്. ചില ഡാറ്റയും പ്രവർത്തനങ്ങളും പ്രദർശനത്തിനായി അനുകരിച്ചവയാണ്.', 'അടയ്ക്കുക'],
+    pa: ['SIH ਪ੍ਰੋਟੋਟਾਈਪ ਝਲਕ', 'ਇਹ ਵੈੱਬਸਾਈਟ SIH 2026 ਪ੍ਰੋਟੋਟਾਈਪ ਹੈ। ਕੁਝ ਡਾਟਾ ਅਤੇ ਕਾਰਵਾਈਆਂ ਪ੍ਰਦਰਸ਼ਨ ਲਈ ਸਿਮੂਲੇਟ ਕੀਤੀਆਂ ਗਈਆਂ ਹਨ।', 'ਬੰਦ ਕਰੋ'],
+    ur: ['SIH پروٹوٹائپ پیش نظارہ', 'یہ ویب سائٹ SIH 2026 پروٹوٹائپ ہے۔ کچھ ڈیٹا اور اقدامات مظاہرے کے لیے فرضی ہیں۔', 'بند کریں'],
+    or: ['SIH ପ୍ରୋଟୋଟାଇପ୍ ପୂର୍ବଦର୍ଶନ', 'ଏହି ୱେବସାଇଟ୍ SIH 2026 ପ୍ରୋଟୋଟାଇପ୍। କିଛି ତଥ୍ୟ ଏବଂ କାର୍ଯ୍ୟ ପ୍ରଦର୍ଶନ ପାଇଁ ସିମୁଲେଟେଡ୍।', 'ବନ୍ଦ କରନ୍ତୁ']
+  };
+  const selected = copy[typeof currentLang !== 'undefined' ? currentLang : 'en'] || copy.en;
+  const notice = document.createElement('aside');
+  notice.id = 'sih-prototype-notice';
+  notice.className = 'sih-notice';
+  notice.innerHTML = `<button class="sih-notice-close" aria-label="${selected[2]}">&times;</button><strong>${selected[0]}</strong><p>${selected[1]}</p>`;
+  document.body.appendChild(notice);
+  localStorage.setItem(visitKey, 'shown');
+  sessionStorage.setItem(visitKey, 'shown');
+  notice.querySelector('.sih-notice-close').onclick = () => {
+    localStorage.setItem(visitKey, 'shown');
+    sessionStorage.setItem(visitKey, 'shown');
+    notice.remove();
+  };
+  setTimeout(() => notice.remove(), 4000);
+}�ିମୁଲେଟେଡ୍।', 'ବନ୍ଦ କରନ୍ତୁ']
+  };
+  const selected = copy[typeof currentLang !== 'undefined' ? currentLang : 'en'] || copy.en;
+  const notice = document.createElement('aside');
+  notice.id = 'sih-prototype-notice';
+  notice.className = 'sih-notice';
+  notice.innerHTML = `<button class="sih-notice-close" aria-label="${selected[2]}">&times;</button><strong>${selected[0]}</strong><p>${selected[1]}</p>`;
+  document.body.appendChild(notice);
+  localStorage.setItem(visitKey, 'shown');
+  sessionStorage.setItem(visitKey, 'shown');
+  notice.querySelector('.sih-notice-close').onclick = () => {
+    localStorage.setItem(visitKey, 'shown');
+    sessionStorage.setItem(visitKey, 'shown');
+    notice.remove();
+  };
+  setTimeout(() => notice.remove(), 4000);
+}ರಿ. ಕೆಲವು ಡೇಟಾ ಮತ್ತು ಕ್ರಿಯೆಗಳು ಪ್ರದರ್ಶನಕ್ಕಾಗಿ ಅನುಕರಿಸಲಾಗಿದೆ.', 'ಮುಚ್ಚಿ'],
     ml: ['SIH പ്രോട്ടോടൈപ്പ് പ്രിവ്യൂ', 'ഈ വെബ്സൈറ്റ് SIH 2026 പ്രോട്ടോടൈപ്പാണ്. ചില ഡാറ്റയും പ്രവർത്തനങ്ങളും പ്രദർശനത്തിനായി അനുകരിച്ചവയാണ്.', 'അടയ്ക്കുക'],
     pa: ['SIH ਪ੍ਰੋਟੋਟਾਈਪ ਝਲਕ', 'ਇਹ ਵੈੱਬਸਾਈਟ SIH 2026 ਪ੍ਰੋਟੋਟਾਈਪ ਹੈ। ਕੁਝ ਡਾਟਾ ਅਤੇ ਕਾਰਵਾਈਆਂ ਪ੍ਰਦਰਸ਼ਨ ਲਈ ਸਿਮੂਲੇਟ ਕੀਤੀਆਂ ਗਈਆਂ ਹਨ।', 'ਬੰਦ ਕਰੋ'],
     ur: ['SIH پروٹوٹائپ پیش نظارہ', 'یہ ویب سائٹ SIH 2026 پروٹوٹائپ ہے۔ کچھ ڈیٹا اور اقدامات مظاہرے کے لیے فرضی ہیں۔', 'بند کریں'],
