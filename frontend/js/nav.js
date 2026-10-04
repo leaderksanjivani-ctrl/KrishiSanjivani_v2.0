@@ -543,37 +543,6 @@ function showPrototypeNotice() {
     notice.remove();
   };
   setTimeout(() => notice.remove(), 4000);
-}�ିମୁଲେଟେଡ୍।', 'ବନ୍ଦ କରନ୍ତୁ']
-  };
-  const selected = copy[typeof currentLang !== 'undefined' ? currentLang : 'en'] || copy.en;
-  const notice = document.createElement('aside');
-  notice.id = 'sih-prototype-notice';
-  notice.className = 'sih-notice';
-  notice.innerHTML = `<button class="sih-notice-close" aria-label="${selected[2]}">&times;</button><strong>${selected[0]}</strong><p>${selected[1]}</p>`;
-  document.body.appendChild(notice);
-  localStorage.setItem(visitKey, 'shown');
-  sessionStorage.setItem(visitKey, 'shown');
-  notice.querySelector('.sih-notice-close').onclick = () => {
-    localStorage.setItem(visitKey, 'shown');
-    sessionStorage.setItem(visitKey, 'shown');
-    notice.remove();
-  };
-  setTimeout(() => notice.remove(), 4000);
-}ರಿ. ಕೆಲವು ಡೇಟಾ ಮತ್ತು ಕ್ರಿಯೆಗಳು ಪ್ರದರ್ಶನಕ್ಕಾಗಿ ಅನುಕರಿಸಲಾಗಿದೆ.', 'ಮುಚ್ಚಿ'],
-    ml: ['SIH പ്രോട്ടോടൈപ്പ് പ്രിവ്യൂ', 'ഈ വെബ്സൈറ്റ് SIH 2026 പ്രോട്ടോടൈപ്പാണ്. ചില ഡാറ്റയും പ്രവർത്തനങ്ങളും പ്രദർശനത്തിനായി അനുകരിച്ചവയാണ്.', 'അടയ്ക്കുക'],
-    pa: ['SIH ਪ੍ਰੋਟੋਟਾਈਪ ਝਲਕ', 'ਇਹ ਵੈੱਬਸਾਈਟ SIH 2026 ਪ੍ਰੋਟੋਟਾਈਪ ਹੈ। ਕੁਝ ਡਾਟਾ ਅਤੇ ਕਾਰਵਾਈਆਂ ਪ੍ਰਦਰਸ਼ਨ ਲਈ ਸਿਮੂਲੇਟ ਕੀਤੀਆਂ ਗਈਆਂ ਹਨ।', 'ਬੰਦ ਕਰੋ'],
-    ur: ['SIH پروٹوٹائپ پیش نظارہ', 'یہ ویب سائٹ SIH 2026 پروٹوٹائپ ہے۔ کچھ ڈیٹا اور اقدامات مظاہرے کے لیے فرضی ہیں۔', 'بند کریں'],
-    or: ['SIH ପ୍ରୋଟୋଟାଇପ୍ ପୂର୍ବଦର୍ଶନ', 'ଏହି ୱେବସାଇଟ୍ SIH 2026 ପ୍ରୋଟୋଟାଇପ୍। କିଛି ତଥ୍ୟ ଏବଂ କାର୍ଯ୍ୟ ପ୍ରଦର୍ଶନ ପାଇଁ ସିମୁଲେଟେଡ୍।', 'ବନ୍ଦ କରନ୍ତୁ']
-  };
-  const selected = copy[typeof currentLang !== 'undefined' ? currentLang : 'en'] || copy.en;
-  const notice = document.createElement('aside');
-  notice.id = 'sih-prototype-notice';
-  notice.className = 'sih-notice';
-  notice.innerHTML = `<button class="sih-notice-close" aria-label="${selected[2]}">&times;</button><strong>${selected[0]}</strong><p>${selected[1]}</p>`;
-  document.body.appendChild(notice);
-  sessionStorage.setItem(visitKey, 'shown');
-  notice.querySelector('.sih-notice-close').onclick = () => notice.remove();
-  setTimeout(() => notice.remove(), 3500);
 }
 
 function applyBrandLogos() {
